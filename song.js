@@ -2,6 +2,8 @@ const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
 const lyricsContainer = $('lyrics-container');
 const lyricsViewport = $('lyricsDisplay');
+const SETTINGS_KEY = 'teleprompterSettings';
+
 let allHymnsData = {};
 let lines = [];
 let initialHymnLines = [];
@@ -15,13 +17,21 @@ let isPlaying = false;
 let availableLanguages = [];
 let selectedLanguages = [];
 let languageOrder = [];
-const SETTINGS_STORAGE_KEY = 'hymnAppSettings';
-const CUSTOM_INTRO_KEY = 'hymnCustomIntros';
+let activeColorInput = null;
+
+const JEWEL_TONES = [
+    '#bb0728', '#730953', '#301734', '#c32d4e', '#bc0788', '#ff36e6',
+    '#c7075a', '#790027', '#953659', '#feba3a', '#c8912f', '#ffe0af',
+    '#d9b056', '#967d2a', '#2d3f25', '#be3a09', '#1e311b', '#3f692f',
+    '#c4720c', '#096c2b', '#0a5843', '#08ba98', '#355983', '#2c4294',
+    '#057d8d', '#287796', '#442897', '#0e1a54', '#143281', '#0d0b18'
+];
+
 const DEFAULTS = {
   bgColor: '#ffffff',
   highlightColor: '#fef08a',
   transitionSpeed: '0.5',
-  lyricsWidth: '800',
+  lyricsWidth: '700',
   languages: {
     English: { fontSize: '3', fontColor: '#111827' },
     Spanish: { fontSize: '3', fontColor: '#1e88e5' },
@@ -29,6 +39,72 @@ const DEFAULTS = {
     Custom: { fontSize: '3', fontColor: '#111827' }
   }
 };
+
+// --- Settings Persistence Functions ---
+function saveSettings() {
+    const settings = getSettingsFromForm();
+    settings.languageOrder = languageOrder;
+    settings.selectedLanguages = selectedLanguages;
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem(SETTINGS_KEY);
+    if (savedSettings) {
+        try {
+            return JSON.parse(savedSettings);
+        } catch (e) {
+            console.error("Error parsing saved settings:", e);
+            localStorage.removeItem(SETTINGS_KEY);
+            return null;
+        }
+    }
+    return null;
+}
+
+function updateFormFromSettings(settings) {
+    if (!settings) return;
+    $('bgColor').value = settings.bgColor || DEFAULTS.bgColor;
+    $('highlightColor').value = settings.highlightColor || DEFAULTS.highlightColor;
+    $('transitionSpeed').value = settings.transitionSpeed || DEFAULTS.transitionSpeed;
+    $('lyricsWidth').value = settings.lyricsWidth || DEFAULTS.lyricsWidth;
+
+    (settings.languageOrder || languageOrder).forEach(lang => {
+        const langSettings = settings.languages?.[lang];
+        if (langSettings) {
+            const fontColorInput = $(`fontColor-${lang}`);
+            const fontSizeInput = $(`fontSize-${lang}`);
+            if (fontColorInput) fontColorInput.value = langSettings.fontColor;
+            if (fontSizeInput) fontSizeInput.value = langSettings.fontSize;
+        }
+    });
+}
+
+function initializeColorPalette() {
+    const paletteContainer = $('jewel-tone-palette');
+    JEWEL_TONES.forEach(color => {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        swatch.style.backgroundColor = color;
+        swatch.dataset.color = color;
+        paletteContainer.appendChild(swatch);
+    });
+
+    paletteContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('color-swatch') && activeColorInput) {
+            activeColorInput.value = e.target.dataset.color;
+            activeColorInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    });
+
+    document.querySelector('#settings-grid').addEventListener('focusin', (e) => {
+        if (e.target.type === 'color') {
+            activeColorInput = e.target;
+            document.querySelectorAll('input[type="color"]').forEach(inp => inp.classList.remove('active-color-input'));
+            activeColorInput.classList.add('active-color-input');
+        }
+    });
+}
 
 // Prevent spacebar default behavior to avoid interference
 document.addEventListener('keydown', (event) => {
@@ -108,6 +184,9 @@ function handleDownArrow(event) {
 function toggleManualControl() {
   $('metaSPL').style.display = $('manualControlOverride').checked ? 'none' : 'inline-block';
   lyricsViewport.classList.toggle('manual-active', $('manualControlOverride').checked);
+  if ($('manualControlOverride').checked) {
+    lyricsViewport.focus();
+  }
   if (isPlaying && audio && !audio.paused) {
     clearTimer();
     if ($('manualControlOverride').checked) {
@@ -120,9 +199,9 @@ function toggleManualControl() {
       if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
         lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
       }
-      if (hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
+      if (lineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
         defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
-      } else {
+      } else if (lineTimings.length === 0) {
         const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
         const introLength = parseFloat($("introLength").value);
         defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
@@ -144,7 +223,7 @@ async function loadAvailableLanguages() {
     console.log(`Initial languages to check: ${initialLanguages.join(', ')}`);
     for (const lang of initialLanguages) {
       try {
-        const res = await fetch(`data/hymns_${lang}.json`);
+        const res = await fetch(`data/hymns_${lang}.json`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         allHymnsData[lang] = await res.json();
         const hasLyrics = Object.values(allHymnsData[lang]).some(hymn => hymn?.lines?.length > 0);
@@ -157,27 +236,28 @@ async function loadAvailableLanguages() {
         }
         console.log(`Loaded ${lang} with some hymns having ${hasLyrics ? 'lyrics' : 'no lyrics'}`);
       } catch (e) {
-        console.warn(`Failed to load hymns_${lang}.json: ${e.message} - File may not exist or is inaccessible`);
-        showNotice(`Failed to load hymns_${lang}.json for ${lang}: ${e.message}. This language is excluded.`);
+        console.warn(`Failed to load hymns_${lang}.json: ${e.message}`);
+        showNotice(`Failed to load hymns_${lang}.json: ${e.message}.`);
       }
     }
     console.log(`Available languages: ${availableLanguages.join(', ')}`);
     if (availableLanguages.length === 0) {
-      showNotice("No valid hymn data found for any language. Check data/ folder and ensure JSON files contain lyrics.");
+      availableLanguages.push('English'); // Fallback to English
+      languageOrder.push('English');
+      showNotice("No valid hymn data found. Defaulting to English.");
     }
-    renderLanguageList();
   } catch (error) {
     console.error("Error loading languages:", error);
     showNotice("Failed to load language files. Check data/ folder and ensure JSON files are present.");
+    availableLanguages.push('English'); // Fallback
+    languageOrder.push('English');
   }
 }
 
 function renderLanguageList() {
+  console.log(`Rendering language list with languageOrder: ${languageOrder.join(', ')}`);
   const langList = $('language-list');
   langList.innerHTML = '';
-  const wasPlaying = isPlaying;
-  const currentTime = audio ? audio.currentTime : 0;
-  const wasPaused = audio ? audio.paused : true;
   languageOrder.forEach(lang => {
     let lineCount;
     if (lang === 'Custom' && usingCustomLyrics) {
@@ -212,10 +292,10 @@ function renderLanguageList() {
       const targetIndex = languageOrder.indexOf(targetLang);
       languageOrder.splice(draggedIndex, 1);
       languageOrder.splice(targetIndex, 0, draggedLang);
+      saveSettings();
       renderLanguageList();
       updateLanguageSettings();
       populateLyricsContainer(lines || initialHymnLines);
-      saveCurrentSettings();
       updateAudioLanguageDisplay();
     });
     item.querySelector('input').addEventListener('change', (e) => {
@@ -230,18 +310,19 @@ function renderLanguageList() {
       if (selectedLanguages.length > 3) {
         selectedLanguages.pop();
         e.target.checked = false;
+        showNotice("Maximum 3 languages can be selected.");
       }
       if (selectedLanguages.length === 0) {
         selectedLanguages = ['English'];
         e.target.checked = true;
       }
+      saveSettings();
       updateLanguageSettings();
       populateLyricsContainer(lines || initialHymnLines);
-      saveCurrentSettings();
       updateAudioLanguageDisplay();
     });
   });
-  updateAudioLanguageDisplay();
+  console.log(`Language list rendered with ${languageOrder.length} languages`);
 }
 
 function updateLanguageSettings() {
@@ -272,20 +353,11 @@ function updateLanguageSettings() {
     const fontColorInput = $(`fontColor-${lang}`);
     const fontSizeInput = $(`fontSize-${lang}`);
     if (fontColorInput && fontSizeInput) {
-      const saved = JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) || '{}');
-      if (!saved.languages?.[lang]) {
-        saved.languages = saved.languages || {};
-        saved.languages[lang] = saved.languages[lang] || {
-          fontSize: DEFAULTS.languages[lang]?.fontSize || '3',
-          fontColor: DEFAULTS.languages[lang]?.fontColor || '#111827'
-        };
-        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(saved));
-      }
-      fontColorInput.value = saved.languages[lang].fontColor || DEFAULTS.languages[lang]?.fontColor || '#111827';
-      fontSizeInput.value = parseFloat(saved.languages[lang].fontSize || DEFAULTS.languages[lang]?.fontSize || '3').toFixed(1);
+      fontColorInput.value = DEFAULTS.languages[lang]?.fontColor || '#111827';
+      fontSizeInput.value = parseFloat(DEFAULTS.languages[lang]?.fontSize || '3').toFixed(1);
       fontColorInput.addEventListener('input', () => {
         applySettings(getSettingsFromForm());
-        saveCurrentSettings();
+        saveSettings();
       });
       fontSizeInput.addEventListener('input', () => {
         let value = parseFloat(fontSizeInput.value) || 3;
@@ -293,7 +365,7 @@ function updateLanguageSettings() {
         if (value > 20) value = 20;
         fontSizeInput.value = value.toFixed(1);
         applySettings(getSettingsFromForm());
-        saveCurrentSettings();
+        saveSettings();
       });
     }
   });
@@ -306,7 +378,7 @@ function decreaseFontSize(lang) {
     value -= 0.1;
     fontSizeInput.value = value.toFixed(1);
     applySettings(getSettingsFromForm());
-    saveCurrentSettings();
+    saveSettings();
   }
 }
 
@@ -317,8 +389,18 @@ function increaseFontSize(lang) {
     value += 0.1;
     fontSizeInput.value = value.toFixed(1);
     applySettings(getSettingsFromForm());
-    saveCurrentSettings();
+    saveSettings();
   }
+}
+
+function adjustTransitionSpeed(amount) {
+    const input = document.querySelector('#transitionSpeed');
+    let value = parseFloat(input.value) || 0.5;
+    value += amount;
+    value = Math.max(0.1, Math.min(2.0, value)); // Clamp value
+    input.value = value.toFixed(1);
+    applySettings(getSettingsFromForm());
+    saveSettings();
 }
 
 function showNotice(msg) {
@@ -378,11 +460,14 @@ function loadCustomLyrics() {
     languageOrder.push('Custom');
     if (selectedLanguages.length < 3 && !selectedLanguages.includes('Custom')) {
       selectedLanguages.push('Custom');
+    } else if (selectedLanguages.length >= 3) {
+      showNotice("Maximum 3 languages can be selected. Custom lyrics loaded but not displayed.");
     }
   }
   updateLiveCounter();
   renderLanguageList();
   updateLanguageSettings();
+  saveSettings();
   setView('hymn');
 }
 
@@ -433,10 +518,13 @@ function loadExcelLyrics() {
           languageOrder.push('Custom');
           if (selectedLanguages.length < 3 && !selectedLanguages.includes('Custom')) {
             selectedLanguages.push('Custom');
+          } else if (selectedLanguages.length >= 3) {
+            showNotice("Maximum 3 languages can be selected. Custom lyrics loaded but not displayed.");
           }
         }
         updateLiveCounter();
         renderLanguageList();
+        saveSettings();
         showNotice(`Imported ${lyricsLines.length} lines from Excel.`);
       } catch (error) {
         console.error('Error parsing Excel:', error);
@@ -457,7 +545,10 @@ function resetLyrics() {
   const title = getHymnTitleFromJSON(currentHymnNumber);
   $('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${title}`;
   setView('hymn');
-  loadAvailableLanguages();
+  loadAvailableLanguages().then(() => {
+    renderLanguageList();
+    updateLanguageSettings();
+  });
 }
 
 function updateLineCountDisplay() {
@@ -512,14 +603,21 @@ function populateLyricsContainer(linesArray) {
         if (singleLang && lang !== singleLang) {
           return;
         }
+        const hasHymn = allHymnsData[lang]?.[currentHymnNumber]?.lines?.length > 0;
         const p = document.createElement('p');
         p.className = `lyric-line lyric-line-${lang}`;
         if (lang === 'Custom' && usingCustomLyrics && lines[index] !== undefined) {
-          p.textContent = lines[index] || '';
-        } else if (lang !== 'Custom' && allHymnsData[lang]?.[currentHymnNumber]?.lines?.[index] !== undefined) {
-          p.textContent = allHymnsData[lang][currentHymnNumber].lines[index] || '';
+          // Add replacement for custom lyrics
+          p.textContent = (lines[index] || '').replace(/-/g, '\u2011');
+        } else if (lang !== 'Custom') {
+          if (hasHymn) {
+            // Add replacement for JSON lyrics
+            p.textContent = (allHymnsData[lang][currentHymnNumber].lines[index] || '').replace(/-/g, '\u2011');
+          } else {
+            p.textContent = index === 0 ? `${lang} lyrics not available` : '';
+          }
         }
-        div.appendChild(p);
+        if (p.textContent !== '') div.appendChild(p);
       }
     });
     lyricsContainer.appendChild(div);
@@ -616,7 +714,6 @@ function playHymn() {
   if (!currentHymnNumber) return;
   stopHymn();
   const introLength = parseFloat($("introLength").value);
-  localStorage.setItem(CUSTOM_INTRO_KEY, JSON.stringify({ [currentHymnNumber]: introLength }));
   if ((lines.length === 0 && !initialHymnLines.length)) return;
   const trackType = $('trackType').checked ? 'voice' : 'accompaniment';
   let topLanguage = languageOrder[0];
@@ -645,9 +742,9 @@ function playHymn() {
     if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
       lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
     }
-    if (hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
+    if (lineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
       defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
-    } else {
+    } else if (lineTimings.length === 0) {
       const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
       defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
     }
@@ -662,6 +759,9 @@ function playHymn() {
     isPlaying = true;
     $('trackType').disabled = true;
     document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
+    if ($('manualControlOverride').checked) {
+      lyricsViewport.focus();
+    }
     try {
       await audio.play();
     } catch (err) {
@@ -741,23 +841,6 @@ function playHymn() {
   };
 }
 
-function startAutoScroll(lineTimings) {
-  clearTimer();
-  if (!isPlaying || currentIndex >= (lines.length || initialHymnLines.length)) return;
-  const secondsForCurrentLine = lineTimings[currentIndex] || 0.2;
-  if (isNaN(secondsForCurrentLine) || secondsForCurrentLine <= 0) return;
-  mainTimer = setTimeout(() => {
-    if (!isPlaying) return;
-    if (currentIndex < (lines.length || initialHymnLines.length) - 1) {
-      setCurrentIndex(currentIndex + 1);
-      startAutoScroll(lineTimings);
-    } else {
-      isPlaying = false;
-      clearTimer();
-    }
-  }, secondsForCurrentLine * 1000);
-}
-
 function stopHymn() {
   isPlaying = false;
   if (audio) { audio.pause(); audio.currentTime = 0; audio = null; }
@@ -803,104 +886,113 @@ function toggleSettings() {
 }
 
 function initializePage() {
-  try {
-    loadAvailableLanguages().then(() => {
-      allHymnsData = {};
-      for (const lang of availableLanguages) {
-        try {
-          fetch(`data/hymns_${lang}.json`).then(res => {
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            return res.json();
-          }).then(data => {
-            allHymnsData[lang] = data;
-            console.log(`Loaded ${lang} with ${allHymnsData[lang][currentHymnNumber]?.lines?.length || 0} lines`);
-          }).catch(err => {
-            console.error(`Failed to load hymns_${lang}.json:`, err);
-            showNotice(`Failed to load hymns_${lang}.json: ${err.message}`);
-          });
-        } catch (err) {
-          console.error(`Failed to load hymns_${lang}.json:`, err);
-          showNotice(`Failed to load hymns_${lang}.json: ${err.message}`);
-        }
-      }
-      if (Object.keys(allHymnsData).length === 0) {
-        showNotice("No hymn data loaded. Please check data/ folder.");
-        setView('custom');
-        $('pageHeader').textContent = "Error Loading Hymns";
-        return;
-      }
-    }).catch(err => {
-      console.error("Failed to load or parse hymns data:", err);
-      showNotice("Error loading hymns. Please try again.");
+  const params = new URLSearchParams(location.search);
+  currentHymnNumber = params.get("n");
+
+  initializeColorPalette();
+
+  loadAvailableLanguages().then(() => {
+    if (Object.keys(allHymnsData).length === 0) {
+      showNotice("No hymn data loaded. Please check data/ folder.");
       setView('custom');
       $('pageHeader').textContent = "Error Loading Hymns";
+      lines = [];
+      initialHymnLines = [];
+      $('introLength').value = 5;
+      renderLanguageList();
+      updateLanguageSettings();
       return;
+    }
+
+    const savedSettings = loadSettings();
+    if (savedSettings?.languageOrder) {
+        languageOrder = savedSettings.languageOrder.filter(lang => availableLanguages.includes(lang) || lang === 'Custom');
+        availableLanguages.forEach(lang => {
+            if (!languageOrder.includes(lang)) languageOrder.push(lang);
+        });
+    }
+    if (savedSettings?.selectedLanguages) {
+        selectedLanguages = savedSettings.selectedLanguages.filter(lang => availableLanguages.includes(lang) || lang === 'Custom');
+    } else if (selectedLanguages.length === 0) {
+        selectedLanguages = [...availableLanguages];
+    }
+
+
+    if (!currentHymnNumber || !allHymnsData['English']?.[currentHymnNumber]) {
+      showNotice("Hymn not found. Please select a valid hymn.");
+      setView('custom');
+      $('pageHeader').textContent = "No Hymn Selected";
+      lines = [];
+      initialHymnLines = [];
+      $('introLength').value = 5;
+      renderLanguageList();
+      updateLanguageSettings();
+      return;
+    }
+
+    const entry = allHymnsData['English'][currentHymnNumber];
+    initialHymnLines = entry?.lines || [];
+    lines = [...initialHymnLines];
+    $('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${entry?.title || 'Unknown'}`;
+    $('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
+
+    renderLanguageList();
+    updateLanguageSettings();
+
+    const settingsToApply = savedSettings || DEFAULTS;
+    updateFormFromSettings(settingsToApply);
+    applySettings(settingsToApply);
+
+    const liveUpdateControls = ['bgColor', 'highlightColor', 'transitionSpeed'];
+    liveUpdateControls.forEach(id => {
+      if ($(id)) $(id).addEventListener('input', () => { 
+          applySettings(getSettingsFromForm());
+          saveSettings();
+      });
     });
-  } catch (err) {
+    $('applyWidthBtn').addEventListener('click', () => {
+      applySettings(getSettingsFromForm());
+      saveSettings();
+    });
+    $('trackType').addEventListener('change', () => { if (audio && !audio.paused) { switchAudioTrack(); } });
+    $('resetButton').addEventListener('click', () => {
+        if (confirm('Reset all settings to default?')) {
+            localStorage.removeItem(SETTINGS_KEY);
+            languageOrder = [...availableLanguages];
+            selectedLanguages = [...availableLanguages];
+            renderLanguageList();
+            updateLanguageSettings();
+            updateFormFromSettings(DEFAULTS);
+            applySettings(DEFAULTS);
+            populateLyricsContainer(lines || initialHymnLines);
+        }
+    });
+    $('loadCustomLyricsBtn').addEventListener('click', loadCustomLyrics);
+    $('loadExcelBtn').addEventListener('click', loadExcelLyrics);
+    $('customLyricsTextarea').addEventListener('input', updateLiveCounter);
+    $('settings-toggle').addEventListener('click', toggleSettings);
+    $('lyric-order-toggle').addEventListener('click', toggleLyricOrder);
+    $('exitCustomBtn').addEventListener('click', () => setView('hymn'));
+    $('manualControlOverride').addEventListener('change', toggleManualControl);
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('keydown', (event) => {
+        if (event.code === 'Space') {
+          event.preventDefault();
+        }
+      });
+    });
+
+    setView('hymn');
+    updateAudioLanguageDisplay();
+  }).catch(err => {
     console.error("Failed to load or parse hymns data:", err);
     showNotice("Error loading hymns. Please try again.");
     setView('custom');
     $('pageHeader').textContent = "Error Loading Hymns";
-    return;
-  }
-  const params = new URLSearchParams(location.search);
-  currentHymnNumber = params.get("n");
-  if (!currentHymnNumber || !allHymnsData['English']?.[currentHymnNumber]) {
-    showNotice("Hymn not found. Please select a valid hymn.");
-    setView('custom');
-    $('pageHeader').textContent = "No Hymn Selected";
-    lines = [];
-    initialHymnLines = [];
-    return;
-  }
-  if (selectedLanguages.length === 0) {
-    selectedLanguages = ['English'];
-  }
-  const liveUpdateControls = ['bgColor', 'highlightColor', 'transitionSpeed'];
-  liveUpdateControls.forEach(id => {
-    if ($(id)) $(id).addEventListener('input', () => { applySettings(getSettingsFromForm()); saveCurrentSettings(); });
+    $('introLength').value = 5;
+    renderLanguageList();
+    updateLanguageSettings();
   });
-  $('applyWidthBtn').addEventListener('click', () => {
-    applySettings(getSettingsFromForm());
-    saveCurrentSettings();
-  });
-  $('trackType').addEventListener('change', () => { if (audio && !audio.paused) { switchAudioTrack(); } });
-  $('resetButton').addEventListener('click', () => {
-    if (confirm('Reset all settings to default?')) {
-      localStorage.removeItem(SETTINGS_STORAGE_KEY);
-      loadAndApplySettings();
-      updateLanguageSettings();
-      populateLyricsContainer(lines || initialHymnLines);
-    }
-  });
-  $('loadCustomLyricsBtn').addEventListener('click', loadCustomLyrics);
-  $('loadExcelBtn').addEventListener('click', loadExcelLyrics);
-  $('customLyricsTextarea').addEventListener('input', updateLiveCounter);
-  $('settings-toggle').addEventListener('click', toggleSettings);
-  $('lyric-order-toggle').addEventListener('click', toggleLyricOrder);
-  $('exitCustomBtn').addEventListener('click', () => setView('hymn'));
-  $('manualControlOverride').addEventListener('change', toggleManualControl);
-  document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('keydown', (event) => {
-      if (event.code === 'Space') {
-        event.preventDefault();
-      }
-    });
-  });
-  const entry = allHymnsData['English'][currentHymnNumber];
-  initialHymnLines = entry?.lines || [];
-  lines = [...initialHymnLines];
-  $('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${entry?.title || 'Unknown'}`;
-  const savedIntros = JSON.parse(localStorage.getItem(CUSTOM_INTRO_KEY) || '{}');
-  $('introLength').value = savedIntros[currentHymnNumber] || entry?.intro_length || 5;
-  setView('hymn');
-  loadAndApplySettings();
-  updateAudioLanguageDisplay();
-}
-
-function saveCurrentSettings() {
-  const settings = getSettingsFromForm();
-  localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
 }
 
 function getSettingsFromForm() {
@@ -926,10 +1018,12 @@ function applySettings(settings) {
   root.style.setProperty('--transition-speed', `${settings.transitionSpeed}s`);
   document.querySelector('.page').style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
   languageOrder.forEach(lang => {
-    root.style.setProperty(`--lyric-font-size-${lang}`, `${settings.languages[lang].fontSize}rem`);
-    root.style.setProperty(`--lyric-font-color-${lang}`, settings.languages[lang].fontColor);
+    if (settings.languages[lang]) {
+      root.style.setProperty(`--lyric-font-size-${lang}`, `${settings.languages[lang].fontSize}rem`);
+      root.style.setProperty(`--lyric-font-color-${lang}`, settings.languages[lang].fontColor);
+    }
   });
-  const maxFontSize = Math.max(...languageOrder.map(lang => parseFloat(settings.languages[lang].fontSize) || 3));
+  const maxFontSize = Math.max(...languageOrder.map(lang => parseFloat(settings.languages[lang]?.fontSize) || 3));
   const singleLineHeightRem = maxFontSize * (1.3 + 1.0);
   const viewportHeightRem = singleLineHeightRem * 3 * selectedLanguages.length;
   lyricsViewport.style.height = `${viewportHeightRem}rem`;
@@ -938,22 +1032,6 @@ function applySettings(settings) {
     el.style.height = `${spacerHeightRem < 0 ? 0 : spacerHeightRem}rem`;
   });
   setCurrentIndex(currentIndex, true);
-}
-
-function loadAndApplySettings() {
-  const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
-  const settings = saved ? JSON.parse(saved) : { ...DEFAULTS };
-  $('bgColor').value = settings.bgColor || DEFAULTS.bgColor;
-  $('highlightColor').value = settings.highlightColor || DEFAULTS.highlightColor;
-  $('transitionSpeed').value = settings.transitionSpeed || DEFAULTS.transitionSpeed;
-  $('lyricsWidth').value = settings.lyricsWidth || DEFAULTS.lyricsWidth;
-  languageOrder.forEach(lang => {
-    if ($(`fontSize-${lang}`)) $(`fontSize-${lang}`).value = settings.languages?.[lang]?.fontSize || DEFAULTS.languages[lang]?.fontSize || '3';
-    if ($(`fontColor-${lang}`)) $(`fontColor-${lang}`).value = settings.languages?.[lang]?.fontColor || DEFAULTS.languages[lang]?.fontColor || '#111827';
-  });
-  renderLanguageList();
-  updateLanguageSettings();
-  applySettings(settings);
 }
 
 function enablePlaybackControls(isPlaying, isPaused = false, forceDisableAll = false) {
@@ -1012,6 +1090,9 @@ function resumeHymn() {
   if (isNaN(spl) || spl <= 0) return;
   isPlaying = true;
   document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
+  if ($('manualControlOverride').checked) {
+    lyricsViewport.focus();
+  }
   try {
     audio.play();
   } catch (err) {
@@ -1020,11 +1101,20 @@ function resumeHymn() {
   enablePlaybackControls(true);
   const hymnEntry = allHymnsData['English'][currentHymnNumber];
   let lineTimings = [];
+  let defaultSecondsPerLine = 0;
   if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
     lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
   }
-  while (lineTimings.length < (lines.length || initialHymnLines.length)) {
-    lineTimings.push(spl);
+  if (lineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
+    defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
+  } else if (lineTimings.length === 0) {
+    const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
+    const introLength = parseFloat($("introLength").value);
+    defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
+  }
+  if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
+  while (lineTimings.length < (hymnEntry?.lines?.length || initialHymnLines.length)) {
+    lineTimings.push(defaultSecondsPerLine);
   }
   if (!$('manualControlOverride').checked) {
     startAutoScroll(lineTimings);
@@ -1084,5 +1174,22 @@ function switchAudioTrack() {
     };
   };
 }
-console.log(localStorage.getItem('hymnCustomIntros'));
+
+function startAutoScroll(lineTimings) {
+  clearTimer();
+  if (!isPlaying || currentIndex >= (lines.length || initialHymnLines.length)) return;
+  const secondsForCurrentLine = lineTimings[currentIndex] || 0.2;
+  if (isNaN(secondsForCurrentLine) || secondsForCurrentLine <= 0) return;
+  mainTimer = setTimeout(() => {
+    if (!isPlaying) return;
+    if (currentIndex < (lines.length || initialHymnLines.length) - 1) {
+      setCurrentIndex(currentIndex + 1);
+      startAutoScroll(lineTimings);
+    } else {
+      isPlaying = false;
+      clearTimer();
+    }
+  }, secondsForCurrentLine * 1000);
+}
+
 document.addEventListener('DOMContentLoaded', initializePage);
