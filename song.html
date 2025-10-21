@@ -32,6 +32,14 @@
       <div class="action-buttons">
         <a href="index.html" class="songs-link">&larr; Back to Hymn Selection</a>
       </div>
+      
+<div id="runlist-panel" style="display: none;">
+    <h2>Runlist</h2>
+    <ul id="runlist-display"></ul>
+  </div>
+   
+      
+      
       <h2>View</h2>
       <div class="view-controls">
         <div class="view-toggle">
@@ -99,27 +107,61 @@
             </div>
           </div>
         </div>
-        <div class="control-group" style="grid-column: 1 / -1;">
-            <label>Jewel Tone Palette</label>
-            <div id="jewel-tone-palette" class="color-palette"></div>
-        </div>
+        
+				<div class="control-group" style="grid-column: 1 / -1;">
+            <div id="jewel-tone-palette" class="color-palette">
+              <label style="width: 100%; margin-bottom: 0.5rem; font-weight: 600;">Jewel Tone Palette</label> </div>
+        </div>
         <div id="language-settings" class="control-group" style="grid-column: 1 / -1;"></div>
-        <div class="control-group">
-          <div class="control-row">
-            <div class="control-subgroup">
-              <label for="bgColor">Background Color</label>
-              <input type="color" id="bgColor" value="#ffffff">
-            </div>
-            <div class="control-subgroup">
-              <label for="highlightColor">Highlight Color</label>
-              <input type="color" id="highlightColor" value="#fef08a">
-            </div>
-          </div>
-        </div>
+        
+<div class="control-group">
+  <div class="control-row color-picker-row">
+
+    <div class="control-subgroup">
+      <label for="bgColor">Background</label>
+      <div class="custom-color-picker">
+        <div class="color-display" data-for="bgColor"></div>
+        <button class="edit-color-btn" data-for="bgColor" aria-label="Edit Color">&#9998;</button>
+        <input type="color" id="bgColor" value="#ffffff" class="color-input-hidden">
+      </div>
+    </div>
+
+    <div class="control-subgroup">
+      <label for="highlightColor">Highlight</label>
+      <div class="custom-color-picker">
+        <div class="color-display" data-for="highlightColor"></div>
+        <button class="edit-color-btn" data-for="highlightColor" aria-label="Edit Color">&#9998;</button>
+        <input type="color" id="highlightColor" value="#fef08a" class="color-input-hidden">
+      </div>
+    </div>
+
+    <div class="control-subgroup">
+      <label id="toggleUnderlineLabel"><span>Underline</span></label>
+      <div class="custom-color-picker">
+        <div class="color-display" data-for="underlineColor"></div>
+        <button class="edit-color-btn" data-for="underlineColor" aria-label="Edit Color">&#9998;</button>
+        <input type="color" id="underlineColor" value="#f59e0b" class="color-input-hidden">
+      </div>
+    </div>
+
+    <div class="control-subgroup">
+      <label id="toggleDotLabel"><span>Dot</span></label>
+      <div class="custom-color-picker">
+        <div class="color-display" data-for="dotColor"></div>
+        <button class="edit-color-btn" data-for="dotColor" aria-label="Edit Color">&#9998;</button>
+        <input type="color" id="dotColor" value="#d81b60" class="color-input-hidden">
+      </div>
+    </div>
+
+  </div>
+</div>
+        
+        
         <div class="control-group" style="grid-column: 1 / -1;">
           <button id="resetButton" class="full-width-btn">Reset Settings</button>
         </div>
       </div>
+      
     </section>
   </div>
   <script src="song.js"></script>
