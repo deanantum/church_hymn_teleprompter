@@ -9,141 +9,324 @@
     .shell { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
     .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
     .row { display: grid; gap: .75rem; }
-    @media (min-width: 720px) { .row-2 { grid-template-columns: 2fr 1fr; align-items: end; } }
     label { font-weight: 600; }
-    input[type="text"], select { width: 100%; padding: .6rem .7rem; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; }
+    input[type="text"], select { width: 100%; padding: .6rem .7rem; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; }box-sizing: border-box; }
     .btns { display: flex; flex-wrap: wrap; gap: .5rem; }
     button { padding: .6rem .9rem; border: 1px solid #cbd5e1; border-radius: 8px; background: #f9fafb; cursor: pointer; font-weight: 600; }
     .primary { background: #2b6cb0; color: #fff; border-color: #2b6cb0; }
     .muted { color: #6b7280; font-size: .9rem; }
     .note { margin-top: .5rem; color: #374151; font-size: .95rem; }
+    .runlist-container { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-top: 1rem; }
+    .list-box { display: flex; flex-direction: column; }
+    .transfer-buttons { display: flex; flex-direction: column; gap: 0.5rem; }
+    #runlist { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; border: 1px solid #d1d5db; border-radius: 8px; }
+    #runlist li { padding: 0.6rem 0.7rem; cursor: grab; border-bottom: 1px solid #e5e7eb; }
+    #runlist li:last-child { border-bottom: none; }
+    #runlist li.dragging { opacity: 0.5; background: #dbeafe; }
+    #runlist li:active { cursor: grabbing; }
+    #runlist li.selected { background: #dbeafe; font-weight: 600; }
+    .search-container {
+     display: flex;
+     align-items: center;
+     border: 1px solid #d1d5db; /* <-- MOVED from input */
+     border-radius: 8px; /* <-- MOVED from input */
+     background-color: #fff; /* <-- ADDED to look like input */
+     padding-right: 0.3rem; /* <-- ADDED space for the button inside */
+     width: 100%;
+   }
+   #searchBox {
+     flex-grow: 1; /* Allow input to fill space */
+     padding: .6rem .7rem; /* Keep original padding */
+     border: none; /* <-- REMOVED */
+     background-color: transparent; /* <-- ADDED */
+     outline: none; /* <-- ADDED prevent double outline on focus */
+     box-sizing: border-box;
+     min-width: 0;
+   }
+    .clear-search-btn {
+     /* position: absolute; <-- REMOVED */
+     /* right: 0.5rem; <-- REMOVED */
+     padding: 0.2rem 0.5rem;
+     border: none;
+     background: #f3f4f6; /* Slightly adjust background */
+     cursor: pointer;
+     font-size: 0.9rem;
+     display: none;
+     flex-shrink: 0; /* Prevent button shrinking */
+     border-radius: 4px; /* Optional rounded corners */
+   }
+   .search-container:focus-within {
+     outline: 2px solid #181028; /* Mimic input focus */
+     outline-offset: 1px;
+   }
+    .clear-search-btn.visible { display: block; }
+    .runlist-btns { display: flex; gap: .5rem; margin-top: .5rem; }
+    .runlist-btns button { flex: 1; }
+    .row > div:first-child {
+      /* Calculate width: (100% - gap) / 2 is roughly one '1fr' column */
+      /* Adjust percentage slightly if needed */
+      width: calc(46% - 0.5rem); /* Example: slightly less than half minus half the gap */
+  	}
   </style>
 </head>
 <body>
   <div class="shell">
-    <div class="card">
+  
+  
+		<div class="card">
       <h1 style="margin-top:0">Hymn Library</h1>
-      <p class="muted">Search by number or title. Select the match and click <strong>Load Song</strong>.</p>
-      <div class="row row-2" style="margin-top:1rem;">
-        <div>
-          <label for="searchBox">Search</label>
-          <input id="searchBox" type="text" placeholder="e.g., 19 or We Thank Thee" autocomplete="off"/>
+      <p class="muted">Search for songs, add them to the runlist, and then click <strong>Load Runlist</strong>.</p>
+
+      <div class="row" style="margin-bottom: 1rem;"> <div> <label for="searchBox">Search</label>
+          <div class="search-container">
+            <input id="searchBox" type="text" placeholder="e.g., 19 or We Thank Thee" autocomplete="off"/>
+            <button class="clear-search-btn" id="clearSearchBtn">X</button>
+          </div>
         </div>
-        <div>
-          <label>&nbsp;</label>
-          <div class="btns">
-            <button class="primary" id="loadBtn">Load Song</button>
-            <button id="clearBtn">Clear</button>
+        </div>
+      <div class="runlist-container">
+        <div class="list-box">
+          <label for="songSelect">All Hymns</label>
+          <select id="songSelect" size="12" aria-label="Hymn list"></select>
+        </div>
+        <div class="transfer-buttons">
+          <button id="addBtn" aria-label="Add to runlist">&rarr;</button>
+          <button id="removeBtn" aria-label="Remove from runlist">&larr;</button>
+        </div>
+        <div class="list-box">
+          <label for="runlist">Runlist (Max 10)</label>
+          <ul id="runlist" aria-label="Runlist"></ul>
+          <div class="runlist-btns">
+            <button class="primary" id="loadBtn">Load Runlist</button>
+            <button id="clearRunlistBtn">Clear Runlist</button>
           </div>
         </div>
       </div>
-      <div class="row row-2" style="margin-top:1rem;">
-        <div>
-          <label for="songSelect">All Hymns</label>
-          <select id="songSelect" size="12" aria-label="Hymn list"></select>
-          <div class="note">Tip: Type in the search box and press <kbd>Enter</kbd> to load the top match.</div>
-        </div>
-        <div></div>
-      </div>
+      <div class="note">Tip: Double-click to add/remove. Drag to reorder runlist.</div>
     </div>
+    
+    
   </div>
   <script>
     const searchBox = document.getElementById('searchBox');
-    const selectEl = document.getElementById('songSelect');
+    const songSelectEl = document.getElementById('songSelect');
+    const runlistEl = document.getElementById('runlist');
     const loadBtn = document.getElementById('loadBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    let SONGS = [];
-    async function loadHymnList() {
-        try {
-            const res = await fetch("data/hymns_English.json"); // Updated to hymns_English.json
-            if (!res.ok) throw new Error(`Could not load hymn data. Status: ${res.status}`);
-            const hymnsData = await res.json();
-            SONGS = [];
-            for (const number in hymnsData) {
-                if (Object.prototype.hasOwnProperty.call(hymnsData, number)) {
-                    const hymn = hymnsData[number];
-                    if (hymn && typeof hymn.title === 'string' && hymn.title.trim()) {
-                        SONGS.push({
-                            n: parseInt(number),
-                            title: hymn.title.trim()
-                        });
-                    } else {
-                        console.warn(`Skipping hymn ${number}: Missing or invalid title`);
-                    }
-                }
-            }
-            if (SONGS.length === 0) {
-                throw new Error("No valid hymns found in hymns_English.json");
-            }
-            SONGS.sort((a, b) => a.n - b.n);
-            renderOptions(SONGS);
-            selectEl.selectedIndex = 0; // Select first hymn by default
-        } catch (error) {
-            console.error("Error loading hymn list:", error);
-            selectEl.innerHTML = '<option disabled>Error loading hymns. Please check if hymns_English.json is accessible in the data/ folder or contact support.</option>';
-            const errorDiv = document.createElement('div');
-            errorDiv.style.color = '#b91c1c';
-            errorDiv.style.marginTop = '1rem';
-            errorDiv.textContent = `Failed to load hymns: ${error.message}. Ensure hymns_English.json is in the data/ directory.`;
-            document.querySelector('.card').appendChild(errorDiv);
-        }
+    const clearRunlistBtn = document.getElementById('clearRunlistBtn');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const addBtn = document.getElementById('addBtn');
+    const removeBtn = document.getElementById('removeBtn');
+    let ALL_SONGS = [];
+    let runlist = [];
+    let draggedItem = null;
+
+    function saveRunlist() {
+      localStorage.setItem('hymnRunlist', JSON.stringify(runlist));
     }
-    function renderOptions(list) {
-      selectEl.innerHTML = '';
+
+    function loadRunlist() {
+      const saved = localStorage.getItem('hymnRunlist');
+      if (saved) {
+        runlist = JSON.parse(saved);
+        renderRunlist();
+      }
+    }
+
+    async function loadHymnList() {
+      try {
+        const res = await fetch("data/hymns_English.json");
+        if (!res.ok) throw new Error(`Could not load hymn data. Status: ${res.status}`);
+        const hymnsData = await res.json();
+        ALL_SONGS = Object.keys(hymnsData).map(number => ({
+          n: parseInt(number),
+          title: (hymnsData[number].title || 'Unknown').trim()
+        })).filter(hymn => hymn.title).sort((a, b) => a.n - b.n);
+        if (ALL_SONGS.length === 0) {
+          throw new Error("No valid hymns found in hymns_English.json");
+        }
+        renderOptions(ALL_SONGS, songSelectEl);
+        songSelectEl.selectedIndex = 0;
+        loadRunlist();
+      } catch (error) {
+        console.error("Error loading hymn list:", error);
+        songSelectEl.innerHTML = '<option disabled>Error loading hymns.</option>';
+      }
+    }
+
+    function renderOptions(list, selectElement) {
+      selectElement.innerHTML = '';
       list.forEach(s => {
         const opt = document.createElement('option');
         opt.value = String(s.n);
         opt.textContent = `${s.n} - ${s.title}`;
-        selectEl.appendChild(opt);
+        selectElement.appendChild(opt);
       });
     }
-    function normalize(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
-    function scoreSong(song, q) {
-      const nq = normalize(q); const nt = normalize(song.title); const ns = `${song.n} - ${nt}`;
-      let score = 0;
-      if (!nq) return 0;
-      if (/^\d+$/.test(nq) && Number(nq) === song.n) score += 100;
-      if (ns.startsWith(nq) || nt.startsWith(nq)) score += 20;
-      if (ns.includes(nq) || nt.includes(nq)) score += 10;
-      let i = 0, j = 0;
-      while (i < nq.length && j < nt.length) { if (nq[i] === nt[j]) i++; j++; }
-      if (i === nq.length) score += 5;
-      return score;
-    }
-    function selectBestMatch(query) {
-      if (!query) { selectEl.selectedIndex = 0; return; }
-      let bestIdx = 0, bestScore = -1;
-      SONGS.forEach((s, idx) => {
-        const sc = scoreSong(s, query);
-        if (sc > bestScore) { bestScore = sc; bestIdx = idx; }
+
+    function renderRunlist() {
+      runlistEl.innerHTML = '';
+      runlist.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${song.n} - ${song.title}`;
+        li.dataset.index = index;
+        li.draggable = true;
+        runlistEl.appendChild(li);
       });
-      selectEl.selectedIndex = bestIdx;
-      const opt = selectEl.options[bestIdx];
-      if (opt && typeof opt.scrollIntoView === 'function') {
-        opt.scrollIntoView({ block: 'nearest' });
+    }
+
+    function addToRunlist() {
+      if (songSelectEl.selectedIndex < 0) return;
+      const songNumber = songSelectEl.value;
+      if (runlist.length >= 10) {
+        alert("Runlist is full (max 10 songs).");
+        return;
+      }
+      if (runlist.some(song => String(song.n) === songNumber)) {
+        return;
+      }
+      const songToAdd = ALL_SONGS.find(song => String(song.n) === songNumber);
+      if (songToAdd) {
+        runlist.push(songToAdd);
+        renderRunlist();
+        saveRunlist();
       }
     }
-    searchBox.addEventListener('input', (e) => { selectBestMatch(e.target.value); });
-    searchBox.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (searchBox.value.trim()) {
-                loadSelected();
-            }
-        }
-    });
-    function loadSelected() {
-      const idx = selectEl.selectedIndex >= 0 ? selectEl.selectedIndex : 0;
-      const song = SONGS[idx];
-      if (!song) return;
-      location.href = `song.html?n=${encodeURIComponent(song.n)}`;
+
+    function removeFromRunlist() {
+      const selected = runlistEl.querySelector('li.selected');
+      if (!selected) return;
+      const index = parseInt(selected.dataset.index);
+      runlist.splice(index, 1);
+      renderRunlist();
+      saveRunlist();
     }
-    loadBtn.addEventListener('click', loadSelected);
-    clearBtn.addEventListener('click', () => {
-      searchBox.value = '';
-      selectEl.selectedIndex = 0;
-      searchBox.focus();
+
+		function loadSelection() {
+			// Check if the runlist is empty FIRST
+			if (runlist.length === 0) {
+				// Show an alert if the runlist is empty
+				alert("Runlist cannot be empty. Please add songs to the runlist first.");
+				return; // IMPORTANT: Stop the function here
+			}
+		
+			// If the runlist is NOT empty, proceed to load it
+			const runlistNumbers = runlist.map(song => song.n).join(',');
+			location.href = `song.html?runlist=${encodeURIComponent(runlistNumbers)}`;
+		
+			// NOTE: The old 'else if' part that loaded a single selected song
+			// has been removed because this button's specific job is to load the runlist.
+		}
+
+    function normalize(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+
+    function filterAndRenderSongs(query) {
+      if (!query) {
+        renderOptions(ALL_SONGS, songSelectEl);
+        songSelectEl.selectedIndex = 0;
+        return;
+      }
+      const normalizedQuery = normalize(query);
+      const filtered = ALL_SONGS.filter(song => {
+        const songText = normalize(`${song.n} - ${song.title}`);
+        return songText.includes(normalizedQuery);
+      });
+      renderOptions(filtered, songSelectEl);
+      if (filtered.length > 0) {
+        songSelectEl.selectedIndex = 0;
+      }
+      clearSearchBtn.classList.toggle('visible', query.length > 0);
+    }
+
+    searchBox.addEventListener('input', (e) => filterAndRenderSongs(e.target.value));
+    searchBox.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addToRunlist();
+      }
     });
+
+    addBtn.addEventListener('click', addToRunlist);
+    removeBtn.addEventListener('click', removeFromRunlist);
+    loadBtn.addEventListener('click', loadSelection);
+    clearRunlistBtn.addEventListener('click', () => {
+      runlist = [];
+      renderRunlist();
+      saveRunlist();
+    });
+    clearSearchBtn.addEventListener('click', () => {
+      searchBox.value = '';
+      filterAndRenderSongs('');
+      searchBox.focus();
+      clearSearchBtn.classList.remove('visible');
+    });
+
+    songSelectEl.addEventListener('dblclick', addToRunlist);
+    runlistEl.addEventListener('click', (e) => {
+      const li = e.target.closest('li');
+      if (!li) return;
+      runlistEl.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+      li.classList.add('selected');
+    });
+    runlistEl.addEventListener('dblclick', removeFromRunlist);
+
+    // Drag and Drop for Runlist
+    runlistEl.addEventListener('dragstart', (e) => {
+      const li = e.target.closest('li');
+      if (!li) return;
+      draggedItem = li;
+      li.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', li.dataset.index);
+    });
+
+    runlistEl.addEventListener('dragend', (e) => {
+      if (draggedItem) {
+        draggedItem.classList.remove('dragging');
+        draggedItem = null;
+      }
+      runlistEl.querySelectorAll('li').forEach(l => l.classList.remove('drag-over-top', 'drag-over-bottom'));
+    });
+
+    runlistEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const li = e.target.closest('li');
+      if (!li || li === draggedItem) return;
+      const rect = li.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      if (e.clientY < midpoint) {
+        li.classList.remove('drag-over-bottom');
+        li.classList.add('drag-over-top');
+      } else {
+        li.classList.remove('drag-over-top');
+        li.classList.add('drag-over-bottom');
+      }
+    });
+
+    runlistEl.addEventListener('dragleave', (e) => {
+      const li = e.target.closest('li');
+      if (li) {
+        li.classList.remove('drag-over-top', 'drag-over-bottom');
+      }
+    });
+
+    runlistEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const li = e.target.closest('li');
+      if (!li || !draggedItem) return;
+      const draggedIndex = parseInt(draggedItem.dataset.index);
+      const targetIndex = parseInt(li.dataset.index);
+      li.classList.remove('drag-over-top', 'drag-over-bottom');
+      const rect = li.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      let insertIndex = e.clientY < midpoint ? targetIndex : targetIndex + 1;
+      if (draggedIndex < targetIndex && insertIndex > draggedIndex) {
+        insertIndex--;
+      }
+      const draggedSong = runlist.splice(draggedIndex, 1)[0];
+      runlist.splice(insertIndex, 0, draggedSong);
+      renderRunlist();
+      saveRunlist();
+    });
+
     document.addEventListener('DOMContentLoaded', loadHymnList);
   </script>
 </body>
