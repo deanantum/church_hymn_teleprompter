@@ -2,14 +2,22 @@
   --lyric-bg-color: #ffffff;
   --lyric-highlight-color: #fef08a;
   --transition-speed: 0.5s;
+  --underline-glow-color: #f59e0b;
+  --dot-color: #d81b60; /* Default color for the dot */
+  /* --- Default Font Colors --- */
+  --lyric-font-color-active-English: #000000;
+  --lyric-font-color-inactive-English: #4b5563;
+  --lyric-font-color-active-Spanish: #1e88e5;
+  --lyric-font-color-inactive-Spanish: #8ab4f8;
+  --lyric-font-color-active-ASL: #d81b60;
+  --lyric-font-color-inactive-ASL: #f48fb1;
+  --lyric-font-color-active-Custom: #000000;
+  --lyric-font-color-inactive-Custom: #4b5563;
+  /* Font Sizes */
   --lyric-font-size-English: 3rem;
-  --lyric-font-color-English: #111827;
   --lyric-font-size-Spanish: 3rem;
-  --lyric-font-color-Spanish: #1e88e5;
   --lyric-font-size-ASL: 3rem;
-  --lyric-font-color-ASL: #d81b60;
   --lyric-font-size-Custom: 3rem;
-  --lyric-font-color-Custom: #111827;
 }
 * {
   box-sizing: border-box;
@@ -164,9 +172,9 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   margin: 0.1rem 0;
   text-align: center;
   flex-shrink: 0;
-  transition: background-color var(--transition-speed);
   font-weight: normal;
   width: 100%;
+  transition: color 0.2s ease-in-out, background-color var(--transition-speed);
 }
 .lyric-line-group.is-current {
   background-color: var(--lyric-highlight-color);
@@ -175,10 +183,18 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   display: flex;
   width: 100%;
 }
-.lyric-line-English { font-size: var(--lyric-font-size-English); color: var(--lyric-font-color-English); }
-.lyric-line-Spanish { font-size: var(--lyric-font-size-Spanish); color: var(--lyric-font-color-Spanish); }
-.lyric-line-ASL { font-size: var(--lyric-font-size-ASL); color: var(--lyric-font-color-ASL); }
-.lyric-line-Custom { font-size: var(--lyric-font-size-Custom); color: var(--lyric-font-color-Custom); }
+.lyric-line-English { font-size: var(--lyric-font-size-English); color: var(--lyric-font-color-inactive-English); }
+.lyric-line-group.is-current .lyric-line-English { color: var(--lyric-font-color-active-English); }
+
+.lyric-line-Spanish { font-size: var(--lyric-font-size-Spanish); color: var(--lyric-font-color-inactive-Spanish); }
+.lyric-line-group.is-current .lyric-line-Spanish { color: var(--lyric-font-color-active-Spanish); }
+
+.lyric-line-ASL { font-size: var(--lyric-font-size-ASL); color: var(--lyric-font-color-inactive-ASL); text-align: center; }
+.lyric-line-group.is-current .lyric-line-ASL { color: var(--lyric-font-color-active-ASL); }
+
+.lyric-line-Custom { font-size: var(--lyric-font-size-Custom); color: var(--lyric-font-color-inactive-Custom); text-align: center; }
+.lyric-line-group.is-current .lyric-line-Custom { color: var(--lyric-font-color-active-Custom); }
+
 .lyrics-viewport.intro-active .lyric-line-group.is-current {
   background-color: transparent;
 }
@@ -190,8 +206,10 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   transform: translate(-50%, -50%);
   width: 100%; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  font-weight: 700; color: #d1d5db; z-index: 10;
-  opacity: 0; transition: opacity 0.3s ease-in-out;
+  font-weight: 700; 
+  color: var(--countdown-color);
+  z-index: 10;
+  opacity: 0; transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
   pointer-events: none;
 }
 #countdown-display.is-visible { opacity: 1; }
@@ -244,24 +262,109 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   background: #ADD8E6;
   cursor: pointer; font-size: 1rem; font-weight: 500;
 }
+
+
+
+/* Parent containers */
 .lyric-order-controls {
-  margin-bottom: 1.5rem;
+  margin: 0;
+  padding: 0;
 }
+
+.lyric-order-grid {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+  transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
+}
+
 .language-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .language-item {
-  padding: 0.5rem;
+  padding: 0.2rem 0.75rem 0.2rem 1rem; /* Left padding for border-to-checkbox */
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   cursor: move;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
+
+.language-item .checkbox-group {
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  gap: 0.5rem; /* This adds the space */
+}
+
+.language-item .checkbox-group input[type="checkbox"] {
+  flex-shrink: 0;
+  padding: 0;
+  /* Conflicting margin rules removed */
+  width: 1.2em;
+  height: 1.2em;
+  cursor: pointer;
+}
+
+.language-item .checkbox-group label {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  text-align: left;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
 .language-item:hover {
   background-color: #f3f4f6;
 }
+
+/* Reduce controls-panel padding to minimize visual gap */
+.controls-panel {
+  padding: 1.5rem 0.5rem;
+}
+
+/* Consolidated global checkbox-group styles */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin: 0;
+  padding: 0;
+  width: 1.2em;
+  height: 1.2em;
+  cursor: pointer;
+}
+
+/* Add gap above Manual Control Override checkbox */
+#playback-controls .row .checkbox-group {
+  margin-top: 0.75rem; /* Keep spacing above checkbox */
+}
+
+/* Other relevant styles */
 .line-count-display {
   padding: 8px 10px;
   box-sizing: border-box;
@@ -269,28 +372,40 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   line-height: 1.4;
   min-height: 40px;
 }
+
 .line-count-display strong {
   font-weight: 700;
 }
+
 .count-item {
   font-size: 0.9rem;
   color: #4b5563;
 }
+
 .count-item strong {
   color: #111827;
 }
+
 .count-item strong.count-mismatch {
   color: #b91c1c;
 }
-#playback-controls { display: block; }
-.controls-panel .row { margin-bottom: 1rem; }
-.controls-panel label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-grow: 1;
+
+#playback-controls {
+  display: block;
 }
+
+.controls-panel .row {
+  margin-bottom: 1rem;
+}
+
+.controls-panel label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+
+
 .checkbox-group label {
   margin-bottom: 0;
   font-weight: 600;
@@ -407,7 +522,13 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   gap: 1rem;
   align-items: center;
 }
+.control-row.color-picker-row {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
 .control-subgroup { display: flex; flex-direction: column; }
+.dual-color-picker { display: flex; gap: 0.5rem; }
+.dual-color-picker .control-subgroup { flex: 1; }
 .full-width-btn { width: 100%; }
 .action-buttons {
   display: flex;
@@ -470,4 +591,211 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
 input[type="color"].active-color-input {
     border: 2px solid #2b6cb0;
     box-shadow: 0 0 5px rgba(43, 108, 176, 0.5);
+}
+
+/* --- Underline Glow Styles --- */
+#toggleDotLabel, #toggleUnderlineLabel {
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 2px 6px;
+  background-color: #f9fafb;
+  text-align: center;
+}
+#toggleDotLabel:hover, #toggleUnderlineLabel:hover {
+    background-color: #f3f4f6;
+}
+#toggleDotLabel.disabled span, #toggleUnderlineLabel.disabled span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.beat-segment {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+.beat-separator {
+  position: relative;
+  top: -0.05em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--dot-color);
+  opacity: 0.8;
+  display: inline-block;
+}
+.lyrics-viewport.dots-hidden .beat-separator {
+    display: none;
+}
+.beat-segment::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--underline-glow-color);
+  box-shadow: 0 0 8px var(--underline-glow-color);
+  border-radius: 2px;
+  transform: scaleX(0);
+  opacity: 0;
+  transform-origin: center;
+}
+.beat-segment.is-glowing::after {
+  animation: glow-underline var(--beat-duration) ease-in-out;
+}
+.lyrics-viewport.underline-hidden .beat-segment.is-glowing::after {
+    animation: none;
+    display: none;
+}
+@keyframes glow-underline {
+  0% {
+    transform: scaleX(0.2);
+    opacity: 0;
+  }
+  10% {
+    transform: scaleX(1);
+    opacity: 1;
+    box-shadow: 0 0 12px var(--underline-glow-color);
+  }
+  90% {
+    transform: scaleX(1);
+    opacity: 1;
+    box-shadow: 0 0 12px var(--underline-glow-color);
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+/* --- Styles for Runlist in song.html --- */
+#runlist-panel {
+  margin-bottom: 1.5rem; /* Add some spacing */
+}
+
+#runlist-display {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 0.5rem; /* Space below the h2 */
+  max-height: 150px; /* Adjust height as needed */
+  overflow-y: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+#runlist-display li {
+  padding: 0.6rem 0.7rem;
+  cursor: pointer; /* Change from 'grab' to 'pointer' */
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#runlist-display li:last-child {
+  border-bottom: none;
+}
+
+#runlist-display li:hover {
+   background-color: #f3f4f6; /* Add a hover effect */
+}
+
+/* Style for the currently active/selected song */
+#runlist-display li.active { /* Using .active as per song.js */
+  background: #dbeafe; /* Light blue background */
+  font-weight: 600; /* Bold text */
+}
+
+/* Add these new rules to your style.css file */
+/* --- Custom Color Picker Styles --- */
+
+/* --- Custom Color Picker Styles --- */
+
+.custom-color-picker {
+  position: relative; /* Required for the hidden input positioning */
+  display: flex; /* <-- THIS IS THE KEY for side-by-side layout */
+  align-items: center; /* Vertically aligns items in the flex container */
+  gap: 0.5rem; /* Space between color bar and icon */
+  height: 35px; /* Overall height */
+  border: 1px solid #d1d5db; /* Outer border for the whole component */
+  border-radius: 6px;
+  padding: 0 4px; /* A little internal padding */
+}
+
+.color-display {
+  flex-grow: 1; /* Makes the color bar fill available horizontal space */
+  height: 25px; /* Height of the color bar itself */
+  border-radius: 4px;
+  /* cursor: pointer; <-- Removed, click doesn't open picker */
+  border: 1px solid #000; /* Thin black border around the color */
+  transition: box-shadow 0.2s ease, outline 0.2s ease;
+}
+
+.edit-color-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #4b5563;
+  width: 25px; /* Explicit width for the button */
+  height: 25px; /* Explicit height for the button */
+  display: flex; /* Helps center the icon if needed */
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.edit-color-btn:hover {
+  color: #111827;
+}
+
+.color-input-hidden {
+  /* Hides the native input visually but keeps it functional */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  opacity: 0;
+  /* Optional: Make it completely inaccessible to pointer events */
+  pointer-events: none;
+}
+
+/* Style for when the color bar is active (for jewel tones) */
+.color-display.active-color-input {
+  box-shadow: 0 0 5px rgba(43, 108, 176, 0.5);
+  outline: 2px solid #2b6cb0;
+  outline-offset: 1px;
+}
+
+/* --- Jewel Tone Palette Visibility Control --- */
+
+#jewel-tone-palette {
+  /* Style for when it's VISIBLE */
+  display: flex; /* Or keep your existing display style */
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 0.5rem; /* Your existing padding */
+  max-height: 200px; /* Adjust as needed, large enough to show all swatches */
+  opacity: 1;
+  overflow: hidden; /* Important for max-height transition */
+  transition: max-height 0.3s ease-out, opacity 0.2s ease-out, padding-top 0.3s ease-out;
+  margin-top: 0.5rem; /* Add some space above */
+}
+
+#jewel-tone-palette.is-hidden {
+  /* Style for when it's HIDDEN */
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0; /* Remove padding when hidden */
+  margin-top: 0; /* Remove space above when hidden */
+  /* pointer-events: none; /* Optional: Prevent accidental interaction */
 }
