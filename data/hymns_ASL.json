@@ -2,6 +2,8 @@
   "1": {
     "title": "The Morning Breaks",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 15,
     "line_time": 0,
     "line_timings": [],
@@ -36,6 +38,8 @@
   "2": {
     "title": "The Spirit of God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 19,
     "line_time": 0,
     "line_timings": [],
@@ -77,6 +81,8 @@
   "3": {
     "title": "Now Let Us Rejoice",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 14,
     "line_time": 0,
     "line_timings": [],
@@ -110,6 +116,8 @@
   "4": {
     "title": "Truth Eternal",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -131,6 +139,8 @@
   "5": {
     "title": "High on the Mountain Top",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 15,
     "line_time": 0,
     "line_timings": [],
@@ -172,6 +182,8 @@
   "6": {
     "title": "Redeemer of Israel",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 17,
     "line_time": 0,
     "line_timings": [],
@@ -205,6 +217,8 @@
   "7": {
     "title": "Israel, Israel, God Is Calling",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 12,
     "line_time": 0,
     "line_timings": [],
@@ -238,6 +252,8 @@
   "8": {
     "title": "Awake and Arise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 19,
     "line_time": 0,
     "line_timings": [],
@@ -271,6 +287,8 @@
   "9": {
     "title": "Come, Rejoice",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 20,
     "line_time": 0,
     "line_timings": [],
@@ -296,6 +314,8 @@
   "10": {
     "title": "Come, Sing to the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
       "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -387,6 +407,8 @@
   "13": {
     "title": "An Angel from on High",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 15,
     "line_time": 0,
     "line_timings": [],
@@ -436,6 +458,8 @@
   "14": {
     "title": "Sweet Is the Peace the Gospel Brings",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 24,
     "line_time": 6.5,
 "line_timings": [],
@@ -473,6 +497,8 @@
   "15": {
     "title": "I Saw a Mighty Angel Fly",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 9,
     "line_time": 0,
     "line_timings": [],
@@ -506,6 +532,8 @@
   "16": {
     "title": "What Glorious Scenes Mine Eyes Behold",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 19,
     "line_time": 0,
     "line_timings": [],
@@ -535,6 +563,8 @@
   "17": {
     "title": "Awake, Ye Saints of God, Awake!",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 16,
     "line_time": 0,
     "line_timings": [],
@@ -556,6 +586,8 @@
   "18": {
     "title": "The Voice of God Again Is Heard",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -581,39 +613,43 @@
   "19": {
     "title": "We Thank Thee, O God, for a Prophet",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      "1: We thank thee, O God, for a prophet",
-      "To guide us in these latter days.",
-      "We thank thee for sending the gospel",
-      "To lighten our minds with its rays.",
-      "We thank thee for every blessing",
-      "Bestowed by thy bounteiful hand.",
-      "We feel it a pleasure to serve thee",
-      "And love to obey thy command.",
-      "2: When dark clouds of trouble hang o’er us",
-      "And threaten our peace to destroy,",
-      "There is hope smiling brightly before us,",
-      "And we know that deliv’rance is nigh.",
-      "We doubt not the Lord nor his goodness.",
-      "We’ve proved him in days that are past.",
-      "The wicked who fight against Zion",
-      "Will surely be smitten at last.",
-      "3: We’ll sing of his goodness and mercy.",
-      "We’ll praise him by day and by night,",
-      "Rejoice in his glorious gospel,",
-      "And bask in its life-giving light.",
-      "Thus on to eternal perfection",
-      "The honest and faithful will go,",
-      "While they who reject this glad message",
-      "Shall never such happiness know."
+		"lines": [
+			"1: Today|Day|(cl:)Mountain|God",
+			"^Place-in|Prophet|(2h)Come-on|(cl:4)Look-at-him",
+			"|Flock-to||(2h)Express",
+			"^Thank|God|Heart, Kind|^Pour-down",
+			"A-Blessing|Covenant|Path|",
+			"Group-travel-up||Learn|Learn",
+			"Gospel|Face-bright|Happy|^Serve",
+			"^Inform-me|Motivate|Obey|^Gratitude",
+			"2: Group-travel-up|Look-forward |(cl:)Mountain|Temple-peak",
+			"|Group-reach-peak||Look-forward",
+			"Lord|^Group-to-heaven||Home",
+			"Safe||Grip-unity|Express",
+			"^Thank|God|Heart|Kind",
+			"Pour-down|Love|Support|No-matter",
+			"<Cloud||<!Dark!|(2h)Pull-me-down",
+			"<(2h)Set-aside|Group-travel-up|!Faith!|",
+			"3: ^Straight|Progress|Gospel|^(2h)Include-me",
+			"Face-bright|Sing|Yay|Yay",
+			"^(2h)HIM|All-day |All-night|Yay",
+			"Yay|Group-travel-up|(cl:)Mountain|Group-reach-peak",
+			"!Pah!|Face-vibe|Joy|Grip-unity",
+			"^Express|^Gratitude|God|Heart",
+			"Kind|^Pour-down|Water|Pour-spill-out",
+			"Group-goes-up|Exalt|Yay|Yay"
     ]
   },
   "20": {
     "title": "God of Power, God of Right",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -704,6 +740,8 @@
   "23": {
     "title": "We Ever Pray for Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -729,6 +767,8 @@
   "24": {
     "title": "God Bless Our Prophet Dear",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -820,6 +860,8 @@
   "27": {
     "title": "Praise to the Man",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -861,6 +903,8 @@
   "28": {
     "title": "Saints, Behold How Great Jehovah",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -878,6 +922,8 @@
   "29": {
     "title": "A Poor Wayfaring Man of Grief",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -935,6 +981,8 @@
   "30": {
     "title": "Come, Come, Ye Saints",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -976,35 +1024,35 @@
   "31": {
     "title": "O God, Our Help in Ages Past",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
   "lines": [
-      "1: O God, our help in ages past,",
-      "Our hope for years to come,",
-      "Our shelter from the stormy blast,",
-      "And our eternal home!",
-      "2: Before the hills in order stood",
-      "Or earth received her frame,",
-      "From everlasting thou art God,",
-      "To endless years the same.",
-      "3: A thousand ages in thy sight",
-      "Are like an evening gone,",
-      "Short as the watch that ends the night",
-      "Before the rising sun.",
-      "4: Time, like an ever-rolling stream,",
-      "Bears all its sons away;",
-      "They fly forgotten, as a dream",
-      "Dies at the opening day.",
-      "5: O God, our help in ages past,",
-      "Our hope for years to come,",
-      "Be thou our guard while life shall last",
-      "And our eternal home."
+      "1: God|Help|Since|",
+			"Moving-forward||Look-forward|",
+			"Heart-confuse|Head-cloud|Worry|God",
+			"Protect|Hand-on-Heart|Peace|",
+			"2: God|Same|Since|Moving-forward",
+			"Look-over||Protect|",
+			"Wow|^Thy|Power|Surround",
+			"Live|Secure|Continue|",
+			"3: God|chaos|Make-ball|Make-ball",
+			"Make-ball|Earth|Beauty|Dear",
+			"Area|Hill|River|Ocean",
+			"God|Eternity-back|Eternity-forward|",
+			"4: Past|Past|God|Help‑me",
+			"Future|Future|Look‑forward|",
+			"Guide||Through|",
+			"^Enter|Heaven|Shine|"
     ]
   },
   "32": {
     "title": "The Happy Day at Last Has Come",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1026,6 +1074,8 @@
   "33": {
     "title": "Our Mountain Home So Dear",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1056,6 +1106,8 @@
   "34": {
     "title": "O Ye Mountains High",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1086,6 +1138,8 @@
   "35": {
     "title": "For the Strength of the Hills",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1119,6 +1173,8 @@
   "36": {
     "title": "They, the Builders of the Nation",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1152,6 +1208,8 @@
   "37": {
     "title": "The Wintry Day, Descending to Its Close",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1177,6 +1235,8 @@
   "38": {
     "title": "Come, All Ye Saints of Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1202,6 +1262,8 @@
   "39": {
     "title": "O Saints of Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1219,6 +1281,8 @@
   "40": {
     "title": "Arise, O Glorious Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1244,6 +1308,8 @@
   "41": {
     "title": "Let Zion in Her Beauty Rise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1294,6 +1360,8 @@
   "43": {
     "title": "Zion Stands with Hills Surrounded",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 17,
     "line_time": 0,
     "line_timings": [],
@@ -1321,6 +1389,8 @@
   "44": {
     "title": "Beautiful Zion, Built Above",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1348,6 +1418,8 @@
   "45": {
     "title": "Lead Me into Life Eternal",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1365,6 +1437,8 @@
   "46": {
     "title": "Glorious Things of Thee Are Spoken",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1398,6 +1472,8 @@
   "47": {
     "title": "We Will Sing of Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1423,6 +1499,8 @@
   "48": {
     "title": "Glorious Things Are Sung of Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1448,6 +1526,8 @@
   "49": {
     "title": "Adam-ondi-Ahman",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1477,6 +1557,8 @@
   "50": {
     "title": "Come, Thou Glorious Day of Promise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1502,6 +1584,8 @@
   "51": {
     "title": "Sons of Michael, He Approaches",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1527,6 +1611,8 @@
   "52": {
     "title": "The Day Dawn Is Breaking",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1577,6 +1663,8 @@
   "54": {
     "title": "Behold, the Mountain of the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1598,6 +1686,8 @@
   "55": {
     "title": "Lo, the Mighty God Appearing!",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1631,6 +1721,8 @@
   "56": {
     "title": "Softly Beams the Sacred Dawning",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1681,6 +1773,8 @@
   "58": {
     "title": "Come, Ye Children of the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1706,6 +1800,8 @@
   "59": {
     "title": "Come, O Thou King of Kings",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1733,6 +1829,8 @@
   "60": {
     "title": "Battle Hymn of the Republic",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1766,6 +1864,8 @@
   "61": {
     "title": "Raise Your Voices to the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1791,6 +1891,8 @@
   "62": {
     "title": "All Creatures of Our God and King",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1828,6 +1930,8 @@
   "63": {
     "title": "Great King of Heaven",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1845,6 +1949,8 @@
   "64": {
     "title": "On This Day of Joy and Gladness",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1870,6 +1976,8 @@
   "65": {
     "title": "Come, All Ye Saints Who Dwell on Earth",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1895,6 +2003,8 @@
   "66": {
     "title": "Rejoice, the Lord Is King!",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1932,6 +2042,8 @@
   "67": {
     "title": "Glory to God on High",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -1969,6 +2081,8 @@
   "68": {
     "title": "A Mighty Fortress Is Our God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2014,6 +2128,8 @@
   "69": {
     "title": "All Glory, Laud, and Honor",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2047,6 +2163,8 @@
   "70": {
     "title": "Sing Praise to Him",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2072,6 +2190,8 @@
   "71": {
     "title": "With Songs of Praise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2097,6 +2217,8 @@
   "72": {
     "title": "Praise to the Lord, the Almighty",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2126,6 +2248,8 @@
   "73": {
     "title": "Praise the Lord with Heart and Voice",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2143,6 +2267,8 @@
   "74": {
     "title": "Praise Ye the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2168,6 +2294,8 @@
   "75": {
     "title": "In Hymns of Praise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2185,6 +2313,8 @@
   "76": {
     "title": "God of Our Fathers, We Come unto Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2206,6 +2336,8 @@
   "77": {
     "title": "Great Is the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2231,6 +2363,8 @@
   "78": {
     "title": "God of Our Fathers, Whose Almighty Hand",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2256,6 +2390,8 @@
   "79": {
     "title": "With All the Power of Heart and Tongue",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2277,6 +2413,8 @@
   "80": {
     "title": "God of Our Fathers, Known of Old",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2316,6 +2454,8 @@
   "81": {
     "title": "Press Forward, Saints",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2337,6 +2477,8 @@
   "82": {
     "title": "For All the Saints",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2362,6 +2504,8 @@
   "83": {
     "title": "Guide Us, O Thou Great Jehovah",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2385,6 +2529,8 @@
   "84": {
     "title": "Faith of Our Fathers",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2412,6 +2558,8 @@
   "85": {
     "title": "How Firm a Foundation",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2449,6 +2597,8 @@
   "86": {
     "title": "How Great Thou Art",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2490,6 +2640,8 @@
   "87": {
     "title": "God Is Love",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2511,6 +2663,8 @@
   "88": {
     "title": "Great God, Attend While Zion Sings",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2536,6 +2690,8 @@
   "89": {
     "title": "The Lord Is My Light",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2569,6 +2725,8 @@
   "90": {
     "title": "From All That Dwell below the Skies",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2586,6 +2744,8 @@
   "91": {
     "title": "Father, Thy Children to Thee Now Raise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2607,6 +2767,8 @@
   "92": {
     "title": "For the Beauty of the Earth",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2640,6 +2802,8 @@
   "93": {
     "title": "Prayer of Thanksgiving",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2665,6 +2829,8 @@
   "94": {
     "title": "Come, Ye Thankful People",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2706,6 +2872,8 @@
   "95": {
     "title": "Now Thank We All Our God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2739,6 +2907,8 @@
   "96": {
     "title": "Dearest Children, God Is Near You",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2766,6 +2936,8 @@
   "97": {
     "title": "Lead, Kindly Light",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2793,6 +2965,8 @@
   "98": {
     "title": "I Need Thee Every Hour",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2834,6 +3008,8 @@
   "99": {
     "title": "Nearer, Dear Savior, to Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2855,6 +3031,8 @@
   "100": {
     "title": "Nearer, My God, to Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2904,6 +3082,8 @@
   "101": {
     "title": "Guide Me to Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2929,6 +3109,8 @@
   "102": {
     "title": "Jesus, Lover of My Soul",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2954,6 +3136,8 @@
   "103": {
     "title": "Precious Savior, Dear Redeemer",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -2979,6 +3163,8 @@
   "104": {
     "title": "Jesus, Savior, Pilot Me",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3006,6 +3192,8 @@
   "105": {
     "title": "Master, the Tempest Is Raging",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3069,6 +3257,8 @@
   "106": {
     "title": "God Speed the Right",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3102,6 +3292,8 @@
   "107": {
     "title": "Lord, Accept Our True Devotion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3123,6 +3315,8 @@
   "108": {
     "title": "The Lord Is My Shepherd",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3152,6 +3346,8 @@
   "109": {
     "title": "The Lord My Pasture Will Prepare",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3179,6 +3375,8 @@
   "110": {
     "title": "Cast Thy Burden upon the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3192,6 +3390,8 @@
   "111": {
     "title": "Rock of Ages",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3225,6 +3425,8 @@
   "112": {
     "title": "Savior, Redeemer of My Soul",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3271,6 +3473,8 @@
   "114": {
     "title": "Come unto Him",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3296,6 +3500,8 @@
   "115": {
     "title": "Come, Ye Disconsolate",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3317,6 +3523,8 @@
   "116": {
     "title": "Come, Follow Me",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3343,6 +3551,8 @@
   "117": {
     "title": "Come unto Jesus",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3368,6 +3578,8 @@
   "118": {
     "title": "Ye Simple Souls Who Stray",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 32,
     "line_time": 0,
     "line_timings": [],
@@ -3401,6 +3613,8 @@
   "119": {
     "title": "Come, We That Love the Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3430,6 +3644,8 @@
   "120": {
     "title": "Lean on My Ample Arm",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3482,6 +3698,8 @@
   "122": {
     "title": "Though Deepening Trials",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3507,6 +3725,8 @@
   "123": {
     "title": "Oh, May My Soul Commune with Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3524,6 +3744,8 @@
   "124": {
     "title": "Be Still, My Soul",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3576,6 +3798,8 @@
   "126": {
     "title": "How Long, O Lord Most Holy and True",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3630,6 +3854,8 @@
   "128": {
     "title": "When Faith Endures",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3650,24 +3876,38 @@
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      "1: Where can I turn for peace?",
-      "Where is my solace",
-      "When other sources cease to make me whole?",
-      "When with a wounded heart, anger, or malice,",
-      "I draw myself apart, searching my soul?",
-      "2: Where, when my aching grows,",
-      "Where, when I languish,",
-      "Who, who can understand? He, only One.",
-      "He answers privately, reaches my reaching",
-      "In my Gethsemane, Savior and Friend.",
-      "3: Gentle the peace he finds for my beseeching.",
-      "Constant he is and kind, love without end."
-    ]
+		"lines": [
+				"1: (2h)YOU-ALL|Worry+|(Lh)Confront|(Rh)Confront",
+				"<?Comfort?|<?Comfort?|(2h)Empty-hand|(2h)There",
+				"<Interact|Support-me|Dissolve~|~",
+				">Connect|Disconnect|Dissolve~|~",
+				"(Rh)Offend-me|(Lh)Offend-me|(Rh)Disapoint|(Lh)Disappoint",
+				"(Rh)Angry(hold)|(Lh)Angry(hold)|Mix-emotion~|~",
+				"(2h)Stop|(cl:)1-back-away|Un-root~|~",
+				"Leave|Wonder|Analyze~|~",
+				"2: Grief|Hold-Heart|<Reach-Out|>Reach-Out",
+				"Weakness|Exhaust|<Beg|>Beg",
+				"<Help|<Help|>Support|>Support",
+				"<(Lh)Search|<(Lh)Search|>(Rh)Search|<(Rh)Search",
+				"<(Lh)Hand-out|<(Lh)Ignore-me|>(Rh)Hand-out|>(Rh)Ignore-me",
+			"(Rh)Think-head|(Lh)Think-heart|(Lh)Hand-on-heart|(Rh)Hand-on-heart",
+				"Where?|Peace|Calm|(Lh)Where?",
+				"^(Rh)One|^Only|^(2h)Understand~|~",
+				"3: >Prayer|^>Focus|>Inform-me~|~",
+				"^God|^>Savior|>Cherish|Love",
+				"(Rh)Area|(Lh)Alone(hold)|^(Rh)Ray-down(hold)|(Lh)Surround-1",
+				"Touch-heart|Satisfy|Calm~|~",
+				"<(Rh)Search-(Lh)There|>(Rh)Search-(Lh)There|>Pray~|~",
+				"^(2h)There|^Peace|^Offer-me|Hands-on-heart",
+				"^HE|^(Rh)Give-me|^(Lh)Give-me|Comfort",
+				"Sweet|Love|Continue~|~"
+			]
   },
   "130": {
     "title": "Be Thou Humble",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3693,6 +3933,8 @@
   "131": {
     "title": "More Holiness Give Me",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3726,6 +3968,8 @@
   "132": {
     "title": "God Is in His Holy Temple",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3751,6 +3995,8 @@
   "133": {
     "title": "Father in Heaven",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3768,6 +4014,8 @@
   "134": {
     "title": "I Believe in Christ",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3809,6 +4057,8 @@
   "135": {
     "title": "My Redeemer Lives",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3846,6 +4096,8 @@
   "136": {
     "title": "I Know That My Redeemer Lives",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3869,6 +4121,8 @@
   "137": {
     "title": "Testimony",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3894,6 +4148,8 @@
   "138": {
     "title": "Bless Our Fast, We Pray",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3915,6 +4171,8 @@
   "139": {
     "title": "In Fasting We Approach Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3968,6 +4226,8 @@
   "141": {
     "title": "Jesus, the Very Thought of Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -3993,6 +4253,8 @@
   "142": {
     "title": "Sweet Hour of Prayer",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4026,6 +4288,8 @@
   "143": {
     "title": "Let the Holy Spirit Guide",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4047,6 +4311,8 @@
   "144": {
     "title": "Secret Prayer",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4113,6 +4379,8 @@
   "146": {
     "title": "Gently Raise the Sacred Strain",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4140,6 +4408,8 @@
   "147": {
     "title": "Sweet Is the Work",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4169,6 +4439,8 @@
   "148": {
     "title": "Sabbath Day",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4186,6 +4458,8 @@
   "149": {
     "title": "As the Dew from Heaven Distilling",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4203,6 +4477,8 @@
   "150": {
     "title": "O Thou Kind and Gracious Father",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4220,6 +4496,8 @@
   "151": {
     "title": "We Meet, Dear Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4237,6 +4515,8 @@
   "152": {
     "title": "God Be with You Till We Meet Again",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4270,6 +4550,8 @@
   "153": {
     "title": "Lord, We Ask Thee Ere We Part",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4287,6 +4569,8 @@
   "154": {
     "title": "Father, This Hour Has Been One of Joy",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4312,6 +4596,8 @@
   "155": {
     "title": "We Have Partaken of Thy Love",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4329,6 +4615,8 @@
   "156": {
     "title": "Sing We Now at Parting",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4354,6 +4642,8 @@
   "157": {
     "title": "Thy Spirit, Lord, Has Stirred Our Souls",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4371,6 +4661,8 @@
   "158": {
     "title": "Before Thee, Lord, I Bow My Head",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4388,6 +4680,8 @@
   "159": {
     "title": "Now the Day Is Over",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4413,6 +4707,8 @@
   "160": {
     "title": "Softly Now the Light of Day",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4434,6 +4730,8 @@
   "161": {
     "title": "The Lord Be with Us",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4455,6 +4753,8 @@
   "162": {
     "title": "Lord, We Come before Thee Now",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4479,6 +4779,8 @@
   "163": {
     "title": "Lord, Dismiss Us with Thy Blessing",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4500,6 +4802,8 @@
   "164": {
     "title": "Great God, to Thee My Evening Song",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4564,6 +4868,8 @@
   "166": {
     "title": "Abide with Me!",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4593,6 +4899,8 @@
   "167": {
     "title": "Come, Let Us Sing an Evening Hymn",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4610,6 +4918,8 @@
   "168": {
     "title": "As the Shadows Fall",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4627,6 +4937,8 @@
   "169": {
     "title": "As Now We Take the Sacrament",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4644,6 +4956,8 @@
   "170": {
     "title": "God, Our Father, Hear Us Pray",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4661,6 +4975,8 @@
   "171": {
     "title": "With Humble Heart",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4678,6 +4994,8 @@
   "172": {
     "title": "In Humility, Our Savior",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4703,6 +5021,8 @@
   "173": {
     "title": "While of These Emblems We Partake",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4732,6 +5052,8 @@
   "174": {
     "title": "While of These Emblems We Partake",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4761,6 +5083,8 @@
   "175": {
     "title": "O God, the Eternal Father",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4820,6 +5144,8 @@
   "178": {
     "title": "O Lord of Hosts",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4837,6 +5163,8 @@
   "179": {
     "title": "Again, Our Dear Redeeming Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4854,6 +5182,8 @@
   "180": {
     "title": "Father in Heaven, We Do Believe",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4871,21 +5201,37 @@
   "181": {
     "title": "Jesus of Nazareth, Savior and King",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      "1: Jesus of Nazareth, Savior and King,",
-      "Triumphant over death, life thou didst bring,",
-      "Leaving thy throne above, thy throne above,",
-      "To suffer, bleed, and die, all for our love.",
-      "All for our love.",
-      "2: Though in a manger laid, a lowly birth,",
-      "Thou art the God of heav’n, the Lord of earth.",
-      "Thou art the great I Am, the great I Am,",
-      "The Christ, the Son of God, the Paschal Lamb,",
-      "The Paschal Lamb."
-    ]
+		"lines": [
+				"1: (cl:)Row|(cl:)Row|Congregation|Think-twiddle",
+				">Heaven|>Jesus|(Rh)Responsible|(Lh)Responsible",
+				"Accept|Willing|VLeave|Here",
+				"<Teach|>Serve|Social|",
+				"Death|Resurrect|Celebrate|",
+				">(cl:4)Look|Hope|Inspire|",
+				"Heaven|^(1h)There|Jesus|",
+				"(cl:4)Crown|Angels|^(cl:4)Surround |(cl:4)Bow",
+				"2: (cl):Row|Bow-Head|Bread|Bless",
+				"Handout|Handout|Partake|Open-heart",
+				"^Interact|^Give-me|Peace|",
+				"Think-twiddle|Pity|Jesus|",
+				">Hit, >Hit|>Mock, >Mock|>Pain|>Pain",
+				">Hill|<Cross|>Shoulder-Drag|",
+				">Nail-Palm|>Nail-Palm|Hands-out|(cl:t)Cross",
+				"Think-twiddle|(cl:)Row|Quietly|",
+				"3: (cl:)Row|Bowhead|Water |Bless",
+				"Handout|Handout|Partake|Open-heart",
+				"^Focus|Heart-offer|Worship|",
+				"^HIM|^Praise|^Applause|",
+				"^(Rh)Inform-me|^(Lh)Inform-me|Inspire|Lead",
+				"Future|Success|Celebrate|Celebrate",
+				"Buried|Resurrect|(cl:V)Ascend|Heaven",
+				"^Glory|^There|^(Rh)(cl:1)Person-in-heaven|^(Lh)(cl:1)Meet"
+			]
   },
   "182": {
     "title": "We'll Sing All Hail to Jesus' Name",
@@ -4907,6 +5253,8 @@
   "183": {
     "title": "In Remembrance of Thy Suffering",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4924,6 +5272,8 @@
   "184": {
     "title": "Upon the Cross of Calvary",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4949,6 +5299,8 @@
   "185": {
     "title": "Reverently and Meekly Now",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4966,6 +5318,8 @@
   "186": {
     "title": "Again We Meet around the Board",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -4983,6 +5337,8 @@
   "187": {
     "title": "God Loved Us, So He Sent His Son",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5004,6 +5360,8 @@
   "188": {
     "title": "Thy Will, O Lord, Be Done",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5021,6 +5379,8 @@
   "189": {
     "title": "O Thou, Before the World Began",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5038,6 +5398,8 @@
   "190": {
     "title": "In Memory of the Crucified",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5055,6 +5417,8 @@
   "191": {
     "title": "Behold the Great Redeemer Die",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5076,6 +5440,8 @@
   "192": {
     "title": "He Died! The Great Redeemer Died",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5093,6 +5459,8 @@
   "193": {
     "title": "I Stand All Amazed",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5123,6 +5491,8 @@
   "194": {
     "title": "There Is a Green Hill Far Away",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5152,6 +5522,8 @@
   "195": {
     "title": "How Great the Wisdom and the Love",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5181,6 +5553,8 @@
   "196": {
     "title": "Jesus, Once of Humble Birth",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5202,6 +5576,8 @@
   "197": {
     "title": "O Savior, Thou Who Wearest a Crown",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5223,6 +5599,8 @@
   "198": {
     "title": "That Easter Morn",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5240,6 +5618,8 @@
   "199": {
     "title": "He Is Risen!",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5267,6 +5647,8 @@
   "200": {
     "title": "Christ the Lord Is Risen Today",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5308,6 +5690,8 @@
   "201": {
     "title": "Joy to the World",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5341,6 +5725,8 @@
   "202": {
     "title": "Oh, Come, All Ye Faithful",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5371,6 +5757,8 @@
   "203": {
     "title": "Angels We Have Heard on High",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5404,6 +5792,8 @@
   "204": {
     "title": "Silent Night",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5431,6 +5821,8 @@
   "205": {
     "title": "Once in Royal David's City",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5458,6 +5850,8 @@
   "206": {
     "title": "Away in a Manger",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5479,6 +5873,8 @@
   "207": {
     "title": "It Came upon the Midnight Clear",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5512,6 +5908,8 @@
   "208": {
     "title": "O Little Town of Bethlehem",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5553,6 +5951,8 @@
   "209": {
     "title": "Hark! The Herald Angels Sing",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5592,6 +5992,8 @@
   "210": {
     "title": "With Wondering Awe",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5619,6 +6021,8 @@
   "211": {
     "title": "While Shepherds Watched Their Flocks",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5691,6 +6095,8 @@
   "213": {
     "title": "The First Noel",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5724,6 +6130,8 @@
   "214": {
     "title": "I Heard the Bells on Christmas Day",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5749,6 +6157,8 @@
   "215": {
     "title": "Ring Out, Wild Bells",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5782,6 +6192,8 @@
   "216": {
     "title": "We Are Sowing",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5807,6 +6219,8 @@
   "217": {
     "title": "Come, Let Us Anew",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5837,6 +6251,8 @@
   "218": {
     "title": "We Give Thee But Thine Own",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5866,6 +6282,8 @@
   "219": {
     "title": "Because I Have Been Given Much",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5896,6 +6314,8 @@
   "220": {
     "title": "Lord, I Would Follow Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5929,6 +6349,8 @@
   "221": {
     "title": "Dear to the Heart of the Shepherd",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -5974,6 +6396,8 @@
   "222": {
     "title": "Hear Thou Our Hymn, O Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6024,6 +6448,8 @@
   "224": {
     "title": "I Have Work Enough to Do",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6045,6 +6471,8 @@
   "225": {
     "title": "We Are Marching On to Glory",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6062,6 +6490,8 @@
   "226": {
     "title": "Improve the Shining Moments",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6083,6 +6513,8 @@
   "227": {
     "title": "There Is Sunshine in My Soul Today",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6124,6 +6556,8 @@
   "228": {
     "title": "You Can Make the Pathway Bright",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6157,6 +6591,8 @@
   "229": {
     "title": "Today, While the Sun Shines",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6174,6 +6610,8 @@
   "230": {
     "title": "Scatter Sunshine",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6207,6 +6645,8 @@
   "231": {
     "title": "Father, Cheer Our Souls Tonight",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6232,6 +6672,8 @@
   "232": {
     "title": "Let Us Oft Speak Kind Words",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6265,6 +6707,8 @@
   "233": {
     "title": "Nay, Speak No Ill",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6298,6 +6742,8 @@
   "234": {
     "title": "Jesus, Mighty King in Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6319,6 +6765,8 @@
   "235": {
     "title": "Should You Feel Inclined to Censure",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6344,6 +6792,8 @@
   "236": {
     "title": "Lord, Accept into Thy Kingdom",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6377,6 +6827,8 @@
   "237": {
     "title": "Do What Is Right",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6410,6 +6862,8 @@
   "238": {
     "title": "Behold Thy Sons and Daughters, Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6435,6 +6889,8 @@
   "239": {
     "title": "Choose the Right",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6468,6 +6924,8 @@
   "240": {
     "title": "Know This, That Every Soul Is Free",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6493,6 +6951,8 @@
   "241": {
     "title": "Count Your Blessings",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6534,6 +6994,8 @@
   "242": {
     "title": "Praise God, from Whom All Blessings Flow",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6547,6 +7009,8 @@
   "243": {
     "title": "Let Us All Press On",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6580,6 +7044,8 @@
   "244": {
     "title": "Come Along, Come Along",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6613,6 +7079,8 @@
   "245": {
     "title": "This House We Dedicate to Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6634,6 +7102,8 @@
   "246": {
     "title": "Onward, Christian Soldiers",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6691,6 +7161,8 @@
   "247": {
     "title": "We Love Thy House, O God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6712,6 +7184,8 @@
   "248": {
     "title": "Up, Awake, Ye Defenders of Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6757,6 +7231,8 @@
   "249": {
     "title": "Called to Serve",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6784,6 +7260,8 @@
   "250": {
     "title": "We Are All Enlisted",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6829,6 +7307,8 @@
   "251": {
     "title": "Behold! A Royal Army",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6862,6 +7342,8 @@
   "252": {
     "title": "Put Your Shoulder to the Wheel",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6895,6 +7377,8 @@
   "253": {
     "title": "Like Ten Thousand Legions Marching",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6928,6 +7412,8 @@
   "254": {
     "title": "True to the Faith",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -6953,6 +7439,8 @@
   "255": {
     "title": "Carry On",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7011,6 +7499,8 @@
   "257": {
     "title": "Rejoice! A Glorious Sound Is Heard",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7032,6 +7522,8 @@
   "258": {
     "title": "O Thou Rock of Our Salvation",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7059,6 +7551,8 @@
   "259": {
     "title": "Hope of Israel",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7121,6 +7615,8 @@
   "261": {
     "title": "Thy Servants Are Prepared",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7142,6 +7638,8 @@
   "262": {
     "title": "Go, Ye Messengers of Glory",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7169,6 +7667,8 @@
   "263": {
     "title": "Go Forth with Faith",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7194,6 +7694,8 @@
   "264": {
     "title": "Hark, All Ye Nations!",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7217,6 +7719,8 @@
   "265": {
     "title": "Arise, O God, and Shine",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7238,6 +7742,8 @@
   "266": {
     "title": "The Time Is Far Spent",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7259,6 +7765,8 @@
   "267": {
     "title": "How Wondrous and Great",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7284,6 +7792,8 @@
   "268": {
     "title": "Come, All Whose Souls Are Lighted",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7309,6 +7819,8 @@
   "269": {
     "title": "Jehovah, Lord of Heaven and Earth",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7375,6 +7887,8 @@
   "271": {
     "title": "Oh, Holy Words of Truth and Love",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7445,6 +7959,8 @@
   "273": {
     "title": "Truth Reflects upon Our Senses",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7486,6 +8002,8 @@
   "274": {
     "title": "The Iron Rod",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7527,6 +8045,8 @@
   "275": {
     "title": "Men Are That They Might Have Joy",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7544,6 +8064,8 @@
   "276": {
     "title": "Come Away to the Sunday School",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7577,6 +8099,8 @@
   "277": {
     "title": "As I Search the Holy Scriptures",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7610,6 +8134,8 @@
   "278": {
     "title": "Thanks for the Sabbath School",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7631,6 +8157,8 @@
   "279": {
     "title": "Thy Holy Word",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7652,6 +8180,8 @@
   "280": {
     "title": "Welcome, Welcome, Sabbath Morning",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7693,6 +8223,8 @@
   "281": {
     "title": "Help Me Teach with Inspiration",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7722,6 +8254,8 @@
   "282": {
     "title": "We Meet Again in Sabbath School",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7743,6 +8277,8 @@
   "283": {
     "title": "The Glorious Gospel Light Has Shone",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7768,6 +8304,8 @@
   "284": {
     "title": "If You Could Hie to Kolob",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7817,6 +8355,8 @@
   "285": {
     "title": "God Moves in a Mysterious Way",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7850,6 +8390,8 @@
   "286": {
     "title": "Oh, What Songs of the Heart",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7891,6 +8433,8 @@
   "287": {
     "title": "Rise, Ye Saints, and Temples Enter",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7924,6 +8468,8 @@
   "288": {
     "title": "How Beautiful Thy Temples, Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7949,6 +8495,8 @@
   "289": {
     "title": "Holy Temples on Mount Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -7982,6 +8530,8 @@
   "290": {
     "title": "Rejoice, Ye Saints of Latter Days",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8003,6 +8553,8 @@
   "291": {
     "title": "Turn Your Hearts",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8032,6 +8584,8 @@
   "292": {
     "title": "O My Father",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8073,6 +8627,8 @@
   "293": {
     "title": "Each Life That Touches Ours for Good",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8098,6 +8654,8 @@
   "294": {
     "title": "Love at Home",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8140,6 +8698,8 @@
   "295": {
     "title": "O Divine Redeemer",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8166,6 +8726,8 @@
   "296": {
     "title": "Our Father, by Whose Name",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8196,6 +8758,8 @@
   "297": {
     "title": "From Homes of Saints Glad Songs Arise",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8217,6 +8781,8 @@
   "298": {
     "title": "Home Can Be a Heaven on Earth",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8242,6 +8808,8 @@
   "299": {
     "title": "Children of Our Heavenly Father",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8263,6 +8831,8 @@
   "300": {
     "title": "Families Can Be Together Forever",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8288,6 +8858,8 @@
   "301": {
     "title": "I Am a Child of God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8321,6 +8893,8 @@
   "302": {
     "title": "I Know My Father Lives",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8339,6 +8913,8 @@
   "303": {
     "title": "Keep the Commandments",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8358,6 +8934,8 @@
   "304": {
     "title": "Teach Me to Walk in the Light",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8379,6 +8957,8 @@
   "305": {
     "title": "The Light Divine",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8425,6 +9005,8 @@
   "307": {
     "title": "In Our Lovely Deseret",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8462,6 +9044,8 @@
   "308": {
     "title": "Love One Another",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8479,6 +9063,8 @@
   "309": {
     "title": "As Sisters in Zion",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8500,6 +9086,8 @@
   "310": {
     "title": "A Key Was Turned in Latter Days",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8521,6 +9109,8 @@
   "311": {
     "title": "We Meet Again as Sisters",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8542,6 +9132,8 @@
   "312": {
     "title": "We Ever Pray for Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8563,6 +9155,8 @@
   "313": {
     "title": "God Is Love",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8615,6 +9209,8 @@
   "315": {
     "title": "Jesus, the Very Thought of Thee",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8640,6 +9236,8 @@
   "316": {
     "title": "The Lord Is My Shepherd",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8664,6 +9262,8 @@
   "317": {
     "title": "Sweet Is the Work",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8689,6 +9289,8 @@
   "318": {
     "title": "Love at Home",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8731,6 +9333,8 @@
   "319": {
     "title": "Ye Elders of Israel",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8752,6 +9356,8 @@
   "320": {
     "title": "The Priesthood of Our Lord",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8773,6 +9379,8 @@
   "321": {
     "title": "Ye Who Are Called to Labor",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8794,6 +9402,8 @@
   "322": {
     "title": "Come, All Ye Sons of God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8815,6 +9425,8 @@
   "323": {
     "title": "Rise Up, O Men of God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8840,6 +9452,8 @@
   "324": {
     "title": "Rise Up, O Men of God",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8865,6 +9479,8 @@
   "325": {
     "title": "See the Mighty Priesthood Gathered",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8890,6 +9506,8 @@
   "326": {
     "title": "Come, Come, Ye Saints",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8931,6 +9549,8 @@
   "327": {
     "title": "Go, Ye Messengers of Heaven",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8952,6 +9572,8 @@
   "328": {
     "title": "An Angel from on High",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -8985,6 +9607,8 @@
   "329": {
     "title": "Thy Servants Are Prepared",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9006,6 +9630,8 @@
   "330": {
     "title": "See, the Mighty Angel Flying",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9031,6 +9657,8 @@
   "331": {
     "title": "Oh, What a Glorious Star Is Risen",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9052,6 +9680,8 @@
   "332": {
     "title": "Come, O Thou King of Kings",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9079,6 +9709,8 @@
   "333": {
     "title": "High on the Mountain Top",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9112,6 +9744,8 @@
   "334": {
     "title": "I Need Thee Every Hour",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9186,6 +9820,8 @@
   "336": {
     "title": "School Thy Feelings",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9219,6 +9855,8 @@
   "337": {
     "title": "O Home Beloved",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9248,6 +9886,8 @@
   "338": {
     "title": "America the Beautiful",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9326,6 +9966,8 @@
   "340": {
     "title": "The Star-Spangled Banner",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9359,6 +10001,8 @@
   "341": {
     "title": "God Save the King",
     "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
     "line_time": 0,
     "line_timings": [],
@@ -9382,12 +10026,14 @@
   "1001": {
   "title": "Come, Thou Fount of Every Blessing",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 22,
   "line_time": 5.3,
   "line_timings": [],
   "lines": [
-      "1: ^HE, A-bless | ^Plenty | (Rh)Give, (Lh)Give",
-      "Pray | ^Ray-on-heart, (2h)Heart-beat | (2h)Tap-heart, Tap-heart",
+      "1: ^HE, A-bless | ^Plenty | )Give, (Lh)Give",
+      "Pray | ^Ray-on-heart, (2h)Heart beat | (2h)Tap-heart, Tap-heart",
       "(Lh)Grab-heart | ^Offer, ^Match | ^Work-out, ^Relationship",
       "^Mercy-me | (2h)Tap-heart, Tap-heart | Inspire, ^Yay, ^Yay",
       "Heaven | ^(2h)(cl:4)Encircle-in | Song",
@@ -9405,7 +10051,7 @@
       "3: ^Ray-heart | (2h)Tap-heart, Tap-heart | ^Thank, ^Thank",
       "(2h)ME, Continue | (Rh)Mistake, (Lh)Mistake | ^He, Continue",
       "^Forgive-me, ^Forgive-me | (Lh)Grab-heart(hold) | (Rh)Weak",
-      "Easy, ^Focus-away | Easy, ^Separate~ | ~",
+      "Easy, ^Focus-away | Easy, ^Separate | ",
       "Pray, Pray | ^His, Love | !Awe!",
       "(2h)Tap-heart, Tap-heart | ^Connect-heart, Pull-connect-up | Focus-up, ^Him",
       "(2h)ME, All-inclusive | (Lh)Grab-heart, (2h)Hold-heart | ^(2h)Offer",
@@ -9415,6 +10061,8 @@
 "1002": {
   "title": "When the Savior Comes Again",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 7,
   "line_time": 0,
   "line_timings": [],
@@ -9448,6 +10096,8 @@
 "1003": {
   "title": "It Is Well with My Soul",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9481,6 +10131,8 @@
 "1004": {
   "title": "I Will Walk with Jesus",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9514,57 +10166,61 @@
 "1005": {
   "title": "His Eye Is on the Sparrow",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
   "lines": [
-      "1: (2h)Sad | (2h)(cl:5)Depressed | Wonder~ | ~",
-      "(Rh)Frustrate (Lh)Frustrate | Overwhelm | Wonder~ | ~",
-      "Grieve | Alone | Wonder~ | ~",
-      "Feelings | 5-list | Push-away~ | ~",
-      "(2h)Look up | Jesus | Inspire~ | Strong",
-      "^He My | Friend | Since~ | ~",
-      "(2h)Here all~ | ~ | ^He >(2h)Look-around | <(2h)Look-around",
-      "Me Know | ^HE (2h)Cherish | ^(2h)Look-me~ | ~",
-      "Bird | (Lh)(cl:)Hold-bird(hold) | ^HE ^(1h)Watch-palm~ | ~",
-      "Me Know | ^HE | ^(2h)Look-me~ | ~",
-      "Ch: !Inspire!~ | ~ | Me Happy~ | ~",
-      "!Inspire!~ | ~ | Me Free(break-chains)~ | ~",
-      "Jesus | (2h)(cl:)Hold-bird | Bird~ | ~",
-      "^Eye-to-eye | ^HE Cherish | (2h)Me | (2h)Me",
-      "2: ^His | Message | ^(2h)Inform-me | Heart touch",
-      "(rs)Overwhelm | Worry | Push-away~ | ~",
-      "^His Love | Comfort | ^Include-heart~ | ~",
-      "Doubt | Fear | Finish | Dissolve",
-      "Path | Jesus | <(rs)Come-on | <(rs)Come-on",
-      "^Trust | Step-forward | Go-ahead~ | ~",
-      "(2h)Here all~ | ~ | ^He >(2h)Look-around | <(2h)Look-around",
-      "Me Know | ^HE Cherish | ^(2h)Look-me | ^(2h)Look-me",
-      "Bird | (Lh)(cl:)Hold-bird(hold) | ^HE (1h)^Watch-bird~ | ~",
-      "Me Know | ^HE | ^(2h)Look-me | ^(2h)Look-me",
-      "Ch: !Inspire!~ | ~ | Me Happy~ | ~",
-      "!Inspire!~ | ~ | Me Free(break-chains)~ | ~",
-      "Jesus | (2h)(cl:)Hold-bird | Bird~ | ~",
-      "^Eye-to-eye | ^HE Cherish | (2h)Me | (2h)Me",
-      "3: Everyday | Tempt | (Rh)Attract | (Lh)Attract",
-      "Everyday | Problem | <Pop-up | >Pop-up",
-      "Happy | Decline | Mess-up~ | ~",
-      "Hope | Look-forward | Gone~ | ~",
-      "!Go-ahead! | Focus-shift-up | ^Near | ^Nearer",
-      "^Help me | <Separate-from-world | ^Connect~ | ~",
-      "(2h)Here all~ | ~ | ^He >(2h)Look-around | <(2h)Look-around",
-      "Me Know | ^HE (2h)Cherish | ^(2h)Look-me | ^(2h)Look-me",
-      "Bird | (Lh)(cl:)Hold-bird(hold) | ^HE (1h)^Watch-bird~ | ~",
-      "Me Know | ^HE | ^(2h)Look-me | ^(2h)Look-me",
-      "Ch: !Inspire!~ | ~ | Me Happy~ | ~",
-      "!Inspire!~ | ~ | Me Free(break-chains)~ | ~",
-      "Jesus | (2h)(cl:)Hold-bird | Bird~ | ~",
-      "^Eye-to-eye | ^HE Cherish | (2h)Me | (2h)Me"
+      "1:(2h)Sad|(cl:5)Depressed|Wonder~|~",
+			"(alt)Frustrate+|Overwhelm|Wonder~|~",
+			"Grieve|Alone|Wonder~|~",
+			"Feelings|5-list|push-away~|~",
+			"(2h)Look-up|Jesus|Inspire|Strong",
+			"^He, My|Friend|Since~|~",
+			"(2h)Here-all|^He, >(2h)Look-around|<Look-around",
+			"Me, Know|^HE, Cherish|^(2h)Look-me~|~",
+			"Bird|(Lh)(cl:)Hold-bird(hold)|^HE, ^(1h)Watch-palm~|~",
+			"Me, Know|^HE|^(2h)Look-me~|~",
+			"Ch:!Inspire!||Me, Happy~|~",
+			"!Inspire!~|~|Me, Free(break-chains)~|~",
+			"Jesus|(cl:)Hold-bird|Bird~|~",
+			"^Eye-to-eye|^HE, Cherish|(2h)Me|(2h)Me",
+			"2:^His|Message|^(2h)Inform-me|Heart-touch",
+			"(rs)Overwhelm|Worry|push-away~|~",
+			"^His, Love|Comfort|^Include-heart~|~",
+			"Doubt|Fear|Finish|Dissolve",
+			"Path|Jesus|<(rs)Come-on|<Come-on",
+			"^Trust|Step-forward|Go-ahead~|~",
+			"(2h)Here-all|^He, >(2h)Look-around|<Look-around",
+			"Me, Know|^HE, Cherish|^(2h)Look-me~|~",
+			"Bird|(Lh)(cl:)Hold-bird(hold)|^HE, ^(1h)Watch-palm~|~",
+			"Me, Know|^HE|^(2h)Look-me~|~",
+			"Ch:!Inspire!||Me, Happy~|~",
+			"!Inspire!~|~|Me, Free(break-chains)~|~",
+			"Jesus|(cl:)Hold-bird|Bird~|~",
+			"^Eye-to-eye|^HE, Cherish|(2h)Me|(2h)Me",
+			"3:Everyday|Tempt|(Rh)Attract|(Lh)Attract",
+			"Everyday|Problem|<Pop-up|>Pop-up",
+			"Happy|Decline|Mess-up~|~",
+			"Hope|Look-forward|Gone~|~",
+			"!Go-ahead!|Focus-shift-up|^Near|^Nearer",
+			"^Help-me|<Separate-from-world|^Connect~|~",
+			"(2h)Here-all|^He, >(2h)Look-around|<Look-around",
+			"Me, Know|^HE, Cherish|^(2h)Look-me~|~",
+			"Bird|(Lh)(cl:)Hold-bird(hold)|^HE, ^(1h)Watch-palm~|~",
+			"Me, Know|^HE|^(2h)Look-me~|~",
+			"Ch:!Inspire!||Me, Happy~|~",
+			"!Inspire!~|~|Me, Free(break-chains)~|~",
+			"Jesus|(cl:)Hold-bird|Bird~|~",
+			"^Eye-to-eye|^HE, Cherish|(2h)Me|(2h)Me"
   ]
 },
 "1006": {
   "title": "Think a Sacred Song",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9582,67 +10238,73 @@
 "1007": {
   "title": "As Bread Is Broken",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
   "lines": [
-		 "1: Bread | Tear, Tear | Pick-up-eat | ^Vision-open",
-      "^Hill | ^Cross | Jesus | (Rh)(cl:A)Nail-in-hand, (Lh)Nail-in-hand",
-      "^He | (Rh)Suffer, (Lh)Suffer | Hand-on-heart | ^Vision-close",
-      "Wow Wow | ^Thank | ^(2h)Him~ | ~",
-      "2: Water | Hold-cup | Drink | ^Vision-open",
-      "^Hill | ^(Rh)Tree, ^(Lh)Kneel | Red | (Rh)Sweat, (Lh)Sweat",
-      "Wow | (Rh)Suffer, (Lh)Suffer | Hand-on-Heart | ^Vision-close",
-      "Grief | Grief-take-away | ^Thank~ | ~",
-      "3: Pray | (cl:A)Change | ^(2h)Want | (2h)^Same-as",
-      "Vision-open | (Rh)Mistake, (Lh)Mistake | Sorry | Grief",
-      "Vision-close | ^(cl:)Heart-give-Him | ^Beg | ^Forgive me",
-      "^(2h)Ray-down | Inspire-me | (cl:A)Heart-change | ^Focus-Him",
-      "4: Cherish | Savior | ?Do-act | What?",
-      "^(2h)(cl:)Hold-to-front | Vision-open | (Rh)Nudge (Lh)Nudge | Message",
-      "^(2h)Bring-up | Vision close | (2h)Think-mind-heart | ?How How?",
-      "Inspire | (Rh)Nudge, (Lh)Nudge | Message | Focus-up"
+		 "1: Bread|Tear+|Pick-up-eat|^Vision-open",
+			"^Hill|^Cross|Jesus|(alt)(cl:A)Nail-in-hand+",
+			"^He|(alt)Suffer+|Hand-on-heart|^Vision-close",
+			"Wow+|^Thank|^(2h)Him|",
+			"2: Water|Hold-cup|Drink|^Vision-open",
+			"^Hill|(Rh)Tree,(Lh)Kneel|Red|(alt)Sweat+",
+			"Wow|(alt)Suffer+|Hand-on-Heart|^Vision-close",
+			"Grief|Grief-take-away|^Thank|",
+			"3: Pray|(cl:A)Change|^(2h)Want|^(2h)Same-as",
+			"Vision-open|(alt)Mistake+|Sorry|Grief",
+			"Vision-close|^(cl:)Heart-give-Him|^Beg|^Forgive-me",
+			"^(2h)Ray-down|Inspire-me|(cl:A)Heart-change|^Focus-Him",
+			"4: Cherish|Savior|?Do-act|What?",
+			"^(cl:)Hold-to-front|Vision-open|(alt)Nudge+|Message",
+			"Bring-up|Vision-close|(2h)Think-mind-heart|?How-How?",
+			"Inspire|(alt)Nudge+|Message|Focus-up"
   ]
 },
 "1008": {
   "title": "Bread of Life, Living Water",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
   "lines": [
-    "1: In the Garden, Jesus suffered",
-    "Ev’ry sin and ev’ry woe—",
-    "Bleeding drops from ev’ry pore,",
-    "That we might forgiveness know.",
-    "Ch: Bread of Life, Living Water,",
-    "Feed my soul, fill my heart.",
-    "Lord, give me new life in Thee",
-    "And make me whole—complete and holy—",
-    "Bound to Thee eternally.",
-    "2: Jesus sacrificed His body",
-    "On the cross in bitter pain—",
-    "Freely gave His life for us",
-    "So that we would live again.",
-    "Ch: Bread of Life, Living Water,",
-    "Feed my soul, fill my heart.",
-    "Lord, give me new life in Thee",
-    "And make me whole—complete and holy—",
-    "Bound to Thee eternally.",
-    "3: Now I come before the altar,",
-    "Off’ring Him my broken heart,",
-    "Seeking for the precious gifts",
-    "His Atonement can impart.",
-    "Ch: Bread of Life, Living Water,",
-    "Feed my soul, fill my heart.",
-    "Lord, give me new life in Thee",
-    "And make me whole—complete and holy—",
-    "Bound to Thee eternally."
+		"1: (Lh)Tree|Jesus|Kneel‑near‑tree|Pray",
+		"<Sin|<Grab‑burden|>Sad|>Grab‑burden",
+		"Grief|Red|Sweat‑face|Sweat‑body",
+		"^Forgive‑me|^Forgive‑me|Touch‑heart|Understand",
+		"Ch: <Bread|<Eat|>Water|>Drink",
+		"^Ray‑heart|Hand‑on‑heart|Open‑heart~|~",
+		"^Ray‑on‑face|Heart‑change|From‑now‑on~|~",
+		"(2h)Grab‑chest|Let‑go‑chest|Face‑glory~|~",
+		"^Relationship‑up|^Relationship‑down|^Continue‑on~|~",
+		"2: Hill|Jesus|(cl:1)Walk~|~",
+		"Cross|(Rh)Only‑1(hold)|(Lh)Suffer|(Lh)pain",
+		"(Rh)Only‑1(hold)|(Rh)Die|^(Rh)cl:1‑up(hold)~|~",
+		"(Lh)ME|(Lh)Die|^(Lh)cl:1‑with‑1‑up~|~",
+		"Ch: <Bread|<Eat|>Water|>Drink",
+		"^Ray‑heart|Hand‑on‑heart|Open‑heart~|~",
+		"^Ray‑on‑face|Heart‑change|From‑now‑on~|~",
+		"(2h)Grab‑chest|Let‑go‑chest|Face‑glory~|~",
+		"^Relationship‑up|^Relationship‑down|^Continue‑on~|~",
+		"3: Sit‑down|~|Eat|Drink",
+		"Open‑heart~|~|^(cl:)Give‑heart~|~",
+		"^(Rh)Pull‑down|^(Lh)Pull‑down|^(Rh)Pull‑include‑heart~|~",
+		"Heart‑change|~|Heal~|~",
+		"Ch: <Bread|<Eat|>Water|>Drink",
+		"^Ray‑heart|Hand‑on‑heart|Open‑heart~|~",
+		"^Ray‑on‑face|Heart‑change|From‑now‑on~|~",
+		"(2h)Grab‑chest|Let‑go‑chest|Face‑glory~|~",
+		"^Relationship‑up|^Relationship‑down|^Continue‑on~|~"
   ]
 },
 "1009": {
   "title": "Gethsemane",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9673,6 +10335,8 @@
 "1010": {
   "title": "Amazing Grace",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9694,6 +10358,8 @@
 "1011": {
   "title": "Holding Hands Around the World",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9729,6 +10395,8 @@
 "1012": {
   "title": "Anytime, Anywhere",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9781,6 +10449,8 @@
 "1014": {
   "title": "My Shepherd Will Supply My Need",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9814,6 +10484,8 @@
 "1015": {
   "title": "Oh, the Deep, Deep Love of Jesus",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9851,43 +10523,45 @@
   "line_time": 0,
   "line_timings": [],
   "lines": [
-    "1: Behold the wounds in Jesus’ hands,",
-    "The mark upon His side,",
-    "Then ponder whom He meant to save",
-    "When on the cross He died.",
-    "We cannot see the love of God,",
-    "Which saves us from the Fall,",
-    "Yet know that Christ from wood and nails",
-    "Built mansions for us all.",
-    "2: Behold the outstretched hands of Christ—",
-    "Our Lord, who came to save—",
-    "Whose love and grace redeem our souls",
-    "And lift us from the grave.",
-    "Though we are bruised whene’er we stray,",
-    "His guiding hands caress.",
-    "He washes and anoints with oil,",
-    "And in His arms we rest.",
-    "3: Behold the wounds in Jesus’ hands.",
-    "Look to your Lord and live.",
-    "He yearns to bless you with His love",
-    "And all your sins forgive.",
-    "Oh, empty is the heart of man",
-    "When it is filled with sin.",
-    "Come, open wide your broken heart",
-    "And let your Savior in!",
-    "4: Behold His wounded hands and feet!",
-    "Come touch, and see, and feel",
-    "The wounds and marks that you may know",
-    "His love for you is real.",
-    "Then as you fall to worship Him",
-    "And wash His feet with tears,",
-    "Your Savior takes you in His arms",
-    "And quiets all your fears."
-  ]
+		"1: (2h)Tap-all|^(2h)Look-up|^Cross|Jesus",
+		"There|(Rh)Nail-in-hands|(Lh)Nail-in-hands|(cl:U)Poke-in-side",
+		"^Look-up|Twiddle-think|(2h)^HIM|Die",
+		"?!Want!|Safe|People|Out-there",
+		"OIC|>^God|Plan|(rs)We, ^Disconnect",
+		"^Fallen|(rs)Jesus|Love|<Go-ahead",
+		"<Atone-right|>^(cl:1)hammer-nail|>^(cl:1)hammer-nail|^Die",
+		"^Gates-open|We, (rs)Safe|^Connect|^Exalt",
+		"2: (2h)Tap-all|^(2h)Look-up|Christ|<(rs)(2h)Come-on",
+		"(Rh)^Look-up|(cl:1)Walk-away|(Rh)Punch-face|(Lh)Punch-face",
+		"(Rh)Suffer|(Lh)Suffer|(Rh)Look-up|Sin",
+		"^(2h)(cl:claw)Heart-give|(rs)Jesus|<Remove|<Clean",
+		"<Anoint|Love|<Provide|<Support",
+		"Someday|Die|^His, Power|(2h)^Ray-down",
+		"Grave|Open|(Rh)Resurrect|(Lh)Resurrect",
+		"(cl:1)^Meet-him|Jesus|(rs)Hug|^Bring-up",
+		"3: (2h)Tap-all|^(2h)Look-up|Jesus|(Rh)Nail-in-palms",
+		"(Lh)Nail-in-palms|IX-(Rh)palm|Love|Give-all",
+		"(2h)^Ray-you|Encourage|^Trust~|~",
+		"(Rh)<You-all|<(Rh)Attract-grab(sad)|<(Lh)Attract-grab(sad)|Close-heart",
+		"Open-heart|Empty-heart|Sad|Grief",
+		"(Rh)^Look-up|^Jesus|^Help-you|Sacrifice",
+		"(rs)(2h)^HIM|(Rh)^!Attract-grab!|(Rh)^!Attract-grab!|Open-heart",
+		"^HIM|Into-heart|^Change~|~",
+		"4: (2h)Tap-all|^(2h)Look-up|Jesus|>(2h)Him",
+		"(Rh)Come-on|(Lh)Come-on|>(Rh)(cl:1)Approach|>(Lh)(cl:1)Approach",
+		"His, Hand|(2h)cl:Hand-bring-me|Feel|(Rh)Feel-palm",
+		"(2h)Wow|Cherish|~|>Kneel",
+		">(alt)Foot+|(Rh)Tear-drop|(Lh)Tear-drop|>(Rh)Wash-foot",
+		"(Lh)Wash-foot|Hands-on-heart|>!Thank-you!|!Thank-you!",
+		"<(rs)Jesus|<(2h)Grab-pull-up|Hug|Smile-big",
+		"(rs)>Fear|Fade|Hug~|~"
+	]
 },
 "1017": {
   "title": "This Is the Christ",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9917,39 +10591,43 @@
 "1018": {
   "title": "Come, Lord Jesus",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
   "lines": [
-    "1: Come, Lord Jesus, to the manger.",
-    "May we see Thy tender face—",
-    "Great Creator, here a stranger,",
-    "Infant in this humble place.",
-    "Darkness scatter; morning swell.",
-    "Come, dear Lord Immanuel.",
-    "Come, Lord Jesus, to the manger.",
-    "Come, Lord Jesus, come!",
-    "2: Come, Lord Jesus, to the wounded—",
-    "Broken heart and bended knee.",
-    "Worthy Lamb, Thy love unbounded,",
-    "Bid our souls to rest in Thee.",
-    "Grant us mercy, Savior, King;",
-    "Come with healing in Thy wings.",
-    "Come, Lord Jesus, to the wounded.",
-    "Come, Lord Jesus, come!",
-    "3: Come, Lord Jesus, great Redeemer,",
-    "Light of Morning, Prince of Peace.",
-    "We will be Thy children ever.",
-    "Dry our tears; may weeping cease.",
-    "Come in glory; come again.",
-    "Come to us to rule and reign.",
-    "Ready us to kneel and greet Thee.",
-    "Come, Lord Jesus, come!"
-  ]
+		"1: Manger|Sleep, There|Put-baby-in-crib",
+		"Jesus, Long-ago|(cl:5)Form-world|(cl:5)Form-world",
+		"Look-forward|(2h)^Come-on|^Invite-down-crib",
+		"Area|(2h)(cl:4)Look-up|^Look-forward",
+		"^Come-on|^Baby-bring-down|In-crib",
+		"(2h)(cl:4)Look-in-crib~|~|Light-from-baby",
+		"^Look-forward|Jesus|^Come-on",
+		"^Baby-bring-down~|~|In-crib",
+		"2: Look-around~|~|Sad, Depressed",
+		"Prayer|(2h)^Come-on|Inspire, Heal",
+		"^Look-forward|Jesus|(cl:1)Come-front",
+		"(Jesus)Look-around|Hand-on-heart|(2h)YOU-ALL",
+		"Love|Heart-spread|(rs)Safe",
+		"Inspire, Heal~|~|Relief",
+		"^Look-foward|Jesus|^Come-on",
+		"^Ray-down|Inspire|Heal",
+		"3: Jesus~|^HIM, Atonement~|~",
+		"(2h)Area~|Dark|(alt)Tear+",
+		"Kneel|(2h)Look‑forward|^(cl:1)Come‑down",
+		"(2h)YOU-ALL|(alt)Wipe-tear+|(2h)(cl:4)Look-up",
+		"^Look-forward|(cl:1)^Come-down|Glory",
+		"(Jesus)Look-around|Control|(2h)World",
+		"(rs)^Look-forward|Jesus|^(2h)Come-on",
+		"(rs)Heart-open~|~|(2h)You-all"
+	]
 },
 "1019": {
   "title": "To Love like Thee",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -9975,6 +10653,8 @@
 "1020": {
   "title": "Softly and Tenderly Jesus Is Calling",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10008,6 +10688,8 @@
 "1021": {
   "title": "I Know That My Savior Loves Me",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10042,6 +10724,8 @@
 "1022": {
   "title": "Faith in Every Footstep",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10087,6 +10771,8 @@
 "1023": {
   "title": "Standing on the Promises",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10128,6 +10814,8 @@
 "1024": {
   "title": "I Have Faith in the Lord Jesus Christ",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10148,6 +10836,8 @@
 "1025": {
   "title": "Take My Heart and Let It Be Consecrated",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10177,6 +10867,8 @@
 "1026": {
   "title": "Holy Places",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10210,6 +10902,8 @@
 "1027": {
   "title": "Welcome Home",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10243,6 +10937,8 @@
 "1028": {
   "title": "This Little Light of Mine",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10291,6 +10987,8 @@
 "1030": {
   "title": "Close as a Quiet Prayer",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10318,31 +11016,35 @@
 "1031": {
   "title": "Come, Hear the Word the Lord Has Spoken",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
   "lines": [
-    "1: Come, hear the word the Lord has spoken,",
-    "Revealed anew in latter days.",
-    "The heav’ns again to us are open;",
-    "Let all rejoice and sing His praise!",
-    "2: The Savior will redeem His people,",
-    "And Satan’s work will be undone.",
-    "The truths of God to earth from heaven",
-    "Will all be gathered into one.",
-    "3: The Lord’s great day is surely coming.",
-    "We long to see that blessed day",
-    "When Christ will reign with peace and justice",
-    "And He will wipe all tears away.",
-    "4: The mountains then will shout, rejoicing,",
-    "For Christ will reign on earth as King!",
-    "His holy word will stand forever.",
-    "Let ev’ry soul give thanks and sing!"
-  ]
+		"1: Heaven|^Inform-me+|(Lh)Area|>Face‑block",
+		"Clouds‑close|Now|Clouds‑open|^Inform-me+",
+		"^(2h)Ray‑down|Spread‑out|(2h)YOU-ALL|(2h)Come!,^Focus",
+		"^Interact|^Give-me|Inspire|!Yay+!",
+		"2: (2h)Get-together|Teach+|Love|Spread",
+		"Satan, Encourage|(2h)Back‑forth|(2h)!Hold!|(2h)Inform‑you",
+		"Near+|^Jesus|(cl:1)Descend, (cl:4)Fall-back|Push‑aside",
+		"(Lh)Low‑area(hold)|(Rh)High‑area|Connected|^Unite",
+		"3: Area|Unequal|(2h)!Hold!|(2h)!Inform‑you!",
+		"Near+|Look‑forward|!Time!|Jesus",
+		"^(cl:1)Descend|^(Lh)!Bright‑on‑1!|!Inspire!|!Take‑over!",
+		"Reign+|Change|Joy|Peace",
+		"4: (2h)!There!|Mountain|(2h)Vibrate|!Yay+!",
+		"Since|Jesus|Teach‑me+|(2h)Stay",
+		"^Only‑1|Give‑all|Peace|(cl:4)Line",
+		"(2h)Kneel|(alt)Honor+|(2h)HIM|Glory+"
+	]
 },
 "1032": {
   "title": "Look unto Christ",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10384,6 +11086,8 @@
 "1033": {
   "title": "Oh, How Great Is Our Joy",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10450,6 +11154,8 @@
 "1035": {
   "title": "As I Keep the Sabbath Day",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10483,6 +11189,8 @@
 "1036": {
   "title": "Read the Book of Mormon and Pray",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10576,35 +11284,41 @@
 "1039": {
   "title": "Because",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 6,
   "line_time": 0,
-  "line_timings": [8,8,8,8,5,4,4,3,8,10,8,8,8,8,5,4,4,3,8,10],
+  "line_timings": [],
     "lines": [
-    "1: Because He walked the path, I know the way.",
-    "Because He calmed the storm, I’m not afraid.",
-    "Because He made the lame to walk and caused the blind to see",
-    "And blessed the children one by one, I feel His love for me.",
-    "Ch: And I will praise forever",
-    "The Savior of the world,",
-    "And I will sing together",
-    "With all the Saints on earth.",
-    "Because He gave to me ev’rything He had to give,",
-    "I breathe, I see, I hope, I love, I live.",
-    "2: Because He died for me, I’ll live again.",
-    "Because He is my Friend, I’ll follow Him.",
-    "Because He fills the world with light, I’m filled with hope and peace.",
-    "And when He comes to earth again, I’ll kneel before His feet.",
-    "Ch: And I will praise forever",
-    "The Savior of the world,",
-    "And I will sing together",
-    "With all the Saints on earth.",
-    "Because He gave to me ev’rything He had to give,",
-    "I breathe, I see, I hope, I love, I live."
-  ]
+			"1: Jesus|Do‑act|Do‑act|Me|Know+|^His|^His|<Storm",
+			"Storm|Jesus|Calm|Dissolve|>Me|Relief~|~|(cl:1)Weak‑steps",
+			"(cl:1)Weak‑steps|Jesus|Bless|Walk|~|>Blind|Soil|(2h)Put‑on‑eye",
+			"Eye‑contact|>Children|(cl:5)Flock‑to‑me|Jesus|1‑Bless|1‑Bless|(2h)THESE~|~|Inspire|Love",
+			"Ch: Globe|(2h)^HIM|Savior~|~",
+			"Me|(Rh)Honor|(Lh)Honor|(2h)^HIM",
+			"Crowd~|~|(2h)Come‑on~|~",
+			"Music|(Rh)Sign|(Lh)Sign|(2h)THESE~",
+			"~|^Jesus|(2h)Give‑me~|~",
+			"<Breath~|~|>(2h)See~|~",
+			">Look‑forward|>Love|(alt)Experience+|!Yes!, All‑include|(2h)THESE‑ALL, ^Jesus|^(2h)!Give‑me!",
+			"2: Jesus|Resurrect|~|Me|Will|Resurrect|(2h)Same‑as~|~",
+			"^(Rh)Look‑at|^Jesus|My|^Friend|^Follow|^(2h)HIM|~|^Jesus",
+			"Globe~|~|(2h)Light-wiggle‑globe~|~|Inspire~|~|Look‑forward|Peace",
+			"Future|^Jesus|1‑Come‑down~|~|Me|Kneel~|~|!Pray!",
+			"Ch: Globe|(2h)^HIM|Savior~|~",
+			"Me|(Rh)Honor|(Lh)Honor|(2h)^HIM",
+			"Crowd~|~|(2h)Come‑on~|~",
+			"Music|(Rh)Sign|(Lh)Sign|(2h)THESE~",
+			"~|^Jesus|(2h)Give‑me~|~",
+			"<Breath~|~|>(2h)See~|~",
+			">Look‑forward|>Love|(alt)Experience+|!Yes!, All‑include|(2h)THESE‑ALL, ^Jesus|^(2h)!Give‑me!"
+		]
 },
 "1040": {
   "title": "His Voice as the Sound",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10638,6 +11352,8 @@
 "1041": {
   "title": "O Lord, Who Gave Thy Life for Me",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10671,31 +11387,35 @@
 "1201": {
   "title": "Hail the Day That Sees Him Rise",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
   "lines": [
-    "1: Hail the day that sees Him rise, Alleluia!",
-    "To His throne beyond the skies. Alleluia!",
-    "Christ, the Lamb for sinners giv’n, Alleluia!",
-    "Enters now the highest heav’n. Alleluia!",
-    "2: There for Him high triumph waits. Alleluia!",
-    "Lift your heads, eternal gates. Alleluia!",
-    "He has conquered death and sin; Alleluia!",
-    "Take the King of Glory in. Alleluia!",
-    "3: See, He lifts His hands above! Alleluia!",
-    "See, He shows the prints of love! Alleluia!",
-    "Hark! His gracious gifts bestow, Alleluia!",
-    "Blessings on His Church below. Alleluia!",
-    "4: Lord, beyond our mortal sight, Alleluia!",
-    "Raise our hearts to reach Thy height. Alleluia!",
-    "There Thy face unclouded see, Alleluia!",
-    "Find our heav’n of heav’ns in Thee. Alleluia!"
+		"1: (cl:4)Look‑up|Jesus|1-Go-up|^Glory|(2h)Awe|(2h)Awe|Wow|Wow",
+		"^Sit‑on‑throne||Look‑around||(2h)Awe|(2h)Awe|Wow|Wow",
+		"^He|Lamb|Atone|Die|(2h)Awe|(2h)Awe|Wow|Wow",
+		"Heaven|(2h)Wiggle‑exalt|1-Go-up|!Pah!|Clap|Celebrate|Celebrate|^(2h)HIM",
+		"2: Angel|^Audience‑out|Celebrate|^Honor|(2h)Awe|(2h)Awe|Wow|Wow",
+		"Heaven|(cl:4)Gate‑open|Jesus|1-Go-up|(2h)Awe|(2h)Awe|Wow|Wow",
+		"Death|Sin|Overcome|Finish|(2h)Awe|(2h)Awe|Wow|Wow",
+		"King|Superior|(2h)Offer‑up(Lh‑hold)|(Rh)1-Go-up|Clap|Celebrate|Celebrate|^(2h)HIM",
+		"3: ^His|Hands|(Rh)Look‑at‑hand|(Rh)Heart‑touch|(2h)Awe|(2h)Awe|Wow|Wow",
+		"Love|(Rh)Nail‑palm|(Lh)Nail‑palm|Show‑all|(2h)Awe|(2h)Awe|Wow|Wow",
+		"A‑bless|Give‑all|Spread‑globe||(2h)Awe|(2h)Awe|Wow|Wow",
+		"^His|People|Power|Spread|Clap|Celebrate|Celebrate|^(2h)HIM",
+		"4: Jesus|Exalt|Me, Look‑forward|Look‑forward|(2h)Awe|(2h)Awe|Wow|Wow",
+		"Heart|Wish|Want|^1‑Meet‑1|(2h)Awe|(2h)Awe|Wow|Wow",
+		"(cl:2)Look‑up|Jesus|^Glory|Beautiful|(2h)Awe|(2h)Awe|Wow|Wow",
+		"Clasp‑hands|Pull‑up|Exalt|^Enter|Clap|Celebrate|Celebrate|^(2h)HIM"
   ]
 },
 "1202": {
   "title": "He Is Born, the Divine Christ Child",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10766,6 +11486,8 @@
 "1204": {
   "title": "Star Bright",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10799,6 +11521,8 @@
 "1205": {
   "title": "Let Easter Anthems Ring",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
@@ -10857,6 +11581,8 @@
 "1207": {
   "title": "Still, Still, Still",
   "safe_title": "",
+  "voiceURL": "",
+  "accompanimentURL": "",
     "intro_length": 10,
   "line_time": 6,
   "line_timings": [],
