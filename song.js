@@ -280,7 +280,9 @@ async function loadAvailableLanguages() {
       }
 
       allHymnsData[lang] = hymnsData;
-      const hasLyrics = Object.values(allHymnsData[lang]).some(hymn => hymn?.lines?.length > 0);
+      const hasLyrics = Object.values(allHymnsData[lang]).some(hymn => 
+				hymn?.lines && Array.isArray(hymn.lines) && hymn.lines.length > 0
+			);
 
       if (hasLyrics) {
         if (!availableLanguages.includes(lang)) { // Avoid duplicates if function runs again
@@ -332,14 +334,12 @@ function renderLanguageList() {
   const langList = $('language-list');
   langList.innerHTML = ''; // Clear existing content
   languageOrder.forEach(lang => {
-    let lineCount;
-    if (lang === 'Custom' && usingCustomLyrics) {
-      const liveCounter = $('live-line-counter');
-      const customCountElement = liveCounter?.querySelector('.count-item strong');
-      lineCount = customCountElement ? parseInt(customCountElement.textContent) || 0 : 0;
-    } else {
-      lineCount = allHymnsData[lang]?.[currentHymnNumber]?.lines?.length || 0;
-    }
+    let lineCount = (lang === 'Custom' && usingCustomLyrics)
+    ? lines.length
+    : allHymnsData[lang]?.[currentHymnNumber]?.lines?.length || 0;
+    
+    if (lineCount === 0 && lang !== 'Custom') return;
+    if (lineCount === 0) return;  // skip Custom if empty
     // Create elements programmatically to avoid whitespace
     
     // --- 1. LI setup ---
@@ -368,7 +368,7 @@ function renderLanguageList() {
     // --- 4. Label Element (MISSING CREATION IN YOUR CODE) ---
     const label = document.createElement('label'); // <-- ADD THIS LINE
     label.htmlFor = `lang-${lang}`;
-    label.textContent = `${lang} (Line Count: ${lineCount})`;
+    label.textContent = `${lang} (Lines: ${lineCount})`;
 
     // --- 5. APPEND INPUTS/LABEL TO DIV ---
     div.appendChild(input); 
@@ -774,62 +774,23 @@ function setView(viewName) {
 }
 
 function loadCustomLyrics() {
-  currentIndex = 0;
-  const customText = $('customLyricsTextarea').value;
-  const customLines = customText.split('\n').filter(line => line.trim() !== '');
-
-  // --- START FIX ---
-  // Check if a hymn is loaded; if not, use a unique identifier for custom-only mode
-  const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
-
-  if (customLines.length === 0) {
-    // If custom lyrics are cleared, remove them from the store
-    delete customLyricsStore[hymnKey];
-    usingCustomLyrics = false;
-    showNotice("Custom lyrics cleared.");
-    if (currentHymnNumber) {
-      // If a hymn was selected, switch back to hymn view logic
-      setView('hymn');
-    }
-    return;
-  }
-  
-  // Store the new custom lines specific to the current song/key
-  customLyricsStore[hymnKey] = customLines;
-  
-  // Load the stored custom lines into the global `lines` array for display
-  lines = customLyricsStore[hymnKey];
-  usingCustomLyrics = true;
-
-  // The rest of the logic remains mostly the same, but it's cleaner to remove the redundant
-  // `lines = customLines;` line which is now handled by the store.
-  // --- END FIX ---
-  
-  // Remove the original `lines = customLines;` from the original code here.
-
-  const liveCounter = $('live-line-counter');
-  const mismatchElement = liveCounter?.querySelector('.count-mismatch');
-  if (mismatchElement) {
-    mismatchElement.textContent = customLines.length;
-  }
-  if (!availableLanguages.includes('Custom')) {
-			availableLanguages.push('Custom');
-	}
-	
-	// Only add "Custom" to languageOrder ONCE EVER
-	if (!languageOrder.includes('Custom')) {
-			languageOrder.push('Custom');  // ← Only runs once per page lifetime
-	}
-	
-	// Only auto-select it if not already selected
-	if (!selectedLanguages.includes('Custom') && selectedLanguages.length < 3) {
-			selectedLanguages.push('Custom');
-	}
-  updateLiveCounter();
-  renderLanguageList();
-  updateLanguageSettings();
-  saveSettings();
-  setView('hymn');
+  const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+  const text = $('customLyricsTextarea').value.trim();
+  const newLines = text.split('\n').filter(l => l.trim() !== '');
+  
+  if (newLines.length === 0) {
+    delete customLyricsStore[hymnKey];
+    usingCustomLyrics = false;
+  } else {
+    customLyricsStore[hymnKey] = newLines;
+    lines = newLines;
+    usingCustomLyrics = true;
+  }
+  
+  updateLiveCounter();
+  renderLanguageList();
+  saveSettings();
+  setView('hymn');
 }
 
 function loadExcelLyrics() {
@@ -1115,160 +1076,110 @@ function togglePauseResume() {
 }
 
 async function initializeAudio(hymnNumber, wasPlaying = false, currentTime = 0, onManualSetup = null) {
-  if (!hymnNumber) {
-    console.warn("initializeAudio called with no hymn number.");
-    return;
-  }
+  if (!hymnNumber) return console.warn("initializeAudio called with no hymn number.");
 
   const trackType = $('trackType').checked ? 'voice' : 'accompaniment';
   let topLanguage = languageOrder[0] || 'English';
   if (topLanguage === 'Custom' && languageOrder.length > 1) topLanguage = languageOrder[1];
-  if (topLanguage === 'ASL') topLanguage = 'English'; // No ASL audio
+  if (topLanguage === 'ASL') topLanguage = 'English';
 
-  const audioLangElement = $('audioLanguage');
-  if (audioLangElement) audioLangElement.textContent = `${topLanguage} Music`;
+  $('audioLanguage')?.setTextContent?.(`${topLanguage} Music`);
 
-  // Get the correct hymn entry
   const hymnEntry = allHymnsData[topLanguage]?.[hymnNumber] || allHymnsData['English']?.[hymnNumber];
-  if (!hymnEntry) {
-    console.error("No hymn data found for audio:", hymnNumber);
-    showNotice("No audio data for this hymn.");
-    forceManualMode();
-    return;
+  if (!hymnEntry) return forceManualMode("No hymn data");
+
+  let audioURL = trackType === 'voice' ? hymnEntry.voiceURL : hymnEntry.accompanimentURL;
+
+  if (!audioURL?.trim()) {
+    const folder = trackType === 'voice' ? 'voice' : 'accompaniment';
+    audioURL = `audio/${topLanguage}/${folder}/${hymnNumber}.mp3`;
   }
 
-  // Get the URL from JSON — this is the ONLY source we trust
-  const audioURL = trackType === 'voice' ? hymnEntry.voiceURL : hymnEntry.accompanimentURL;
+  console.log(`Loading audio: ${audioURL}`);
 
-  if (!audioURL || audioURL.trim() === '') {
-    console.warn("No audio URL in JSON for", topLanguage, hymnNumber);
-    showNotice(`No ${trackType} audio for ${topLanguage} hymn ${hymnNumber}`);
-    forceManualMode();
-    return;
-  }
+  if (audio) { audio.pause(); audio = null; }
 
-  console.log(`Loading audio from URL: ${audioURL}`);
-
-  // Stop any existing audio
-  if (audio) {
-    audio.pause();
-    audio = null;
-  }
-
-  // Create and load new audio
   audio = new Audio(audioURL);
   audio.preload = 'metadata';
   audio.currentTime = currentTime;
 
-  // Success handlers
-  audio.onloadedmetadata = async () => {
+  audio.onloadedmetadata = () => {
     startCounterTick();
-    console.log("Audio loaded successfully:", audioURL);
     audio.addEventListener('timeupdate', updateCounter);
     audio.addEventListener('ended', onAudioEnded);
-
-    // Auto-uncheck manual override
-    const manualCheckbox = $('manualControlOverride');
-    if (manualCheckbox?.checked) {
-      manualCheckbox.checked = false;
+    if ($('manualControlOverride')?.checked) {
+      $('manualControlOverride').checked = false;
       toggleManualControl();
     }
-
-    if (wasPlaying) {
-      try { await audio.play(); } catch (err) { handlePlayError(err); }
-    }
-
+    if (wasPlaying) audio.play().catch(handlePlayError);
     enablePlaybackControls(wasPlaying, !wasPlaying && currentTime > 0);
   };
 
-  // Error handler — fallback to manual mode
   audio.onerror = () => {
-    console.error("Audio failed to load:", audioURL);
-    showNotice("Audio failed to load. Using manual mode.");
+    console.error("Audio failed:", audioURL);
+    showNotice(`No ${trackType} audio for ${topLanguage} hymn ${hymnNumber}`);
     audio = null;
     forceManualMode();
     if (onManualSetup) onManualSetup();
   };
 
-  // Helper: go to manual mode
-  function forceManualMode() {
+  function forceManualMode(msg = "No audio available") {
     audio = null;
-    showNotice("No audio available. Manual Control enabled.");
-    const manualCheckbox = $('manualControlOverride');
-    if (manualCheckbox && !manualCheckbox.checked) {
-      manualCheckbox.checked = true;
-      toggleManualControl();
-    }
+    showNotice(`${msg}. Manual Control enabled.`);
+    const cb = $('manualControlOverride');
+    if (cb && !cb.checked) { cb.checked = true; toggleManualControl(); }
     enablePlaybackControls(false, false, false);
     setCurrentIndex(0, true);
   }
 }
 
 function playHymn() {
-
-	if (!currentHymnNumber && !usingCustomLyrics) {
-      showNotice("No hymn selected and no custom lyrics loaded.");
-      return;
+  if (!currentHymnNumber && !usingCustomLyrics) {
+    showNotice("No hymn selected and no custom lyrics loaded.");
+    return;
   }
   const currentLyrics = usingCustomLyrics ? lines : initialHymnLines;
   if (!currentLyrics || currentLyrics.length === 0) {
-      showNotice("No lyrics available to display for the current selection.");
-      return; // Can't play/display if no lyrics exist
+    showNotice("No lyrics available to display for the current selection.");
+    return;
   }
-  
-  stopHymn();
-	console.log("playHymn: Called. State reset.");
-	
-	// Handle custom lyrics without an associated hymn number (always manual)
+
+  stopHymn();
+  console.log("playHymn: Called. State reset.");
+
+  // Custom lyrics only (manual mode)
   if (usingCustomLyrics && !currentHymnNumber) {
-    console.log("playHymn: Handling custom lyrics without audio.");
     showNotice("Playing custom lyrics without audio. Use Manual Control.");
-    isPlaying = true; // Set playing state for manual mode
+    isPlaying = true;
     const manualCheckbox = $('manualControlOverride');
-    if (manualCheckbox && !manualCheckbox.checked) {
-        manualCheckbox.checked = true;
-    }
-    toggleManualControl(); // Apply manual mode UI (focus etc.)
-    enablePlaybackControls(true, false); // Enable Pause/Stop
-    setCurrentIndex(0, true); // Start lyrics at the beginning
-    return; // Exit function for custom-only lyrics
+    if (manualCheckbox && !manualCheckbox.checked) manualCheckbox.checked = true;
+    toggleManualControl();
+    enablePlaybackControls(true, false);
+    currentIndex = -1;                // ← no line highlighted
+    populateLyricsContainer();        // ← all inactive colors
+    return;
   }
-  
-  // --- Attempt to initialize audio for standard hymns ---
+
+  // Normal hymn with audio
   console.log(`playHymn: Attempting to initialize audio for Hymn ${currentHymnNumber}...`);
-  setCurrentIndex(0, true); // Set lyrics to start immediately while audio loads/fails
-  enablePlaybackControls(false, false, false); // Keep controls disabled initially until audio status known
-  document.querySelectorAll('input, textarea, button').forEach(el => el.blur()); // Blur inputs
-	
-  const introLength = parseFloat($("introLength").value);
-  if ((lines.length === 0 && !initialHymnLines.length)) return;
+  currentIndex = -1;                  // ← start with NO highlight/active colors
+  populateLyricsContainer();          // ← render all lines inactive
+  enablePlaybackControls(false, false, false);
+  document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
 
-  if (usingCustomLyrics && !currentHymnNumber) {
-    showNotice("Playing without audio. Use Manual Control.");
-    isPlaying = true;
-    enablePlaybackControls(true);
-    $('manualControlOverride').checked = true;
-    toggleManualControl();
-    setCurrentIndex(0, true);
-    return;
-  }
+  const introLength = parseFloat($("introLength").value);
 
-  // This callback will run *only* if initializeAudio sets up manual mode successfully
   initializeAudio(currentHymnNumber, false, 0, () => {
-      // --- Manual Setup Callback ---
-      console.log("playHymn: Manual mode setup completed by initializeAudio's error handler.");
-      isPlaying = true; // Set playing state for manual mode
-      // Play/Pause/Stop should reflect manual control state
-      // enablePlaybackControls(true, false); // Enable Pause/Stop for manual scrolling << Let's keep them disabled as per the onerror
-      enablePlaybackControls(false, false, true); // Keep audio controls disabled in manual mode
-      // Note: setCurrentIndex(0, true) was already called in the onerror handler
+    isPlaying = true;
+    enablePlaybackControls(false, false, true);
   });
-  audio.onloadedmetadata = async () => {
-    if (introLength >= audio.duration) {
-      showNotice("Intro length exceeds audio duration. Playback stopped.");
-      stopHymn();
-      return;
-    }
+
+  audio.onloadedmetadata = async () => {
+    if (introLength >= audio.duration) {
+      showNotice("Intro length exceeds audio duration. Playback stopped.");
+      stopHymn();
+      return;
+    }
     updateCounter();
     const hymnEntry = allHymnsData['English']?.[currentHymnNumber] || {};
     let lineTimings = [];
@@ -1289,32 +1200,27 @@ function playHymn() {
     }
     lineTimings = lineTimings.slice(0, targetLineCount);
     const avgSecondsPerLine = lineTimings.reduce((sum, t) => sum + t, 0) / lineTimings.length;
-    $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)}s/line`;
-    setCurrentIndex(0, true);
-    lyricsViewport.classList.add('intro-active');
-    isPlaying = true;
-    document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
-    if ($('manualControlOverride').checked) {
-      lyricsViewport.focus();
-    }
-    try {
-      await audio.play();
-			startCounterTick();
-    } catch (err) {
-      handlePlayError(err);
-    }
-    enablePlaybackControls(true);
-    await startIntroCountdown(introLength);
-    lyricsViewport.classList.remove('intro-active');
+    $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)}s/line`;
 
-		if (!$('manualControlOverride').checked) {
-				startAutoScroll(lineTimings);
-		} else {
-				// Listener is already handled by toggleManualControl, ensure focus:
-				lyricsViewport.focus();
-		}
+  lyricsViewport.classList.add('intro-active');
+  isPlaying = true;
+	
+	try {
+		await audio.play();
+		startCounterTick();
+		enablePlaybackControls(true);
+		await startIntroCountdown(introLength);
+	} catch (err) {
+		handlePlayError(err);
+		return; // stop if play fails
+	}
 
-  };
+  lyricsViewport.classList.remove('intro-active');
+  setCurrentIndex(0);  // now highlight + active colors
+
+  if (!$('manualControlOverride').checked) startAutoScroll(lineTimings);
+  else lyricsViewport.focus();
+};
 }
 
 function stopHymn() {
@@ -1365,17 +1271,17 @@ function toggleSettings() {
 }
 
 function initializePage() {
-  languageOrder = [...new Set(languageOrder)];           // remove duplicates
-	selectedLanguages = [...new Set(selectedLanguages)];   // remove duplicates
-	const params = new URLSearchParams(location.search);
+  languageOrder = [...new Set(languageOrder)];
+  selectedLanguages = [...new Set(selectedLanguages)];
+  const params = new URLSearchParams(location.search);
   runlistNumbers = params.get("runlist") ? params.get("runlist").split(',').map(s => s.trim()) : [];
   console.log("InitializePage: Starting.");
-  
-	if (performance.navigation.type === 1) { // hard refresh
-			languageOrder = languageOrder.filter((l, i, a) => l !== 'Custom' || i === a.lastIndexOf('Custom'));
-			selectedLanguages = selectedLanguages.filter((l, i, a) => l !== 'Custom' || i === a.indexOf('Custom'));
-	}
-  // Initialize color palette early
+
+  if (performance.navigation.type === 1) {
+    languageOrder = languageOrder.filter((l, i, a) => l !== 'Custom' || i === a.lastIndexOf('Custom'));
+    selectedLanguages = selectedLanguages.filter((l, i, a) => l !== 'Custom' || i === a.indexOf('Custom'));
+  }
+
   try {
     initializeColorPalette();
     console.log("InitializePage: Color palette initialized.");
@@ -1384,7 +1290,6 @@ function initializePage() {
     showNotice("Error setting up color palette.");
   }
 
-  // Set default view
   try {
     setView('hymn');
     console.log("InitializePage: Default view set to 'hymn'.");
@@ -1397,7 +1302,6 @@ function initializePage() {
   loadAvailableLanguages().then(() => {
     console.log("InitializePage .then(): Language data loaded, processing...");
 
-    // Load saved settings
     let savedSettings = null;
     try {
       savedSettings = loadSettings();
@@ -1407,13 +1311,11 @@ function initializePage() {
       savedSettings = null;
     }
 
-    // 1. RESTORE LANGUAGE ORDER & SELECTION FROM SAVED SETTINGS (including Custom!)
     try {
       if (savedSettings?.languageOrder && Array.isArray(savedSettings.languageOrder)) {
         languageOrder = savedSettings.languageOrder.filter(lang =>
           availableLanguages.includes(lang) || lang === 'Custom'
         );
-        // Add any missing available languages at the end
         availableLanguages.forEach(lang => {
           if (!languageOrder.includes(lang)) languageOrder.push(lang);
         });
@@ -1431,7 +1333,6 @@ function initializePage() {
       } else if (availableLanguages.length > 0) {
         selectedLanguages = [availableLanguages[0]];
       }
-
       console.log("Language order & selection restored:", { languageOrder, selectedLanguages });
     } catch (e) {
       console.error("Error restoring language order/selection:", e);
@@ -1439,129 +1340,131 @@ function initializePage() {
       selectedLanguages = availableLanguages.length > 0 ? [availableLanguages[0]] : [];
     }
 
-    // 2. APPLY ALL SAVED SETTINGS — ONE TIME ONLY (colors, fonts, order, everything)
-		try {
-			renderLanguageList();
-			updateLanguageSettings(); // ← This rebuilds the color pickers
-		
-			const settingsToApply = { ...DEFAULTS, ...(savedSettings || {}) };
-		
-			// CRITICAL ORDER FIX:
-			// 1. First apply colors to the teleprompter
-			applySettings(settingsToApply);
-			
-			// 2. THEN update the form + color display bars (they now exist!)
-			updateFormFromSettings(settingsToApply);
-		
-			console.log("All settings fully restored and applied from localStorage");
-		} catch (settingsError) {
-			console.error("Error applying settings:", settingsError);
-			showNotice("Error applying saved settings.");
-		}
+    const settingsToApply = { ...DEFAULTS, ...(savedSettings || {}) };
+    applySettings(settingsToApply);
+    updateFormFromSettings(settingsToApply);
 
-    // 3. Process runlist or single hymn
     const runlistPanel = $('runlist-panel');
     let hymnDataLoaded = false;
 
     try {
       if (runlistNumbers.length > 0) {
-					console.log("InitializePage .then(): Processing runlist...");
-					currentHymnNumber = runlistNumbers[0];
-					currentRunlistIndex = 0;
-					const firstEntry = allHymnsData['English']?.[currentHymnNumber] || {};
-				
-					if (Object.keys(firstEntry).length > 0) {
-						hymnDataLoaded = true;
-						if (runlistPanel) runlistPanel.style.display = 'block';
-						const runlistDisplay = $('runlist-display');
-						if (!runlistDisplay) throw new Error("Runlist display element not found!");
-				
-						runlistDisplay.innerHTML = ''; // Clear
-				
-						runlistNumbers.forEach((num, idx) => {
-							const entry = allHymnsData['English']?.[num] || {};
-							const title = entry.title || 'Unknown';
-							const li = document.createElement('li');
-							li.textContent = `${num} - ${title}`;
-							li.dataset.index = idx;
-				
-							// FIXED CLICK HANDLER — 100% reliable
-							li.addEventListener('click', function () {
-								try {
-									stopHymn();
-									currentRunlistIndex = idx;
-									currentHymnNumber = num;
-							
-									const entry = allHymnsData['English']?.[num] || {};
-									$('pageHeader').textContent = `Hymn ${num} - ${entry.title || 'Unknown'}`;
-									initialHymnLines = entry.lines || [];
-									const customLinesForHymn = customLyricsStore[num];
-                            if (customLinesForHymn) {
-                                lines = customLinesForHymn;
-                                usingCustomLyrics = true;
-                                $('customLyricsTextarea').value = customLinesForHymn.join('\n');
-                            } else {
-                                lines = [...initialHymnLines];
-                                usingCustomLyrics = false;
-                                $('customLyricsTextarea').value = '';
-                            }
-									$('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
-							
-									populateLyricsContainer();
-									updateLineCountDisplay();
-									updateAudioLanguageDisplay();  // ← Now this exists!
-							
-									// Remove active from all, add to clicked one
-									runlistDisplay.querySelectorAll('li').forEach(l => l.classList.remove('active'));
-									this.classList.add('active');
-							
-									initializeAudio(num);
-								} catch (err) {
-									console.error("Runlist click error:", err);
-									showNotice("Error switching hymn: " + err.message);
-								}
-							});
-				
-							runlistDisplay.appendChild(li);
-						});
-				
-						// Mark first item as active
-						runlistDisplay.querySelector('li')?.classList.add('active');
-				
-						// Load first hymn
-						$('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${firstEntry.title || 'Unknown'}`;
-						initialHymnLines = firstEntry.lines || [];
-						lines = [...initialHymnLines];
-						usingCustomLyrics = false;
-						$('introLength').value = firstEntry?.intro_length !== undefined ? parseFloat(firstEntry.intro_length).toFixed(1) : 5;
-						initializeAudio(currentHymnNumber);
-					} else {
-						if (runlistPanel) runlistPanel.style.display = 'none';
-					}
-				} else {
+        console.log("InitializePage .then(): Processing runlist...");
+        currentHymnNumber = runlistNumbers[0];
+        currentRunlistIndex = 0;
+        const firstEntry = allHymnsData['English']?.[currentHymnNumber] || {};
+
+        if (Object.keys(firstEntry).length > 0) {
+          hymnDataLoaded = true;
+          if (runlistPanel) runlistPanel.style.display = 'block';
+
+          const runlistDisplay = $('runlist-display');
+          if (!runlistDisplay) throw new Error("Runlist display element not found!");
+          runlistDisplay.innerHTML = '';
+
+          runlistNumbers.forEach((num, idx) => {
+            const entry = allHymnsData['English']?.[num] || {};
+            const title = entry.title || 'Unknown';
+            const li = document.createElement('li');
+            li.textContent = `${num} - ${title}`;
+            li.dataset.index = idx;
+
+            li.addEventListener('click', function () {
+              try {
+                stopHymn();
+                currentRunlistIndex = idx;
+                currentHymnNumber = num;
+                const entry = allHymnsData['English']?.[num] || {};
+                $('pageHeader').textContent = `Hymn ${num} - ${entry.title || 'Unknown'}`;
+                initialHymnLines = entry.lines || [];
+
+                const customLinesForHymn = customLyricsStore[num];
+                if (customLinesForHymn) {
+                  lines = customLinesForHymn;
+                  usingCustomLyrics = true;
+                  $('customLyricsTextarea').value = customLinesForHymn.join('\n');
+                } else {
+                  lines = [...initialHymnLines];
+                  usingCustomLyrics = false;
+                  $('customLyricsTextarea').value = '';
+                }
+
+                const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+                const saved = customLyricsStore[hymnKey];
+                $('customLyricsTextarea').value = saved ? saved.join('\n') : '';
+                updateLiveCounter();
+
+                $('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
+                populateLyricsContainer();
+                updateLineCountDisplay();
+                updateAudioLanguageDisplay();
+                renderLanguageList();
+                updateLanguageSettings();
+
+                runlistDisplay.querySelectorAll('li').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                initializeAudio(num);
+              } catch (err) {
+                console.error("Runlist click error:", err);
+                showNotice("Error switching hymn: " + err.message);
+              }
+            });
+            runlistDisplay.appendChild(li);
+          });
+
+          runlistDisplay.querySelector('li')?.classList.add('active');
+
+          $('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${firstEntry.title || 'Unknown'}`;
+          initialHymnLines = firstEntry.lines || [];
+          lines = [...initialHymnLines];
+          usingCustomLyrics = false;
+
+          const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+          const saved = customLyricsStore[hymnKey];
+          $('customLyricsTextarea').value = saved ? saved.join('\n') : '';
+          updateLiveCounter();
+
+          $('introLength').value = firstEntry?.intro_length !== undefined ? parseFloat(firstEntry.intro_length).toFixed(1) : 5;
+          initializeAudio(currentHymnNumber);
+
+          renderLanguageList();
+          updateLanguageSettings();   // ← now after hymn loaded
+        } else {
+          if (runlistPanel) runlistPanel.style.display = 'none';
+        }
+      } else {
         console.log("InitializePage .then(): Processing single hymn...");
         if (runlistPanel) runlistPanel.style.display = 'none';
         currentHymnNumber = params.get("n");
+
         if (currentHymnNumber && allHymnsData['English']?.[currentHymnNumber]) {
           hymnDataLoaded = true;
           usingCustomLyrics = false;
           const entry = allHymnsData['English'][currentHymnNumber];
           initialHymnLines = entry?.lines || [];
-          
+
           const customLinesForHymn = customLyricsStore[currentHymnNumber];
-          if (customLinesForHymn) {
-              lines = customLinesForHymn;
-              usingCustomLyrics = true;
-              $('customLyricsTextarea').value = customLinesForHymn.join('\n'); // Load input window
-          } else {
-              lines = [...initialHymnLines];
-              usingCustomLyrics = false;
-              $('customLyricsTextarea').value = ''; // Clear input window
-          }
-          
+          if (customLinesForHymn) {
+            lines = customLinesForHymn;
+            usingCustomLyrics = true;
+            $('customLyricsTextarea').value = customLinesForHymn.join('\n');
+          } else {
+            lines = [...initialHymnLines];
+            usingCustomLyrics = false;
+            $('customLyricsTextarea').value = '';
+          }
+
+          const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+          const saved = customLyricsStore[hymnKey];
+          $('customLyricsTextarea').value = saved ? saved.join('\n') : '';
+          updateLiveCounter();
+
           $('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${entry?.title || 'Unknown'}`;
           $('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
           initializeAudio(currentHymnNumber);
+
+          renderLanguageList();
+          updateLanguageSettings();   // ← now after hymn loaded
         } else {
           currentHymnNumber = null;
           lines = [];
@@ -1581,7 +1484,6 @@ function initializePage() {
       enablePlaybackControls(false, false, false);
     }
 
-    // Populate lyrics
     try {
       populateLyricsContainer();
       updateLineCountDisplay();
@@ -1590,7 +1492,6 @@ function initializePage() {
       showNotice("Error displaying lyrics.");
     }
 
-    // Setup event listeners
     try {
       console.log("InitializePage .then(): Setting up event listeners...");
       const liveUpdateControls = ['bgColor', 'highlightColor', 'underlineColor', 'dotColor', 'transitionSpeed'];
@@ -1626,7 +1527,7 @@ function initializePage() {
 
       $('resetButton')?.addEventListener('click', () => {
         if (confirm('Reset all settings to default?')) {
-        	customLyricsStore = {};
+          customLyricsStore = {};
           localStorage.removeItem(SETTINGS_KEY);
           location.reload();
         }
@@ -1635,6 +1536,26 @@ function initializePage() {
       $('loadCustomLyricsBtn')?.addEventListener('click', loadCustomLyrics);
       $('loadExcelBtn')?.addEventListener('click', loadExcelLyrics);
       $('customLyricsTextarea')?.addEventListener('input', updateLiveCounter);
+
+      $('customLyricsTextarea')?.addEventListener('input', () => {
+        const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+        const newText = $('customLyricsTextarea').value;
+        const newLines = newText.split('\n').filter(l => l.trim() !== '');
+
+        if (newLines.length === 0) {
+          delete customLyricsStore[hymnKey];
+          usingCustomLyrics = false;
+        } else {
+          customLyricsStore[hymnKey] = newLines;
+          lines = newLines;
+          usingCustomLyrics = true;
+        }
+
+        updateLiveCounter();
+        renderLanguageList();
+        saveSettings();
+      });
+
       $('exitCustomBtn')?.addEventListener('click', () => setView('hymn'));
       $('settings-toggle')?.addEventListener('click', () => toggleCollapsibleById('settings'));
       $('lyric-order-toggle')?.addEventListener('click', () => toggleCollapsibleById('lyric-order'));
@@ -1647,7 +1568,6 @@ function initializePage() {
       showNotice("Warning: Some controls might not work correctly.");
     }
 
-    // Final checks
     try {
       updateAudioLanguageDisplay();
       if (!hymnDataLoaded && !usingCustomLyrics) {
@@ -1658,7 +1578,6 @@ function initializePage() {
     } catch (e) {
       console.error("Error in final checks:", e);
     }
-
   }).catch(err => {
     console.error("InitializePage --- CRITICAL ERROR ---", err);
     showNotice(`CRITICAL ERROR: ${err.message}. Check console (F12).`);
@@ -1724,6 +1643,14 @@ function applySettings(settings) {
     el.style.height = `${spacerHeightRem < 0 ? 0 : spacerHeightRem}rem`;
   });
   setCurrentIndex(currentIndex, true);
+
+	if (currentIndex === 0) {
+		document.querySelectorAll('.lyric-line-group:first-child .lyric-line')
+			.forEach(line => {
+				const lang = line.className.match(/lyric-line-(\w+)/)[1];
+				line.style.color = getComputedStyle(root).getPropertyValue(`--lyric-font-color-inactive-${lang}`).trim();
+			});
+	}
 }
 
 function enablePlaybackControls(isPlaying, isPaused = false, forceDisableAll = false) {
