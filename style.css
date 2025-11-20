@@ -799,3 +799,10 @@ input[type="color"].active-color-input {
   margin-top: 0; /* Remove space above when hidden */
   /* pointer-events: none; /* Optional: Prevent accidental interaction */
 }
+
+.intro-active .lyric-line-group.is-current .lyric-line {
+  color: var(--lyric-font-color-inactive-English) !important; /* default */
+}
+.intro-active .lyric-line-group.is-current .lyric-line-Spanish { color: var(--lyric-font-color-inactive-Spanish) !important; }
+.intro-active .lyric-line-group.is-current .lyric-line-ASL { color: var(--lyric-font-color-inactive-ASL) !important; }
+.intro-active .lyric-line-group.is-current .lyric-line-Custom { color: var(--lyric-font-color-inactive-Custom) !important; }
