@@ -33,20 +33,21 @@ const JEWEL_TONES = [
     '#f4ffff', '#bea0ae', '#82bbe0', '#8de6ed', '#fce6e1', '#d5d7d0'
 ];
 const DEFAULTS = {
-  bgColor: '#ffffff',
-  highlightColor: '#fef08a',
-  underlineColor: '#f59e0b',
-  dotColor: '#d81b60',
-  showDots: true,
-  showUnderline: true,
-  transitionSpeed: '0.5',
-  lyricsWidth: '700',
-  languages: {
-    English: { fontSize: '3', fontColorActive: '#000000', fontColorInactive: '#4b5563' },
-    Spanish: { fontSize: '3', fontColorActive: '#1e88e5', fontColorInactive: '#8ab4f8' },
-    ASL: { fontSize: '3', fontColorActive: '#d81b60', fontColorInactive: '#f48fb1' },
-    Custom: { fontSize: '3', fontColorActive: '#000000', fontColorInactive: '#4b5563' }
-  }
+  bgColor: '#ffffff',
+  highlightColor: '#fef08a',
+  underlineColor: '#f59e0b',
+  dotColor: '#d81b60',
+  showDots: true,
+  showUnderline: true,
+  showProgressBar: true, // <--- ADD THIS LINE
+  transitionSpeed: '0.5',
+  lyricsWidth: '700',
+  languages: {
+    English: { fontSize: '3', fontColorActive: '#000000', fontColorInactive: '#4b5563' },
+    Spanish: { fontSize: '3', fontColorActive: '#1e88e5', fontColorInactive: '#8ab4f8' },
+    ASL: { fontSize: '3', fontColorActive: '#d81b60', fontColorInactive: '#f48fb1' },
+    Custom: { fontSize: '3', fontColorActive: '#000000', fontColorInactive: '#4b5563' }
+  }
 };
 
 function saveSettings() {
@@ -473,145 +474,168 @@ item.querySelector('input').addEventListener('change', (e) => {
 }
 
 function updateLanguageSettings() {
-    const langSettingsDiv = $('language-settings');
+  const langSettingsDiv = $('language-settings');
 
-    if (!langSettingsDiv) {
-        console.error("FATAL: Could not find #language-settings div. Settings UI cannot be built.");
-        showNotice("Error: UI element missing (#language-settings). Settings cannot be displayed.");
-        return;
-    }
+  if (!langSettingsDiv) {
+    console.error("FATAL: Could not find #language-settings div.");
+    return;
+  }
 
-    langSettingsDiv.innerHTML = ''; // Clear previous content safely
+  langSettingsDiv.innerHTML = ''; 
+  const settings = loadSettings() || {}; 
 
-    const settings = loadSettings() || {}; // Load current settings once
+  languageOrder.forEach(lang => {
+    if (!selectedLanguages.includes(lang)) return;
 
-    languageOrder.forEach(lang => {
-        if (!selectedLanguages.includes(lang)) return;
+    const currentLangSettings = settings.languages?.[lang] || DEFAULTS.languages[lang] || DEFAULTS.languages['English'];
+    const activeColorValue = currentLangSettings.fontColorActive;
+    const inactiveColorValue = currentLangSettings.fontColorInactive;
 
-        // --- Get settings for this language ---
-        const currentLangSettings = settings.languages?.[lang] || DEFAULTS.languages[lang] || DEFAULTS.languages['English'];
-        const activeColorValue = currentLangSettings.fontColorActive;
-        const inactiveColorValue = currentLangSettings.fontColorInactive;
+    const langGroupDiv = document.createElement('div');
+    langGroupDiv.className = 'control-group language-control-group';
+    langGroupDiv.style.marginBottom = '1.5rem'; 
+    langGroupDiv.style.borderBottom = '1px solid #e5e7eb';
+    langGroupDiv.style.paddingBottom = '1rem';
 
-        const langGroupDiv = document.createElement('div');
-        langGroupDiv.className = 'control-group language-control-group';
+    // 1. Create Main Header Label
+    const mainLabel = document.createElement('label');
+    mainLabel.innerHTML = `<strong>${lang} Font</strong>`;
+    mainLabel.style.display = 'block';
+    mainLabel.style.marginBottom = '0.5rem';
+    langGroupDiv.appendChild(mainLabel);
 
-        // 1. Create Language Label
-        const langLabel = document.createElement('label');
-        const strongTag = document.createElement('strong');
-        const uTag = document.createElement('u');
-        uTag.textContent = lang;
-        strongTag.appendChild(uTag);
-        langLabel.appendChild(strongTag);
-        langGroupDiv.appendChild(langLabel);
+    // 2. Create Grid Row
+    const controlRow = document.createElement('div');
+    controlRow.style.display = 'grid';
+    controlRow.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    controlRow.style.gap = '0.75rem';
+    controlRow.style.alignItems = 'end';
 
-        // 2. Create Control Row div
-        const controlRow = document.createElement('div');
-        controlRow.className = 'control-row';
+    // --- Column 1: Active Color ---
+    const activeColorGroup = document.createElement('div');
+    activeColorGroup.className = 'control-subgroup';
+    const activeLabel = document.createElement('label');
+    activeLabel.htmlFor = `fontColor-active-${lang}`;
+    activeLabel.textContent = 'Active';
+    activeLabel.style.fontSize = '0.85rem';
+    
+    activeColorGroup.appendChild(activeLabel);
+    activeColorGroup.innerHTML += createColorPickerHTML(`fontColor-active-${lang}`, activeColorValue);
+    controlRow.appendChild(activeColorGroup);
 
-        // 3. Create Font Color Subgroup
-        const colorSubgroup = document.createElement('div');
-        colorSubgroup.className = 'control-subgroup';
-        const colorLabel = document.createElement('label');
-        colorLabel.textContent = 'Font Color';
-        colorSubgroup.appendChild(colorLabel);
+    // --- Column 2: Inactive Color ---
+    const inactiveColorGroup = document.createElement('div');
+    inactiveColorGroup.className = 'control-subgroup';
+    const inactiveLabel = document.createElement('label');
+    inactiveLabel.htmlFor = `fontColor-inactive-${lang}`;
+    inactiveLabel.textContent = 'Inactive';
+    inactiveLabel.style.fontSize = '0.85rem';
+    
+    inactiveColorGroup.appendChild(inactiveLabel);
+    inactiveColorGroup.innerHTML += createColorPickerHTML(`fontColor-inactive-${lang}`, inactiveColorValue);
+    controlRow.appendChild(inactiveColorGroup);
 
-        const dualPicker = document.createElement('div');
-        dualPicker.className = 'dual-color-picker';
+    // --- Column 3: Font Size ---
+    const sizeSubgroup = document.createElement('div');
+    sizeSubgroup.className = 'control-subgroup';
+    const sizeLabel = document.createElement('label');
+    sizeLabel.htmlFor = `fontSize-${lang}`;
+    sizeLabel.textContent = 'Size';
+    sizeLabel.style.fontSize = '0.85rem';
+    
+    sizeSubgroup.appendChild(sizeLabel);
 
-        // --- Active Color (NEW) ---
-        const activeColorGroup = document.createElement('div');
-        activeColorGroup.className = 'control-subgroup';
-        const activeLabel = document.createElement('label');
-        activeLabel.htmlFor = `fontColor-active-${lang}`;
-        activeLabel.textContent = 'Active';
+    const sizeInputGroup = document.createElement('div');
+    sizeInputGroup.className = 'input-group';
+    sizeInputGroup.style.height = '35px'; 
+    // Ensure flex layout so buttons grow
+    sizeInputGroup.style.display = 'flex'; 
+
+    const decreaseBtn = document.createElement('button');
+    decreaseBtn.className = 'btn';
+    // CHANGED: Added 'flex: 1' to make button wider
+    decreaseBtn.style.cssText = "height: 100%; background-color: #ADD8E6; border: 1px solid #d1d5db; border-right: none; border-top-left-radius: 6px; border-bottom-left-radius: 6px; padding: 0; display: flex; align-items: center; justify-content: center; flex: 1;";
+    decreaseBtn.textContent = '-';
+    decreaseBtn.onclick = () => decreaseFontSize(lang);
+
+    const sizeInput = document.createElement('input');
+    sizeInput.type = 'number';
+    sizeInput.id = `fontSize-${lang}`;
+    sizeInput.className = 'form-control';
+    sizeInput.min = "0.1";
+    sizeInput.max = "20";
+    sizeInput.step = "0.1";
+    // CHANGED: Fixed width to 3rem, removed width: 100%
+    sizeInput.style.cssText = "height: 100%; width: 3.5rem; text-align: center; border-radius: 0; margin: 0; padding: 0; border: 1px solid #d1d5db;";
+
+    const increaseBtn = document.createElement('button');
+    increaseBtn.className = 'btn';
+    // CHANGED: Added 'flex: 1' to make button wider
+    increaseBtn.style.cssText = "height: 100%; background-color: #ADD8E6; border: 1px solid #d1d5db; border-left: none; border-top-right-radius: 6px; border-bottom-right-radius: 6px; padding: 0; display: flex; align-items: center; justify-content: center; flex: 1;";
+    increaseBtn.textContent = '+';
+    increaseBtn.onclick = () => increaseFontSize(lang);
+
+    sizeInputGroup.appendChild(decreaseBtn);
+    sizeInputGroup.appendChild(sizeInput);
+    sizeInputGroup.appendChild(increaseBtn);
+    sizeSubgroup.appendChild(sizeInputGroup);
+    controlRow.appendChild(sizeSubgroup);
+
+    // Append Row
+    langGroupDiv.appendChild(controlRow);
+    
+    // --- Progress Bar Toggle ---
+    if (lang === selectedLanguages[0]) {
+        const progressRow = document.createElement('div');
+        progressRow.className = 'control-row';
+        progressRow.style.marginTop = '0.75rem';
+        progressRow.style.paddingTop = '0.5rem';
+        progressRow.style.borderTop = '1px dashed #e5e7eb';
+
+        const checkboxGroup = document.createElement('div');
+        checkboxGroup.className = 'checkbox-group';
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = 'progressBarToggle';
+        cb.checked = (settings.showProgressBar !== undefined) ? settings.showProgressBar : true;
         
-        // Use the HTML template function
-        activeColorGroup.appendChild(activeLabel);
-        activeColorGroup.innerHTML += createColorPickerHTML(`fontColor-active-${lang}`, activeColorValue);
-        dualPicker.appendChild(activeColorGroup);
+        cb.addEventListener('change', () => {
+             saveSettings(); 
+             applySettings(getSettingsFromForm()); 
+        });
 
-        // --- Inactive Color (NEW) ---
-        const inactiveColorGroup = document.createElement('div');
-        inactiveColorGroup.className = 'control-subgroup';
-        const inactiveLabel = document.createElement('label');
-        inactiveLabel.htmlFor = `fontColor-inactive-${lang}`;
-        inactiveLabel.textContent = 'Inactive';
-        
-        // Use the HTML template function
-        inactiveColorGroup.appendChild(inactiveLabel);
-        inactiveColorGroup.innerHTML += createColorPickerHTML(`fontColor-inactive-${lang}`, inactiveColorValue);
-        dualPicker.appendChild(inactiveColorGroup);
+        const lbl = document.createElement('label');
+        lbl.htmlFor = 'progressBarToggle';
+        lbl.textContent = 'Lyric Progress Bar';
 
-        colorSubgroup.appendChild(dualPicker);
-        controlRow.appendChild(colorSubgroup);
+        checkboxGroup.appendChild(cb);
+        checkboxGroup.appendChild(lbl);
+        progressRow.appendChild(checkboxGroup);
+        langGroupDiv.appendChild(progressRow);
+    }
+    
+    langSettingsDiv.appendChild(langGroupDiv);
 
-        // 4. Create Font Size Subgroup
-        const sizeSubgroup = document.createElement('div');
-        sizeSubgroup.className = 'control-subgroup';
-        const sizeLabel = document.createElement('label');
-        sizeLabel.htmlFor = `fontSize-${lang}`;
-        sizeLabel.textContent = 'Font Size: ';
-        sizeSubgroup.appendChild(sizeLabel);
+    // --- Initialize Colors ---
+    updateColorDisplay(`fontColor-active-${lang}`);
+    updateColorDisplay(`fontColor-inactive-${lang}`);
 
-        const sizeInputGroup = document.createElement('div');
-        sizeInputGroup.className = 'input-group';
+    // --- Listeners ---
+    const activeInput = $(`fontColor-active-${lang}`); 
+    const inactiveInput = $(`fontColor-inactive-${lang}`); 
+    
+    sizeInput.value = parseFloat(currentLangSettings.fontSize || '3').toFixed(1);
 
-        const decreaseBtn = document.createElement('button');
-        decreaseBtn.className = 'btn';
-        decreaseBtn.style.cssText = "background-color: #ADD8E6; border: 1px solid #d1d5db; border-right: none; border-top-left-radius: 8px; border-bottom-left-radius: 8px; width: 2.5rem;";
-        decreaseBtn.textContent = '-';
-        decreaseBtn.onclick = () => decreaseFontSize(lang); // Use arrow function
-
-        const sizeInput = document.createElement('input');
-        sizeInput.type = 'number';
-        sizeInput.id = `fontSize-${lang}`;
-        sizeInput.className = 'form-control';
-        sizeInput.min = "0.1";
-        sizeInput.max = "20";
-        sizeInput.step = "0.1";
-        sizeInput.style.cssText = "width: 5rem; text-align: center; border-radius: 0; margin: 0; padding: 0.4rem;";
-
-        const increaseBtn = document.createElement('button');
-        increaseBtn.className = 'btn';
-        increaseBtn.style.cssText = "background-color: #ADD8E6; border: 1px solid #d1d5db; border-left: none; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 2.5rem;";
-        increaseBtn.textContent = '+';
-        increaseBtn.onclick = () => increaseFontSize(lang); // Use arrow function
-
-        sizeInputGroup.appendChild(decreaseBtn);
-        sizeInputGroup.appendChild(sizeInput);
-        sizeInputGroup.appendChild(increaseBtn);
-        sizeSubgroup.appendChild(sizeInputGroup);
-        controlRow.appendChild(sizeSubgroup);
-
-        // 5. Append control row and the whole language group
-        langGroupDiv.appendChild(controlRow);
-        langSettingsDiv.appendChild(langGroupDiv);
-
-        // --- NEW: Initialize the new display colors ---
-        // (Must be called *after* elements are appended to the DOM)
-        updateColorDisplay(`fontColor-active-${lang}`);
-        updateColorDisplay(`fontColor-inactive-${lang}`);
-
-        // 6. Set values and add listeners (NOW that elements are in the DOM)
-        // --- Find the NEWLY created inputs ---
-        const activeInput = $(`fontColor-active-${lang}`); // This ID is on the <input>
-        const inactiveInput = $(`fontColor-inactive-${lang}`); // This ID is on the <input>
-        // const sizeInput = $(`fontSize-${lang}`); // Already defined above, re-use it
-
-        // Set font size value (color values were set by createColorPickerHTML)
-        sizeInput.value = parseFloat(currentLangSettings.fontSize || '3').toFixed(1);
-
-        // This listener block is correct and attaches to the hidden inputs
-        [activeInput, inactiveInput, sizeInput].forEach(input => {
-            if (input) { // Add a check in case an element isn't found
-                input.addEventListener('input', () => {
-                    applySettings(getSettingsFromForm());
-                    saveSettings();
-                });
-            }
-        });
-    });
+    [activeInput, inactiveInput, sizeInput].forEach(input => {
+      if (input) { 
+        input.addEventListener('input', () => {
+          applySettings(getSettingsFromForm());
+          saveSettings();
+        });
+      }
+    });
+  });
 }
 
 function decreaseFontSize(lang) {
@@ -919,108 +943,140 @@ function updateLiveCounter() {
 }
 
 function populateLyricsContainer() {
-    lyricsContainer.innerHTML = '';
-    lyricsContainer.appendChild(Object.assign(document.createElement('div'), { className: 'spacer' }));
-    let maxLines = 0;
+    lyricsContainer.innerHTML = '';
+    lyricsContainer.appendChild(Object.assign(document.createElement('div'), { className: 'spacer' }));
+    
+    // --- UPDATED LOGIC: Find the maximum line count among ALL selected languages ---
+    const maxLines = getMaxLineCount();
+    // ------------------------------------------------------------------------------
 
-    if (usingCustomLyrics) {
-        maxLines = lines.length;  // Custom is the source of truth
-    } else {
-        // Normal hymn mode — find longest language
-        selectedLanguages.forEach(lang => {
-            const count = allHymnsData[lang]?.[currentHymnNumber]?.lines?.length || 0;
-            if (count > maxLines) maxLines = count;
+    for (let index = 0; index < maxLines; index++) {
+        const div = document.createElement('div');
+        div.className = 'lyric-line-group';
+        div.id = `line-${index}`;
+        
+        let progressBarAdded = false; 
+
+        languageOrder.forEach(lang => {
+            if (!selectedLanguages.includes(lang)) return;
+
+            let lineText = '';
+
+            // Get text safely (handles cases where index > length of specific language)
+            if (lang === 'Custom' && usingCustomLyrics) {
+                lineText = (lines[index] || '').replace(/-/g, '\u2011');
+            } else if (allHymnsData[lang]?.[currentHymnNumber]?.lines) {
+                if (lang !== 'Custom') {
+                    lineText = (allHymnsData[lang][currentHymnNumber].lines[index] || '').replace(/-/g, '\u2011');
+                } else if (!usingCustomLyrics) {
+                    lineText = (allHymnsData[lang][currentHymnNumber].lines[index] || '').replace(/-/g, '\u2011');
+                }
+            }
+
+            const p = document.createElement('p');
+            p.className = `lyric-line lyric-line-${lang}`;
+            
+            // Handle Beats (Dots)
+            if ((lang.includes('SL') || (lang === 'Custom' && lineText.includes('|')))) {
+                const beats = lineText.split('|').map(s => s.trim());
+                beats.forEach((beatText, i) => {
+                    const segment = document.createElement('span');
+                    segment.className = 'beat-segment';
+                    segment.textContent = beatText;
+                    p.appendChild(segment);
+                    if (i < beats.length - 1) {
+                        const separator = document.createElement('span');
+                        separator.className = 'beat-separator';
+                        separator.textContent = '•';
+                        p.appendChild(separator);
+                    }
+                });
+            } else if (lineText) {
+                p.textContent = lineText;
+            } else if (lang !== 'Custom') {
+                 // Only show "not available" if the WHOLE hymn is missing, 
+                 // not just because this specific line is shorter than the max.
+                 if (index === 0 && !allHymnsData[lang]?.[currentHymnNumber]?.lines) {
+                    p.textContent = `${lang} lyrics not available`;
+                 }
+            }
+
+            // Insert Bar INSIDE the <p> tag
+            if (p.hasChildNodes()) {
+                // Logic: Add bar if it hasn't been added to this group yet.
+                // Even if lineText is empty (because this language is shorter), 
+                // we might still want the bar if it's the top-most selected language 
+                // to show the timing flow.
+                // However, usually we only want it on visible text. 
+                // We check `lineText.trim() !== ''` to ensure we attach to visible text if possible.
+                if (!progressBarAdded && lineText && lineText.trim() !== '') {
+                    const progressContainer = document.createElement('div');
+                    progressContainer.className = 'line-progress-container';
+                    progressContainer.innerHTML = `
+                        <div class="line-progress-bar">
+                            <div class="line-progress-knob"></div>
+                        </div>
+                    `;
+                    p.appendChild(progressContainer);
+                    progressBarAdded = true;
+                }
+                div.appendChild(p);
+            }
         });
-    }
+        
+        // Edge Case: If we looped through all languages and NO bar was added 
+        // (e.g. because the top language line was empty but the second language had text),
+        // the loop above handles attaching to the next available text because of the order.
+        // But if ALL text is empty for this line (shouldn't happen due to maxLines logic),
+        // we just append the div empty.
 
-    for (let index = 0; index < maxLines; index++) {
-        const div = document.createElement('div');
-        div.className = 'lyric-line-group';
-        div.id = `line-${index}`;
-        languageOrder.forEach(lang => {
-            if (!selectedLanguages.includes(lang)) return;
-						
-						let lineText = '';
-						
-            if (lang === 'Custom' && usingCustomLyrics) {
-						lineText = (lines[index] || '').replace(/-/g, '\u2011');
-						}
-						// If NOT using custom lyrics OR if it is a standard language (English, Spanish, ASL)
-						// we show the standard lyrics, unless custom is active and we want to prevent overlap.
-						else if (allHymnsData[lang]?.[currentHymnNumber]?.lines) {
-								// Only display the standard language if:
-								// 1. We are NOT using custom lyrics, OR
-								// 2. The language is NOT 'Custom' (i.e., display English/ASL alongside Custom)
-								if (lang !== 'Custom') {
-										lineText = (allHymnsData[lang][currentHymnNumber].lines[index] || '').replace(/-/g, '\u2011');
-								} else if (!usingCustomLyrics) {
-										// This branch handles standard languages when custom isn't selected/active
-										lineText = (allHymnsData[lang][currentHymnNumber].lines[index] || '').replace(/-/g, '\u2011');
-								}
-						}
-            const p = document.createElement('p');
-            p.className = `lyric-line lyric-line-${lang}`;
-            if ((lang.includes('SL') || (lang === 'Custom' && lineText.includes('|')))) {
-                const beats = lineText.split('|').map(s => s.trim());
-                beats.forEach((beatText, i) => {
-                    const segment = document.createElement('span');
-                    segment.className = 'beat-segment';
-                    segment.textContent = beatText;
-                    p.appendChild(segment);
-                    if (i < beats.length - 1) {
-                        const separator = document.createElement('span');
-                        separator.className = 'beat-separator';
-                        separator.textContent = '•';
-                        p.appendChild(separator);
-                    }
-                });
-            } else if (lineText) {
-                p.textContent = lineText;
-            } else if (lang !== 'Custom') {
-                 if (index === 0 && !allHymnsData[lang]?.[currentHymnNumber]?.lines) {
-                    p.textContent = `${lang} lyrics not available`;
-                 }
-            }
-            if (p.hasChildNodes()) {
-                div.appendChild(p);
-            }
-        });
-        if (div.hasChildNodes()) {
-            lyricsContainer.appendChild(div);
-        }
-    }
-    lyricsContainer.appendChild(Object.assign(document.createElement('div'), { className: 'spacer' }));
-    requestAnimationFrame(() => {
-        applySettings(getSettingsFromForm());
-        if (maxLines > 0) {
-            setCurrentIndex(currentIndex, true);
-        }
-    });
+        if (div.hasChildNodes()) {
+            lyricsContainer.appendChild(div);
+        }
+    }
+    
+    lyricsContainer.appendChild(Object.assign(document.createElement('div'), { className: 'spacer' }));
+    requestAnimationFrame(() => {
+        applySettings(getSettingsFromForm());
+        if (maxLines > 0) {
+            setCurrentIndex(currentIndex, true);
+        }
+    });
 }
 
 function setCurrentIndex(newIdx, instant = false) {
-  const currentLineEl = lyricsContainer.querySelector('.is-current');
-  if (currentLineEl) currentLineEl.classList.remove('is-current');
-  const lineArray = usingCustomLyrics ? lines : initialHymnLines;
-  if (newIdx < 0 || newIdx >= lineArray.length) {
-    currentIndex = -1;
-    return;
-  }
-  const nextLineEl = $(`line-${newIdx}`);
-  if (!nextLineEl) return;
-  const viewportHeight = lyricsViewport.clientHeight;
-  const targetScrollTop = nextLineEl.offsetTop - (viewportHeight / 2) + (nextLineEl.offsetHeight / 2);
-  if (instant) {
-    lyricsContainer.style.transition = 'none';
-    lyricsContainer.style.transform = `translateY(-${targetScrollTop}px)`;
-    setTimeout(() => {
-      lyricsContainer.style.transition = `transform var(--transition-speed) ease-in-out`;
-    }, 50);
-  } else {
-    lyricsContainer.style.transform = `translateY(-${targetScrollTop}px)`;
-  }
-  nextLineEl.classList.add('is-current');
-  currentIndex = newIdx;
+  const currentLineEl = lyricsContainer.querySelector('.is-current');
+  if (currentLineEl) currentLineEl.classList.remove('is-current');
+  
+  // --- FIX: Use the shared Max Line Count logic ---
+  // Previously: const lineArray = usingCustomLyrics ? lines : initialHymnLines;
+  const totalLines = getMaxLineCount();
+  
+  // Check against the TOTAL available visual lines, not just the active array
+  if (newIdx < 0 || newIdx >= totalLines) {
+    currentIndex = -1;
+    return;
+  }
+  // ------------------------------------------------
+
+  const nextLineEl = $(`line-${newIdx}`);
+  if (!nextLineEl) return;
+  
+  const viewportHeight = lyricsViewport.clientHeight;
+  const targetScrollTop = nextLineEl.offsetTop - (viewportHeight / 2) + (nextLineEl.offsetHeight / 2);
+  
+  if (instant) {
+    lyricsContainer.style.transition = 'none';
+    lyricsContainer.style.transform = `translateY(-${targetScrollTop}px)`;
+    setTimeout(() => {
+      lyricsContainer.style.transition = `transform var(--transition-speed) ease-in-out`;
+    }, 50);
+  } else {
+    lyricsContainer.style.transform = `translateY(-${targetScrollTop}px)`;
+  }
+  
+  nextLineEl.classList.add('is-current');
+  currentIndex = newIdx;
 }
 
 function formatTime(seconds) {
@@ -1076,6 +1132,7 @@ function togglePauseResume() {
 }
 
 async function initializeAudio(hymnNumber, wasPlaying = false, currentTime = 0, onManualSetup = null) {
+  resetTempo();
   if (!hymnNumber) return console.warn("initializeAudio called with no hymn number.");
 
   const trackType = $('trackType').checked ? 'voice' : 'accompaniment';
@@ -1194,7 +1251,7 @@ function playHymn() {
       defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
     }
     if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
-    const targetLineCount = usingCustomLyrics ? lines.length : (hymnEntry?.lines?.length || initialHymnLines.length);
+    const targetLineCount = getMaxLineCount();
     while (lineTimings.length < targetLineCount) {
       lineTimings.push(defaultSecondsPerLine);
     }
@@ -1235,6 +1292,12 @@ function stopHymn() {
   $('metaCounter').textContent = "- / -";
   if (!currentHymnNumber) $('audioLanguage').textContent = '';
   $('countdown-display').classList.remove('is-visible');
+
+	document.querySelectorAll('.line-progress-bar').forEach(bar => {
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+  });
+
   lyricsViewport.classList.remove('is-counting-down', 'intro-active');
   enablePlaybackControls(false);
   populateLyricsContainer();
@@ -1352,6 +1415,10 @@ function initializePage() {
         console.log("InitializePage .then(): Processing runlist...");
         currentHymnNumber = runlistNumbers[0];
         currentRunlistIndex = 0;
+        // Set initial indicator to 1
+        const indicator = $('runlistIndicator');
+        if (indicator) indicator.textContent = "1";
+        
         const firstEntry = allHymnsData['English']?.[currentHymnNumber] || {};
 
         if (Object.keys(firstEntry).length > 0) {
@@ -1362,6 +1429,7 @@ function initializePage() {
           if (!runlistDisplay) throw new Error("Runlist display element not found!");
           runlistDisplay.innerHTML = '';
 
+          // --- CORRECTED LOOP START ---
           runlistNumbers.forEach((num, idx) => {
             const entry = allHymnsData['English']?.[num] || {};
             const title = entry.title || 'Unknown';
@@ -1369,48 +1437,14 @@ function initializePage() {
             li.textContent = `${num} - ${title}`;
             li.dataset.index = idx;
 
+            // Simplified listener using the new function
             li.addEventListener('click', function () {
-              try {
-                stopHymn();
-                currentRunlistIndex = idx;
-                currentHymnNumber = num;
-                const entry = allHymnsData['English']?.[num] || {};
-                $('pageHeader').textContent = `Hymn ${num} - ${entry.title || 'Unknown'}`;
-                initialHymnLines = entry.lines || [];
-
-                const customLinesForHymn = customLyricsStore[num];
-                if (customLinesForHymn) {
-                  lines = customLinesForHymn;
-                  usingCustomLyrics = true;
-                  $('customLyricsTextarea').value = customLinesForHymn.join('\n');
-                } else {
-                  lines = [...initialHymnLines];
-                  usingCustomLyrics = false;
-                  $('customLyricsTextarea').value = '';
-                }
-
-                const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
-                const saved = customLyricsStore[hymnKey];
-                $('customLyricsTextarea').value = saved ? saved.join('\n') : '';
-                updateLiveCounter();
-
-                $('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
-                populateLyricsContainer();
-                updateLineCountDisplay();
-                updateAudioLanguageDisplay();
-                renderLanguageList();
-                updateLanguageSettings();
-
-                runlistDisplay.querySelectorAll('li').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                initializeAudio(num);
-              } catch (err) {
-                console.error("Runlist click error:", err);
-                showNotice("Error switching hymn: " + err.message);
-              }
+              loadRunlistIndex(idx);
             });
+
             runlistDisplay.appendChild(li);
           });
+          // --- CORRECTED LOOP END ---
 
           runlistDisplay.querySelector('li')?.classList.add('active');
 
@@ -1562,6 +1596,25 @@ function initializePage() {
       $('playback-toggle')?.addEventListener('click', () => toggleCollapsibleById('playback'));
       $('manualControlOverride')?.addEventListener('change', toggleManualControl);
 
+      const fullscreenBtn = $('fullscreenToggleBtn');
+      if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', () => {
+          const page = document.querySelector('.page');
+          const isNowFullscreen = page.classList.toggle('fullscreen-active');
+
+          // Toggle the icon:
+          // » (Right) means "Click to hide right panel"
+          // « (Left) means "Click to show right panel"
+          fullscreenBtn.innerHTML = isNowFullscreen ? '&laquo;' : '&raquo;';
+
+          // Optional: Re-calculate lyrics viewport height if needed since width changed
+          setTimeout(() => {
+            const settings = getSettingsFromForm();
+            applySettings(settings);
+          }, 300); // Wait for CSS transition if any
+        });
+      }
+
       console.log("InitializePage .then(): Event listeners set up.");
     } catch (e) {
       console.error("Error setting up event listeners:", e);
@@ -1569,11 +1622,11 @@ function initializePage() {
     }
 
     try {
-      updateAudioLanguageDisplay();
+      // updateAudioLanguageDisplay(); // <-- Removed duplicate
       if (!hymnDataLoaded && !usingCustomLyrics) {
         showNotice("No hymn selected or data found. Please select a hymn or load custom lyrics.");
       }
-      updateAudioLanguageDisplay();
+      updateAudioLanguageDisplay(); // Keep this one
       console.log("InitializePage .then(): Initialization complete.");
     } catch (e) {
       console.error("Error in final checks:", e);
@@ -1588,26 +1641,31 @@ function initializePage() {
 
 
 function getSettingsFromForm() {
-  const settings = {
-    bgColor: $('bgColor').value || DEFAULTS.bgColor,
-    highlightColor: $('highlightColor').value || DEFAULTS.highlightColor,
-    underlineColor: $('underlineColor').value || DEFAULTS.underlineColor,
-    dotColor: $('dotColor').value || DEFAULTS.dotColor,
-    showDots: !$('toggleDotLabel').classList.contains('disabled'),
-    showUnderline: !$('toggleUnderlineLabel').classList.contains('disabled'),
-    transitionSpeed: $('transitionSpeed').value || DEFAULTS.transitionSpeed,
-    lyricsWidth: $('lyricsWidth').value || DEFAULTS.lyricsWidth,
-    languages: {}
-  };
-  languageOrder.forEach(lang => {
-    const defaults = DEFAULTS.languages[lang] || DEFAULTS.languages.English;
-    settings.languages[lang] = {
-      fontSize: $(`fontSize-${lang}`)?.value || defaults.fontSize,
-      fontColorActive: $(`fontColor-active-${lang}`)?.value || defaults.fontColorActive,
-      fontColorInactive: $(`fontColor-inactive-${lang}`)?.value || defaults.fontColorInactive
-    };
-  });
-  return settings;
+  const settings = {
+    bgColor: $('bgColor').value || DEFAULTS.bgColor,
+    highlightColor: $('highlightColor').value || DEFAULTS.highlightColor,
+    underlineColor: $('underlineColor').value || DEFAULTS.underlineColor,
+    dotColor: $('dotColor').value || DEFAULTS.dotColor,
+    showDots: !$('toggleDotLabel').classList.contains('disabled'),
+    showUnderline: !$('toggleUnderlineLabel').classList.contains('disabled'),
+    
+    // --- NEW: Read Progress Bar Toggle ---
+    showProgressBar: $('progressBarToggle') ? $('progressBarToggle').checked : DEFAULTS.showProgressBar,
+    // -------------------------------------
+    
+    transitionSpeed: $('transitionSpeed').value || DEFAULTS.transitionSpeed,
+    lyricsWidth: $('lyricsWidth').value || DEFAULTS.lyricsWidth,
+    languages: {}
+  };
+  languageOrder.forEach(lang => {
+    const defaults = DEFAULTS.languages[lang] || DEFAULTS.languages.English;
+    settings.languages[lang] = {
+      fontSize: $(`fontSize-${lang}`)?.value || defaults.fontSize,
+      fontColorActive: $(`fontColor-active-${lang}`)?.value || defaults.fontColorActive,
+      fontColorInactive: $(`fontColor-inactive-${lang}`)?.value || defaults.fontColorInactive
+    };
+  });
+  return settings;
 }
 
 function applySettings(settings) {
@@ -1618,6 +1676,7 @@ function applySettings(settings) {
   root.style.setProperty('--transition-speed', `${settings.transitionSpeed}s`);
   lyricsViewport.classList.toggle('dots-hidden', !settings.showDots);
   lyricsViewport.classList.toggle('underline-hidden', !settings.showUnderline);
+	lyricsViewport.classList.toggle('progress-bar-hidden', !settings.showProgressBar);
   $('toggleDotLabel').classList.toggle('disabled', !settings.showDots);
   $('toggleUnderlineLabel').classList.toggle('disabled', !settings.showUnderline);
   document.querySelector('.page').style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
@@ -1763,50 +1822,83 @@ function switchAudioTrack() {
 }
 
 function startAutoScroll(lineTimings) {
-  clearTimer();
-  const currentLineArray = usingCustomLyrics ? lines : initialHymnLines;
-  if (!isPlaying || currentIndex >= currentLineArray.length) return;
-  const secondsForCurrentLine = lineTimings[currentIndex] || 0.2;
-  if (isNaN(secondsForCurrentLine) || secondsForCurrentLine <= 0) return;
-  const currentLineEl = $(`line-${currentIndex}`);
-  if (currentLineEl) {
-    const activeLanguages = languageOrder.filter(lang => selectedLanguages.includes(lang));
-    activeLanguages.forEach(lang => {
-        const lineText = usingCustomLyrics && lang === 'Custom'
-            ? (lines[currentIndex] || '')
-            : (allHymnsData[lang]?.[currentHymnNumber]?.lines[currentIndex] || '');
-        const isSignLanguage = lang.includes('SL') || (lang === 'Custom' && lineText.includes('|'));
-        if (isSignLanguage) {
-            const lyricLineEl = currentLineEl.querySelector(`.lyric-line-${lang}`);
-            const beatElements = lyricLineEl ? lyricLineEl.querySelectorAll('.beat-segment') : [];
-            if (beatElements.length > 0) {
-                const timePerBeat = secondsForCurrentLine / beatElements.length;
-                const animationDuration = timePerBeat;
-                beatElements.forEach((beatEl, i) => {
-                    setTimeout(() => {
-                        if (!isPlaying) return;
-                        beatEl.style.setProperty('--beat-duration', `${animationDuration}s`);
-                        beatEl.classList.add('is-glowing');
-                        setTimeout(() => {
-                            beatEl.classList.remove('is-glowing');
-                            beatEl.style.removeProperty('--beat-duration');
-                        }, animationDuration * 1000);
-                    }, i * timePerBeat * 1000);
-                });
-            }
-        }
-    });
-  }
-  mainTimer = setTimeout(() => {
-    if (!isPlaying) return;
-    if (currentIndex < currentLineArray.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      startAutoScroll(lineTimings);
-    } else {
-      isPlaying = false;
-      clearTimer();
-    }
-  }, secondsForCurrentLine * 1000);
+  clearTimer();
+  
+  // --- FIX: Use Max Line Count for the bounds check ---
+  const totalLines = getMaxLineCount();
+  
+  if (!isPlaying || currentIndex >= totalLines) return;
+  // ----------------------------------------------------
+  
+  // Get base time and adjust for tempo
+  const baseSeconds = lineTimings[currentIndex] || 0.2;
+  const adjustedSeconds = baseSeconds / playbackRate; 
+
+  if (isNaN(adjustedSeconds) || adjustedSeconds <= 0) return;
+  
+  const currentLineEl = $(`line-${currentIndex}`);
+  
+  if (currentLineEl) {
+    // 1. Handle BEAT animations
+    const activeLanguages = languageOrder.filter(lang => selectedLanguages.includes(lang));
+    activeLanguages.forEach(lang => {
+        const lineText = usingCustomLyrics && lang === 'Custom'
+            ? (lines[currentIndex] || '')
+            : (allHymnsData[lang]?.[currentHymnNumber]?.lines[currentIndex] || '');
+        
+        const isSignLanguage = lang.includes('SL') || (lang === 'Custom' && lineText.includes('|'));
+        
+        if (isSignLanguage) {
+            const lyricLineEl = currentLineEl.querySelector(`.lyric-line-${lang}`);
+            const beatElements = lyricLineEl ? lyricLineEl.querySelectorAll('.beat-segment') : [];
+            if (beatElements.length > 0) {
+                const timePerBeat = adjustedSeconds / beatElements.length;
+                beatElements.forEach((beatEl, i) => {
+                    setTimeout(() => {
+                        if (!isPlaying) return;
+                        beatEl.style.setProperty('--beat-duration', `${timePerBeat}s`);
+                        beatEl.classList.add('is-glowing');
+                        setTimeout(() => beatEl.classList.remove('is-glowing'), timePerBeat * 1000);
+                    }, i * timePerBeat * 1000);
+                });
+            }
+        }
+    });
+
+    // 2. Handle PROGRESS LINE Animation
+    const progressBar = currentLineEl.querySelector('.line-progress-bar');
+    if (progressBar) {
+        progressBar.style.transition = 'none';
+        progressBar.style.width = '0%';
+        void progressBar.offsetWidth; // Force reflow
+        progressBar.style.transition = `width ${adjustedSeconds}s linear`;
+        progressBar.style.width = '100%';
+    }
+  }
+  
+  mainTimer = setTimeout(() => {
+    if (!isPlaying) return;
+    
+    // --- FIX: Check against totalLines here too ---
+    if (currentIndex < totalLines - 1) {
+      setCurrentIndex(currentIndex + 1);
+      startAutoScroll(lineTimings); 
+    } else {
+      // End of song logic
+      isPlaying = false;
+      clearTimer();
+
+      const activeLine = lyricsContainer.querySelector('.is-current');
+      if (activeLine) activeLine.classList.remove('is-current');
+
+      document.querySelectorAll('.line-progress-bar').forEach(bar => {
+          bar.style.transition = 'none';
+          bar.style.width = '0%';
+      });
+
+      enablePlaybackControls(false);
+    }
+  }, adjustedSeconds * 1000);
 }
 
 function toggleCollapsibleById(id, forceOpen = null) {
@@ -2084,4 +2176,158 @@ function deleteAllCustomLyrics() {
         
         showNotice("All custom lyrics deleted and settings saved.");
     }
+}
+
+// --- Runlist & Mini Control Logic ---
+
+function playSmart() {
+  // If paused and has progress, resume. Otherwise, play from start.
+  if (audio && audio.paused && audio.currentTime > 0 && !isPlaying) {
+    resumeHymn();
+  } else {
+    playHymn();
+  }
+}
+
+function nextSong() {
+  if (runlistNumbers.length === 0) return showNotice("Runlist is empty.");
+  if (currentRunlistIndex < runlistNumbers.length - 1) {
+    loadRunlistIndex(currentRunlistIndex + 1);
+  } else {
+    showNotice("End of runlist.");
+  }
+}
+
+function prevSong() {
+  if (runlistNumbers.length === 0) return showNotice("Runlist is empty.");
+  if (currentRunlistIndex > 0) {
+    loadRunlistIndex(currentRunlistIndex - 1);
+  } else {
+    showNotice("Start of runlist.");
+  }
+}
+
+function loadRunlistIndex(idx) {
+  try {
+    stopHymn(); // Stop current playback
+    
+    const num = runlistNumbers[idx];
+    if (!num) return;
+
+    currentRunlistIndex = idx;
+    currentHymnNumber = num;
+    
+    // --- NEW: Update the indicator number ---
+    const indicator = $('runlistIndicator');
+    if (indicator) {
+        // Display 1-based index (idx + 1)
+        indicator.textContent = idx + 1;
+    }
+    // ----------------------------------------
+    
+    const entry = allHymnsData['English']?.[num] || {};
+    $('pageHeader').textContent = `Hymn ${num} - ${entry.title || 'Unknown'}`;
+    
+    initialHymnLines = entry.lines || [];
+
+    // Handle custom lyrics for this hymn
+    const customLinesForHymn = customLyricsStore[num];
+    if (customLinesForHymn) {
+      lines = customLinesForHymn;
+      usingCustomLyrics = true;
+      $('customLyricsTextarea').value = customLinesForHymn.join('\n');
+    } else {
+      lines = [...initialHymnLines];
+      usingCustomLyrics = false;
+      $('customLyricsTextarea').value = '';
+    }
+    
+    if (!customLinesForHymn) {
+        const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+        const saved = customLyricsStore[hymnKey];
+        if (saved) $('customLyricsTextarea').value = saved.join('\n');
+    }
+
+    updateLiveCounter();
+    $('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
+    
+    populateLyricsContainer();
+    updateLineCountDisplay();
+    updateAudioLanguageDisplay();
+    renderLanguageList();
+    updateLanguageSettings();
+
+    const runlistDisplay = $('runlist-display');
+    if (runlistDisplay) {
+        runlistDisplay.querySelectorAll('li').forEach(l => l.classList.remove('active'));
+        const activeLi = runlistDisplay.querySelector(`li[data-index="${idx}"]`);
+        if (activeLi) activeLi.classList.add('active');
+    }
+
+    initializeAudio(num);
+    
+  } catch (err) {
+    console.error("Error switching hymn:", err);
+    showNotice("Error switching hymn: " + err.message);
+  }
+}
+
+// --- Tempo / Speed Control Logic ---
+let currentBPM = 100; // Visual BPM (Base 100)
+let playbackRate = 1.0; // Actual Audio Rate
+
+function adjustTempo(bpmChange) {
+  currentBPM += bpmChange;
+  
+  // Safety Limits (40 BPM to 220 BPM is standard metronome range)
+  if (currentBPM < 40) currentBPM = 40;
+  if (currentBPM > 220) currentBPM = 220;
+  
+  // Calculate new rate: 100 is considered "1.0" (Original Speed)
+  playbackRate = currentBPM / 100;
+  
+  updateTempoUI();
+}
+
+function resetTempo() {
+  currentBPM = 100;
+  playbackRate = 1.0;
+  updateTempoUI();
+}
+
+function updateTempoUI() {
+  // 1. Update the Number Display
+  const display = $('tempoDisplay');
+  if (display) display.textContent = currentBPM;
+
+  // 2. Update Audio immediately if playing
+  if (audio) {
+    audio.playbackRate = playbackRate;
+  }
+  
+  // Note: startAutoScroll uses the 'playbackRate' global variable automatically
+}
+
+function getMaxLineCount() {
+    let max = 0;
+    // Check Custom first if active
+    if (usingCustomLyrics && lines) {
+        max = lines.length;
+    }
+    
+    // Check all selected languages
+    selectedLanguages.forEach(lang => {
+        let count = 0;
+        if (lang === 'Custom') {
+            if (usingCustomLyrics && lines) count = lines.length;
+        } else {
+            count = allHymnsData[lang]?.[currentHymnNumber]?.lines?.length || 0;
+        }
+        if (count > max) max = count;
+    });
+    
+    // Fallback to English if everything else fails
+    if (max === 0 && initialHymnLines) max = initialHymnLines.length;
+    
+    return max;
 }
