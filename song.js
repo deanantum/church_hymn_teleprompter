@@ -662,9 +662,12 @@ function increaseFontSize(lang) {
 }
 
 function deleteLanguageFromOrder(event) {
+    // Prevent the click from bubbling up (good practice)
+    event.stopPropagation();
+
     const langToRemove = event.currentTarget.dataset.lang;
 
-    if (!confirm(`Are you sure you want to remove '${langToRemove}' from the Lyric Order? This will reset custom settings related to this language.`)) {
+    if (!confirm(`Are you sure you want to remove '${langToRemove}'? This will delete any saved data for this language.`)) {
         return;
     }
 
@@ -674,45 +677,44 @@ function deleteLanguageFromOrder(event) {
     // 2. Remove from Selection list
     selectedLanguages = selectedLanguages.filter(l => l !== langToRemove);
 
-    // 3. Special handling for 'Custom' lyrics (permanently delete data)
+    // 3. Special handling for 'Custom' lyrics
     if (langToRemove === 'Custom') {
-        // Find all keys in the store that start with a number (hymn numbers)
-        Object.keys(customLyricsStore).forEach(key => {
-            if (!isNaN(parseInt(key))) {
-                delete customLyricsStore[key];
-            }
-        });
-        // Also delete the 'CUSTOM_ONLY' key if it exists
-        delete customLyricsStore['CUSTOM_ONLY'];
+        // --- NEW: Completely wipe Custom data ---
+        customLyricsStore = {}; 
         
-        // Remove 'Custom' from available languages list (if present)
-        availableLanguages = availableLanguages.filter(l => l !== 'Custom');
+        // Clear the input box immediately
+        const textarea = $('customLyricsTextarea');
+        if (textarea) textarea.value = '';
 
-        // Reset the active lyrics view if it was using custom lyrics for the current song
-        if (usingCustomLyrics) {
-            const currentHymnKey = currentHymnNumber || 'CUSTOM_ONLY';
-            if (!customLyricsStore[currentHymnKey]) {
-                // Fall back to original lyrics/empty state
-                lines = [...initialHymnLines];
-                usingCustomLyrics = false;
-                $('customLyricsTextarea').value = '';
-            }
-        }
+        // Reset internal state to use standard lyrics
+        usingCustomLyrics = false;
+        lines = [...initialHymnLines];
+        
+        // Remove from available languages so it doesn't reappear
+        availableLanguages = availableLanguages.filter(l => l !== 'Custom');
+        // ----------------------------------------
     }
     
-    // Ensure we always have at least one language selected (if available)
-    if (selectedLanguages.length === 0 && languageOrder.length > 0) {
-        selectedLanguages.push(languageOrder[0]);
+    // Ensure we always have at least one language selected
+    if (selectedLanguages.length === 0) {
+        if (languageOrder.length > 0) {
+             selectedLanguages.push(languageOrder[0]);
+        } else if (availableLanguages.length > 0) {
+             selectedLanguages.push(availableLanguages[0]);
+        }
     }
 
     // 4. Save and Update UI
-    saveSettings(); 
+    saveSettings(); // This overwrites localStorage with the empty customLyricsStore
     renderLanguageList();
     updateLanguageSettings();
     populateLyricsContainer();
     updateAudioLanguageDisplay();
+    
+    // Update the line count display (Custom vs Original)
+    updateLiveCounter(); 
 
-    showNotice(`'${langToRemove}' removed from order. Settings saved.`);
+    showNotice(`'${langToRemove}' removed and data cleared.`);
 }
 
 function adjustTransitionSpeed(amount) {
