@@ -6517,9 +6517,9 @@
       "safe_title": "",
       "voiceURL": "https://media2.ldscdn.org/assets/music/hymns/2001-01-2030-angels-we-have-heard-on-high-vocal-and-instrumental-192k-eng.mp3",
       "accompanimentURL": "https://media2.ldscdn.org/assets/music/hymns/2001-01-2030-angels-we-have-heard-on-high-instrumental-192k-eng.mp3",
-      "intro_length": 22,
+      "intro_length": 21,
       "line_time": 0,
-      "line_timings": [5.1, 4.7, 4.6, 4.7, 13.9, 16.2, 5, 4.9, 4.7, 5, 14, 16.7, 4.8, 4.8, 4.6, 4.8, 13.8, 16.8],
+      "line_timings": [4.8, 4.7, 4.6, 4.7, 13.9, 16.2, 5, 4.9, 4.7, 5, 14, 16.7, 4.8, 4.8, 4.6, 4.8, 13.8, 16.8],
 "lines":[
 "1: Angels we have heard on high",
 "Sweetly singing o’er the plains,",
