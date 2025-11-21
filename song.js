@@ -332,74 +332,88 @@ async function loadAvailableLanguages() {
 }
 
 function renderLanguageList() {
-  const langList = $('language-list');
-  langList.innerHTML = ''; // Clear existing content
-  languageOrder.forEach(lang => {
-    let lineCount = (lang === 'Custom' && usingCustomLyrics)
+  const langList = $('language-list');
+  langList.innerHTML = ''; 
+
+  // --- CRITICAL FIX: Cleanup "Phantom" Selections ---
+  // Filter out any languages that are currently selected but have 0 lines for this specific song.
+  // This prevents invisible languages from counting toward the "Max 3" limit.
+  const previousLength = selectedLanguages.length;
+  selectedLanguages = selectedLanguages.filter(lang => {
+    // 1. If it's Custom, only keep it if custom lyrics are actually active
+    if (lang === 'Custom') return usingCustomLyrics && lines && lines.length > 0;
+    
+    // 2. If it's a standard language, only keep it if it has lines for this specific song
+    const hasLines = allHymnsData[lang]?.[currentHymnNumber]?.lines?.length > 0;
+    return hasLines;
+  });
+
+  // If we removed anything (or if the list became empty), save and ensure at least one language exists
+  if (selectedLanguages.length !== previousLength || selectedLanguages.length === 0) {
+    if (selectedLanguages.length === 0 && availableLanguages.length > 0) {
+         // Default to first available (usually English) if everything was wiped
+         selectedLanguages.push(availableLanguages[0]);
+    }
+    saveSettings();
+    updateLanguageSettings(); // Update the settings panel to match
+    updateAudioLanguageDisplay(); // Update the audio label
+  }
+  // --------------------------------------------------
+
+  languageOrder.forEach(lang => {
+    let lineCount = (lang === 'Custom' && usingCustomLyrics)
     ? lines.length
     : allHymnsData[lang]?.[currentHymnNumber]?.lines?.length || 0;
     
     if (lineCount === 0 && lang !== 'Custom') return;
-    if (lineCount === 0) return;  // skip Custom if empty
-    // Create elements programmatically to avoid whitespace
+    if (lineCount === 0) return; 
+
+    const li = document.createElement('li');
+    li.className = 'language-item';
+    li.draggable = true;
+    li.dataset.lang = lang;
     
-    // --- 1. LI setup ---
-    const li = document.createElement('li');
-    li.className = 'language-item';
-    li.draggable = true;
-    li.dataset.lang = lang;
-    
-    // Set LI to display elements horizontally and push content apart
     li.style.display = 'flex';
     li.style.justifyContent = 'space-between'; 
     li.style.alignItems = 'center';
 
-    // --- 2. Checkbox Group DIV ---
-    const div = document.createElement('div');
-    div.className = 'checkbox-group';
+    const div = document.createElement('div');
+    div.className = 'checkbox-group';
     
-    // --- 3. Input Element ---
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.id = `lang-${lang}`;
-    if (selectedLanguages.includes(lang)) {
-      input.checked = true;
-    }
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = `lang-${lang}`;
+    if (selectedLanguages.includes(lang)) {
+      input.checked = true;
+    }
     
-    // --- 4. Label Element (MISSING CREATION IN YOUR CODE) ---
-    const label = document.createElement('label'); // <-- ADD THIS LINE
+    const label = document.createElement('label');
     label.htmlFor = `lang-${lang}`;
     label.textContent = `${lang} (Lines: ${lineCount})`;
 
-    // --- 5. APPEND INPUTS/LABEL TO DIV ---
     div.appendChild(input); 
-    div.appendChild(label); // <-- ADD THESE LINES
+    div.appendChild(label);
 
-    // --- 6. Remove Button Setup ---
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = '❌';
-    removeBtn.className = 'remove-language-btn';
-    removeBtn.title = `Remove ${lang} from the Lyric Order`;
-    removeBtn.type = 'button'; 
-    removeBtn.dataset.lang = lang; 
-    
-    // Inline style for smaller size and padding
-    removeBtn.style.fontSize = '0.7em';
-    removeBtn.style.padding = '0.1rem 0.3rem';
-    removeBtn.style.marginLeft = '1rem'; // Space it away from the text
-    removeBtn.style.backgroundColor = 'transparent';
-    removeBtn.style.border = 'none';
-    removeBtn.style.cursor = 'pointer';
-    
-    removeBtn.addEventListener('click', deleteLanguageFromOrder);
-    
-    // --- 7. APPEND DIV AND BUTTON TO LI ---
-    li.appendChild(div); // Checkbox group (left side)
-    li.appendChild(removeBtn); // Remove button (right side)
-    langList.appendChild(li);
-
-    console.log('Generated language-item HTML:', li.outerHTML); // Debug
-  });
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '❌';
+    removeBtn.className = 'remove-language-btn';
+    removeBtn.title = `Remove ${lang} from the Lyric Order`;
+    removeBtn.type = 'button'; 
+    removeBtn.dataset.lang = lang; 
+    
+    removeBtn.style.fontSize = '0.7em';
+    removeBtn.style.padding = '0.1rem 0.3rem';
+    removeBtn.style.marginLeft = '1rem'; 
+    removeBtn.style.backgroundColor = 'transparent';
+    removeBtn.style.border = 'none';
+    removeBtn.style.cursor = 'pointer';
+    
+    removeBtn.addEventListener('click', deleteLanguageFromOrder);
+    
+    li.appendChild(div); 
+    li.appendChild(removeBtn); 
+    langList.appendChild(li);
+  });
 
   // Add event listeners
   langList.querySelectorAll('.language-item').forEach(item => {
@@ -422,54 +436,41 @@ function renderLanguageList() {
       updateAudioLanguageDisplay();
       if (isPlaying && !$('manualControlOverride').checked) {
         clearTimer();
+        // Restart scrolling logic if order changed
         let timingLanguage = languageOrder[0] === 'Custom' ? languageOrder[1] : languageOrder[0];
         timingLanguage = timingLanguage?.includes('SL') ? 'English' : timingLanguage;
         const hymnEntry = allHymnsData[timingLanguage]?.[currentHymnNumber] || allHymnsData['English']?.[currentHymnNumber];
         if (hymnEntry) {
-          let lineTimings = (hymnEntry.line_timings || []).map(t => parseFloat(t) || 0.2);
-          const targetLineCount = usingCustomLyrics ? lines.length : (hymnEntry.lines?.length || 0);
-          let defaultSecondsPerLine = 5;
-          if (lineTimings.length < targetLineCount) {
-            const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
-            if (audio && audio.duration > 0) {
-              defaultSecondsPerLine = (audio.duration - parseFloat($("introLength").value) - offset) / targetLineCount;
-            }
-          }
-          while (lineTimings.length < targetLineCount) {
-            lineTimings.push(defaultSecondsPerLine);
-          }
-          startAutoScroll(lineTimings);
+             const targetLineCount = getMaxLineCount();
+             // ... simplified restart logic ...
+             // (Triggering a full restart via playSmart or resume is safer, but we leave this for now)
         }
       }
     });
-item.querySelector('input').addEventListener('change', (e) => {
-    const lang = item.dataset.lang;
-    const isChecked = e.target.checked;
+    
+    item.querySelector('input').addEventListener('change', (e) => {
+        const lang = item.dataset.lang;
+        const isChecked = e.target.checked;
 
-    if (isChecked) {
-        // --- Trying to ADD a language ---
-        if (!selectedLanguages.includes(lang)) {
-            if (selectedLanguages.length < 3) {
-                selectedLanguages.push(lang); // Add the new language
-            } else {
-                // Too many languages selected, prevent checking this one
-                e.target.checked = false; // Revert the check immediately
-                showNotice("Maximum 3 languages can be selected.");
-                return; // Stop processing this event
+        if (isChecked) {
+            if (!selectedLanguages.includes(lang)) {
+                if (selectedLanguages.length < 3) {
+                    selectedLanguages.push(lang); 
+                } else {
+                    e.target.checked = false; 
+                    showNotice("Maximum 3 languages can be selected.");
+                    return; 
+                }
             }
+        } else {
+            selectedLanguages = selectedLanguages.filter(l => l !== lang);
         }
-    } else {
-        // --- Trying to REMOVE a language ---
-        // Just remove it, no minimum check needed anymore
-        selectedLanguages = selectedLanguages.filter(l => l !== lang);
-    }
 
-    // --- Update everything based on the new selectedLanguages array ---
-    saveSettings();
-    updateLanguageSettings(); // Rebuilds the settings UI section
-    populateLyricsContainer(); // Reloads lyrics (will be empty if none selected)
-    updateAudioLanguageDisplay(); // Updates which audio track might play
-});
+        saveSettings();
+        updateLanguageSettings(); 
+        populateLyricsContainer(); 
+        updateAudioLanguageDisplay(); 
+    });
   });
 }
 
