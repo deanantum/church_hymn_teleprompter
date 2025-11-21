@@ -173,7 +173,12 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   text-align: center;
   flex-shrink: 0;
   font-weight: normal;
-  width: 100%;
+  
+  /* --- UPDATES START --- */
+  width: fit-content;   /* Hug the text width */
+  position: relative;   /* Anchor for the progress bar */
+  /* --- UPDATES END --- */
+  
   transition: color 0.2s ease-in-out, background-color var(--transition-speed);
 }
 .lyric-line-group.is-current {
@@ -806,3 +811,178 @@ input[type="color"].active-color-input {
 .intro-active .lyric-line-group.is-current .lyric-line-Spanish { color: var(--lyric-font-color-inactive-Spanish) !important; }
 .intro-active .lyric-line-group.is-current .lyric-line-ASL { color: var(--lyric-font-color-inactive-ASL) !important; }
 .intro-active .lyric-line-group.is-current .lyric-line-Custom { color: var(--lyric-font-color-inactive-Custom) !important; }
+
+/* --- Fullscreen Toggle Logic --- */
+
+/* Ensure the parent panel allows absolute positioning of the button */
+#main-panel {
+  position: relative; 
+}
+
+/* Style the toggle button */
+.fullscreen-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 2rem;     /* Large chevron size */
+  line-height: 1;
+  color: #9ca3af;      /* Subtle gray */
+  cursor: pointer;
+  padding: 0;
+  z-index: 50;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.fullscreen-toggle:hover {
+  color: #111827;      /* Darker on hover */
+  background: transparent; /* Remove default button bg */
+  transform: scale(1.1);
+}
+
+/* The Class that hides the 2nd column */
+.page.fullscreen-active {
+  grid-template-columns: 1fr; /* Only one column */
+}
+
+.page.fullscreen-active .controls-panel {
+  display: none; /* Completely hide the controls */
+}
+
+/* --- Mini Controls Styles --- */
+
+.mini-controls {
+  display: none;      /* Hidden by default */
+  position: absolute;
+  
+  /* CHANGED: Hangs the buttons outside the right edge */
+  top: 0;             
+  right: -3.5rem;     
+  
+  gap: 0.5rem;
+  z-index: 50;
+  flex-direction: column;
+}
+
+/* Show them when fullscreen is active */
+.page.fullscreen-active .mini-controls {
+  display: flex;
+}
+
+.page.fullscreen-active #main-panel {
+  /* margin-right removed so the panel stays full size */
+  overflow: visible; /* This allows the buttons to be seen outside the border */
+}
+
+.mini-controls button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.mini-controls button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+  border-color: #9ca3af;
+}
+
+.mini-controls button:active {
+  background-color: #e5e7eb;
+}
+
+/* --- Runlist Indicator Styles --- */
+
+.runlist-indicator {
+  display: none; /* Hidden by default */
+  position: absolute;
+  top: 0.5rem;
+  left: 1.2rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #d1d5db; /* Light grey, unobtrusive */
+  z-index: 40;
+  line-height: 1;
+  pointer-events: none; /* Clicks pass through */
+  font-family: system-ui, sans-serif;
+}
+
+/* Only show when fullscreen is active */
+.page.fullscreen-active .runlist-indicator {
+  display: block;
+}
+
+/* Tempo Display Style */
+#tempoDisplay {
+  background-color: #e5e7eb;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 0.4rem 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 55px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* --- Lyric Progress Bar Styles --- */
+
+/* Ensure the group can contain the absolute bar */
+.lyric-line-group {
+  position: relative; 
+  /* existing styles... */
+}
+
+.line-progress-container {
+  position: absolute;
+  bottom: 0;          /* Align to bottom of the text line */
+  left: 0;
+  width: 100%;        /* Matches the text width exactly */
+  height: 4px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.lyric-line-group.is-current .line-progress-container {
+  opacity: 1;
+}
+
+.line-progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--underline-glow-color);
+  position: relative;
+  border-radius: 2px;
+  transition-timing-function: linear; 
+}
+
+.line-progress-knob {
+  position: absolute;
+  right: -6px; 
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: var(--dot-color);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* --- Hide Progress Bar State --- */
+.lyrics-viewport.progress-bar-hidden .line-progress-container {
+  display: none !important;
+}
