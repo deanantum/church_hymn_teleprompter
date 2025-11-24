@@ -33,20 +33,20 @@ const JEWEL_TONES = [
     '#f4ffff', '#bea0ae', '#82bbe0', '#8de6ed', '#fce6e1', '#d5d7d0'
 ];
 const DEFAULTS = {
-  bgColor: '#ffffff',
-  highlightColor: '#fef08a',
-  underlineColor: '#f59e0b',
-  dotColor: '#d81b60',
+  bgColor: '#d5d7d0',
+  highlightColor: '#287796',
+  underlineColor: '#f4ffff',
+  dotColor: '#82bbe0',
   showDots: true,
   showUnderline: true,
-  showProgressBar: true, // <--- ADD THIS LINE
+  showProgressBar: true,
   transitionSpeed: '0.5',
   lyricsWidth: '700',
   languages: {
-    English: { fontSize: '3', fontColorActive: '#000000', fontColorInactive: '#4b5563' },
+    English: { fontSize: '3', fontColorActive: '#f4ffff', fontColorInactive: '#4b5563' },
     Spanish: { fontSize: '3', fontColorActive: '#1e88e5', fontColorInactive: '#8ab4f8' },
-    ASL: { fontSize: '3', fontColorActive: '#d81b60', fontColorInactive: '#f48fb1' },
-    Custom: { fontSize: '3', fontColorActive: '#000000', fontColorInactive: '#4b5563' }
+    ASL: { fontSize: '3', fontColorActive: '#d5d7d0', fontColorInactive: '#287796' },
+    Custom: { fontSize: '3', fontColorActive: '#ffe0af', fontColorInactive: '#953659' }
   }
 };
 
