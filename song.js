@@ -34,7 +34,7 @@ const JEWEL_TONES = [
 ];
 const DEFAULTS = {
   bgColor: '#d5d7d0',
-  highlightColor: '#287796',
+  highlightColor: '#2c4294',
   underlineColor: '#f4ffff',
   dotColor: '#82bbe0',
   showDots: true,
@@ -812,6 +812,28 @@ function loadCustomLyrics() {
     customLyricsStore[hymnKey] = newLines;
     lines = newLines;
     usingCustomLyrics = true;
+
+    // --- FIX START: FORCE CUSTOM BACK INTO THE LIST ---
+    // 1. Ensure it is marked as available
+    if (!availableLanguages.includes('Custom')) {
+      availableLanguages.push('Custom');
+    }
+    
+    // 2. Ensure it is in the sort order (Lyric Order list)
+    if (!languageOrder.includes('Custom')) {
+      languageOrder.push('Custom');
+    }
+
+    // 3. Auto-select it (if we haven't hit the limit of 3)
+    if (!selectedLanguages.includes('Custom')) {
+      if (selectedLanguages.length < 3) {
+        selectedLanguages.push('Custom');
+      } else {
+        // Optional: specific notice if they are full
+        showNotice("Custom lyrics loaded. Uncheck another language to view them.");
+      }
+    }
+    // --- FIX END ---
   }
   
   updateLiveCounter();
@@ -1263,23 +1285,36 @@ function playHymn() {
     $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)}s/line`;
 
   lyricsViewport.classList.add('intro-active');
-  isPlaying = true;
+	isPlaying = true;
 	
 	try {
-		await audio.play();
-		startCounterTick();
-		enablePlaybackControls(true);
-		await startIntroCountdown(introLength);
+			// 1) Ask browser to start playback (this may buffer or delay)
+			await audio.play();
+	
+			// 2) Wait until playback is *actually* moving
+			await waitForActualPlayback(audio);
+	
+			// 3) Now that we know sound is really happening, start timing
+			startCounterTick();
+			enablePlaybackControls(true);
+	
+			// Run the intro countdown AFTER audio is audibly going
+			await startIntroCountdown(introLength);
+	
 	} catch (err) {
-		handlePlayError(err);
-		return; // stop if play fails
+			handlePlayError(err);
+			return; // stop if play fails
+	}
+	
+	lyricsViewport.classList.remove('intro-active');
+	setCurrentIndex(0);  // now highlight + active colors
+	
+	if (!$('manualControlOverride').checked) {
+			startAutoScroll(lineTimings);
+	} else {
+			lyricsViewport.focus();
 	}
 
-  lyricsViewport.classList.remove('intro-active');
-  setCurrentIndex(0);  // now highlight + active colors
-
-  if (!$('manualControlOverride').checked) startAutoScroll(lineTimings);
-  else lyricsViewport.focus();
 };
 }
 
@@ -1371,6 +1406,12 @@ function initializePage() {
     let savedSettings = null;
     try {
       savedSettings = loadSettings();
+      if (savedSettings?.customLyricsStore && Object.keys(savedSettings.customLyricsStore).length > 0) {
+          if (!availableLanguages.includes('Custom')) {
+              availableLanguages.push('Custom');
+              console.log("Restored 'Custom' to available languages based on saved data.");
+          }
+      }
       console.log("InitializePage .then(): Settings loaded from localStorage.");
     } catch (e) {
       console.error("Error loading saved settings:", e);
@@ -1563,10 +1604,30 @@ function initializePage() {
       $('trackType')?.addEventListener('change', switchAudioTrack);
 
       $('resetButton')?.addEventListener('click', () => {
-        if (confirm('Reset all settings to default?')) {
-          customLyricsStore = {};
-          localStorage.removeItem(SETTINGS_KEY);
-          location.reload();
+        if (confirm('Reset colors, sizes, and layout to defaults? \n\n(Your Lyric Order and Custom Lyrics will be kept.)')) {
+          
+          // 1. Create a "Target" settings object based on Defaults
+          // We use JSON parse/stringify to get a clean copy of the DEFAULTS object
+          const targetSettings = JSON.parse(JSON.stringify(DEFAULTS));
+
+          // 2. Update the visible Form Inputs to match these defaults
+          // This function (already in your code) sets the input values and updates the color swatches
+          updateFormFromSettings(targetSettings);
+          
+          // Manual check for the Progress Bar toggle (in case updateFormFromSettings misses it)
+          const progBar = $('progressBarToggle');
+          if (progBar) progBar.checked = targetSettings.showProgressBar !== false;
+
+          // 3. Apply these settings to the Live View immediately
+          // This updates the CSS variables so you see the change instantly
+          applySettings(targetSettings);
+
+          // 4. Save to Local Storage
+          // saveSettings() reads the *current* form values (which we just reset) 
+          // and combines them with your *existing* languageOrder/Lyrics (which we didn't touch).
+          saveSettings();
+
+          showNotice("Colors and sizes reset to defaults.");
         }
       });
 
@@ -1598,24 +1659,37 @@ function initializePage() {
       $('lyric-order-toggle')?.addEventListener('click', () => toggleCollapsibleById('lyric-order'));
       $('playback-toggle')?.addEventListener('click', () => toggleCollapsibleById('playback'));
       $('manualControlOverride')?.addEventListener('change', toggleManualControl);
+			$('autoWidthBtn')?.addEventListener('click', setAutoWidth);
+			
 
       const fullscreenBtn = $('fullscreenToggleBtn');
       if (fullscreenBtn) {
         fullscreenBtn.addEventListener('click', () => {
-          const page = document.querySelector('.page');
-          const isNowFullscreen = page.classList.toggle('fullscreen-active');
-
-          // Toggle the icon:
-          // » (Right) means "Click to hide right panel"
-          // « (Left) means "Click to show right panel"
-          fullscreenBtn.innerHTML = isNowFullscreen ? '&laquo;' : '&raquo;';
-
-          // Optional: Re-calculate lyrics viewport height if needed since width changed
-          setTimeout(() => {
-            const settings = getSettingsFromForm();
-            applySettings(settings);
-          }, 300); // Wait for CSS transition if any
-        });
+				const page = document.querySelector('.page');
+				const controls = document.querySelector('.controls-panel');
+			
+				const isNowFullscreen = page.classList.toggle('fullscreen-active');
+				fullscreenBtn.innerHTML = isNowFullscreen ? '&laquo;' : '&raquo;';
+			
+				if (isNowFullscreen) {
+					// COLLAPSING — hide immediately
+					controls.classList.add('is-hidden');
+			
+					// Apply settings after grid change
+					setTimeout(() => {
+						applySettings(getSettingsFromForm());
+					}, 10);
+			
+				} else {
+					// EXPANDING — wait for grid to settle first
+					setTimeout(() => {
+						// Now fade it in smoothly (no awkward jump)
+						controls.classList.remove('is-hidden');
+			
+						applySettings(getSettingsFromForm());
+					}, 120);
+				}
+			});
       }
 
       console.log("InitializePage .then(): Event listeners set up.");
@@ -1682,7 +1756,17 @@ function applySettings(settings) {
 	lyricsViewport.classList.toggle('progress-bar-hidden', !settings.showProgressBar);
   $('toggleDotLabel').classList.toggle('disabled', !settings.showDots);
   $('toggleUnderlineLabel').classList.toggle('disabled', !settings.showUnderline);
-  document.querySelector('.page').style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
+  const pageEl = document.querySelector('.page');
+	if (pageEl) {
+		if (pageEl.classList.contains('fullscreen-active')) {
+			// Fullscreen: teleprompter takes full width
+			pageEl.style.gridTemplateColumns = '1fr';
+		} else {
+			// Normal: use configured lyrics width + 400px controls
+			pageEl.style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
+		}
+	}
+
   let topLang = languageOrder.length > 0 ? languageOrder[0] : 'English';
   if (topLang === 'Custom' && !selectedLanguages.includes('Custom')) {
     topLang = languageOrder.find(lang => selectedLanguages.includes(lang)) || 'English';
@@ -1722,8 +1806,11 @@ function enablePlaybackControls(isPlaying, isPaused = false, forceDisableAll = f
     const stopButtonDisabled = forceDisableAll || (!isPlaying && !isPaused) || !hasAudio;
 
     $('btnPlay').disabled = playButtonDisabled;
-    $('btnPauseResume').disabled = pauseResumeDisabled;
-    $('btnPauseResume').innerHTML = isPlaying ? '&#9208; Pause' : '&#9199; Resume';
+    const pauseBtn = $('btnPauseResume');
+		if (pauseBtn) {
+				pauseBtn.disabled = pauseResumeDisabled;
+				pauseBtn.innerHTML = isPlaying ? '&#9208; Pause' : '&#9199; Resume';
+		}
     $('btnStop').disabled = stopButtonDisabled;
 
     // This is your new, simplified logic
@@ -2334,3 +2421,58 @@ function getMaxLineCount() {
     
     return max;
 }
+
+function setAutoWidth() {
+  const page = document.querySelector('.page');
+  if (!page) return;
+
+  const sidebarWidth = 400;          // your second column
+  const gap = 24;                    // 1.5rem ≈ 24px (see .page { gap: 1.5rem; })
+  const bodyPadding = 32;            // body has 1rem left + 1rem right = 32px total
+
+  const totalWidth = window.innerWidth;
+
+  let lyricsWidth;
+
+  // If we're in fullscreen (controls panel hidden), use almost the full window width
+  if (page.classList.contains('fullscreen-active')) {
+    lyricsWidth = totalWidth - bodyPadding;
+  } else {
+    // Normal 2-column mode: window width minus sidebar, gap, and padding
+    lyricsWidth = totalWidth - sidebarWidth - gap - bodyPadding;
+  }
+
+  // Safety minimum so it never collapses too far
+  lyricsWidth = Math.max(500, Math.round(lyricsWidth));
+
+  // Update the field
+  $('lyricsWidth').value = lyricsWidth;
+
+  // Apply via settings so everything stays in sync
+  const settings = getSettingsFromForm();
+  settings.lyricsWidth = String(lyricsWidth);
+  applySettings(settings);
+
+  // Persist
+  saveSettings();
+}
+
+function waitForActualPlayback(audio, thresholdSeconds = 0.05) {
+  return new Promise(resolve => {
+    // If it's already playing and past the threshold, resolve immediately
+    if (audio && !audio.paused && audio.currentTime > thresholdSeconds) {
+      return resolve();
+    }
+
+    const onTimeUpdate = () => {
+      if (audio && !audio.paused && audio.currentTime > thresholdSeconds) {
+        audio.removeEventListener('timeupdate', onTimeUpdate);
+        resolve();
+      }
+    };
+
+    audio.addEventListener('timeupdate', onTimeUpdate);
+  });
+}
+
+
