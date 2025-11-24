@@ -75,7 +75,7 @@
 
         <div class="btns" style="margin-bottom: 1rem;">
           <button id="btnPlay" onclick="playHymn()">&#9654; Play</button>
-          <button id="btnPauseResume" onclick="togglePauseResume()" disabled>&#9208; Pause</button>
+          <!-- ><button id="btnPauseResume" onclick="togglePauseResume()" disabled>&#9208; Pause</button> -->
           <button id="btnStop" onclick="stopHymn()" disabled>&#9209; Stop</button>
         </div>
 
@@ -130,16 +130,26 @@
                 <button class="btn" style="background-color: #ADD8E6; border: 1px solid #d1d5db; border-left: none; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 2.5rem;" onclick="adjustTransitionSpeed(0.1)">+</button>
               </div>
             </div>
-            <div class="control-subgroup">
-              <label for="lyricsWidth">Window Width (px)</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="lyricsWidth" value="800" placeholder="Enter width">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" id="applyWidthBtn" type="button">Apply</button>
-                </div>
-              </div>
-            </div>
-          </div>
+            
+            
+<div class="control-subgroup" style="width: 100%;">
+  <label for="lyricsWidth">Window Width (px)</label>
+  <div class="input-group lyrics-width-group" style="width: 100%; max-width: 340px;">
+    <input type="text"
+           id="lyricsWidth"
+           class="form-control"
+           value="800"
+           placeholder="e.g. 900">
+    
+    <div class="lyrics-width-buttons">
+      <button class="btn btn-outline-secondary" id="autoWidthBtn" type="button">Auto</button>
+      <button class="btn btn-primary" id="applyWidthBtn" type="button">Apply</button>
+    </div>
+  </div>
+</div>
+
+
+
         </div>
         
 				<div class="control-group" style="grid-column: 1 / -1;">
