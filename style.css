@@ -865,9 +865,12 @@ input[type="color"].active-color-input {
   flex-direction: column;
 }
 
-/* Show them when fullscreen is active */
 .page.fullscreen-active .mini-controls {
-  display: flex;
+  position: fixed;   /* instead of absolute */
+  right: 1rem;   /* stays inside the margin space */
+  top: 3.5rem;   /* below the chevron */
+  display: flex;     /* keep them visible */
+  z-index: 100;      /* ensure they sit above everything */
 }
 
 .page.fullscreen-active #main-panel {
@@ -985,4 +988,80 @@ input[type="color"].active-color-input {
 /* --- Hide Progress Bar State --- */
 .lyrics-viewport.progress-bar-hidden .line-progress-container {
   display: none !important;
+}
+
+#lyricsWidth {
+  border-right: none !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+#autoWidthBtn {
+  border-radius: 0;
+}
+#applyWidthBtn {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.input-group .input-group-append button {
+  border-left: none !important;
+}
+.input-group .input-group-append button:first-child {
+  border-right: 1px solid #ced4da !important;
+}
+.lyrics-width-buttons .btn {
+  background-color: #ADD8E6;
+  border: 1px solid #d1d5db;
+  color: #000;
+  height: 100%;
+  padding: 0 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;          /* base, we’ll tweak corners below */
+}
+
+/* Left button (Auto) – middle segment */
+#autoWidthBtn {
+  border-right: none;        /* so it shares a border with Apply */
+}
+
+/* Right button (Apply) – rounded right edge */
+#applyWidthBtn {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+
+.lyrics-width-group {
+  position: relative;
+  width: 100%;
+}
+
+.lyrics-width-group .form-control {
+  border-radius: 8px;
+  border-right: none;       /* So there isn't a double border under the buttons */
+  padding-right: 7rem;      /* Space for Auto + Apply buttons */
+}
+.lyrics-width-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  display: flex;             /* side-by-side */
+  flex-direction: row;
+  align-items: stretch;
+}
+/* In fullscreen mode, leave space on the right for mini-controls */
+.page.fullscreen-active #main-panel {
+  margin-right: 50px;   /* ← adjust to taste (80–120px works well) */
+}
+
+.controls-panel.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.controls-panel {
+    transition: opacity 0.25s ease;
 }
