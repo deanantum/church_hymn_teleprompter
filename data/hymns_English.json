@@ -11804,9 +11804,9 @@
       "safe_title": "",
       "voiceURL": "https://assets.churchofjesuschrist.org/d1/66/d166d9c4ee3511ee9c12eeeeac1ec1e5a534eadb/when_the_savior_comes_again.mp3",
       "accompanimentURL": "https://assets.churchofjesuschrist.org/c2/45/c245dd61ee3511ee9c12eeeeac1ec1e526e197b4/when_the_savior_comes_again.mp3",
-      "intro_length": 7,
+      "intro_length": 8,
       "line_time": 0,
-      "line_timings": [],
+      "line_timings": [4.1, 3.2, 6.8, 3.5, 3.3, 5.9, 4.1, 3.5, 6.9, 6.6, 8.3, 6.7, 5.5, 3.3, 3.1, 6.8, 3.6, 3.3, 5.9, 4, 3.6, 6.8, 6.7, 8.6, 6.1],
       "lines": [
          "1: When the Savior comes again,",
          "He will cleanse the earth, and then",
