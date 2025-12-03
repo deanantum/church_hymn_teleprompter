@@ -15,6 +15,7 @@ let customLyricsStore = {};
 let currentView = 'hymn';
 let audio = null;
 let mainTimer = null;
+let introTimeout = null;
 let isPlaying = false;
 let availableLanguages = [];
 let selectedLanguages = [];
@@ -1121,29 +1122,53 @@ function updateCounter() {
 }
 
 function startIntroCountdown(duration) {
-  return new Promise(resolve => {
-    const countdownEl = $('countdown-display');
-    const countdownNumEl = countdownEl.querySelector('.countdown-number');
-    let secondsLeft = Math.ceil(duration);
-    if (duration <= 3) {
-      lyricsViewport.classList.remove('is-counting-down');
-      setTimeout(resolve, duration * 1000);
-      return;
-    }
-    lyricsViewport.classList.add('is-counting-down');
-    countdownEl.classList.add('is-visible');
-    countdownNumEl.textContent = secondsLeft;
-    clearTimer();
-    mainTimer = setInterval(() => {
-      secondsLeft--;
-      if (secondsLeft > 0) { countdownNumEl.textContent = secondsLeft; }
-      if (secondsLeft === 3) {
-        countdownEl.classList.remove('is-visible');
-        lyricsViewport.classList.remove('is-counting-down');
-      }
-      if (secondsLeft <= 0) { clearTimer(); resolve(); }
-    }, 1000);
-  });
+  return new Promise(resolve => {
+    const countdownEl = $('countdown-display');
+    const countdownNumEl = countdownEl.querySelector('.countdown-number');
+    
+    // Visuals still need whole numbers (rounding up)
+    let secondsLeft = Math.ceil(duration);
+
+    // If duration is very short (<= 3s), we just wait the precise time and exit
+    if (duration <= 3) {
+      lyricsViewport.classList.remove('is-counting-down');
+      // Use precise decimal duration here
+      introTimeout = setTimeout(resolve, duration * 1000); 
+      return;
+    }
+
+    // Setup Visuals
+    lyricsViewport.classList.add('is-counting-down');
+    countdownEl.classList.add('is-visible');
+    countdownNumEl.textContent = secondsLeft;
+    
+    clearTimer();
+
+    // 1. THE LOGIC TIMER (Precise)
+    // This triggers exactly at 5.3s (or whatever decimal is entered)
+    introTimeout = setTimeout(() => {
+        clearTimer(); // Stop the visual ticker
+        // Clean up visual state immediately
+        countdownEl.classList.remove('is-visible');
+        lyricsViewport.classList.remove('is-counting-down');
+        resolve(); // Start the song
+    }, duration * 1000);
+
+    // 2. THE VISUAL TIMER (Approximate)
+    // This updates the big numbers on screen every second
+    mainTimer = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0) { countdownNumEl.textContent = secondsLeft; }
+      
+      // Hide the visuals when we get close to the end (3 seconds left)
+      if (secondsLeft <= 3) {
+        countdownEl.classList.remove('is-visible');
+        lyricsViewport.classList.remove('is-counting-down');
+      }
+      
+      // Note: We do NOT resolve() here anymore. The introTimeout handles that.
+    }, 1000);
+  });
 }
 
 function togglePauseResume() {
@@ -1845,10 +1870,14 @@ function handlePlayError(err) {
 }
 
 function clearTimer() {
-  if (mainTimer) {
-    clearTimeout(mainTimer);
-    mainTimer = null;
-  }
+  if (mainTimer) {
+    clearInterval(mainTimer); // Changed to ClearInterval for correctness
+    mainTimer = null;
+  }
+  if (introTimeout) {
+    clearTimeout(introTimeout); // Clears the precise decimal timer
+    introTimeout = null;
+  }
 }
 
 function pauseHymn() {
@@ -2474,5 +2503,4 @@ function waitForActualPlayback(audio, thresholdSeconds = 0.05) {
     audio.addEventListener('timeupdate', onTimeUpdate);
   });
 }
-
 
