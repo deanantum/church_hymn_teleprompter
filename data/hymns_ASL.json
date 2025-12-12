@@ -2676,8 +2676,31 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
+  	"lines": [
+      "House|(alt)(cl:claw)House+|(alt)(cl:claw)House+|Town",
+			"Candle+|Candle, (cl)Blow-out+|(cl)Blow-out, Sleep~|~",
+			"(2h)Area|Dark|Quiet|Calm",
+			"Star|^>(cl:5)Dot-sky|^<(cl:5)Dot-sky|(Rh)Shine",
+			"(Lh)Shine|^Flow-down~|~|Flow-street",
+			">IX|(2h)Shine~|~|Jesus",
+			"Christ|Born|Hands-on-heart|>Past-total",
+			"Fear|Resolve|Hope|Wave-spread",
+			"Dark|Quiet|(2h)Area|Sleep",
+			"Star|^(cl:5)Dot-sky|(Rh)Shine|(Lh)Shine",
+			"(2h)v_Shine|Angels|(cl:4)Surround-me|(2h)Watch",
+			"IX|Mary|Hold-baby~|~",
+			"(2h)Watch|Eye-contact|(cl:4)Line-sway|(alt)Sign+",
+			"Wave-spread|Jesus|Christ|Born",
+			"There|King|(cl:4)Surround-me|Wave-spread",
+			"<Peace|>Peace|<Yay|>Yay",
+			"Stars|^(cl:5)Dot-sky|(Rh)Shine|(Lh)Shine",
+			"(2h)v_Shine|Jesus|Born|Rock-baby~",
+			"~|<(Lh)Area|Lower|<IX+",
+			"Clueless|God|(rs)(2h)Look-over|<THEY",
+			"Humble|(Rh)Inform|(Lh)Inform|Jesus",
+			"Christ|Born|There|(rs)Heart-touch",
+			"Spread-light|^(Rh)Give-down|Candle-light|^(Lh)Give-down",
+			"Candle-light|Peace|Wave-spread|Yay"
     ]
   },
   "209": {
