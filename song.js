@@ -23,6 +23,9 @@ let languageOrder = [];
 let activeColorInput = null;
 let runlistNumbers = [];
 let currentRunlistIndex = 0;
+let currentSpeed = 0; // Default 0 means "Standard Speed"
+let playbackRate = 1.0;
+let currentLineTimings = [];
 
 
 const JEWEL_TONES = [
@@ -52,11 +55,56 @@ const DEFAULTS = {
 };
 
 function saveSettings() {
-    const settings = getSettingsFromForm();
-    settings.languageOrder = [...languageOrder];
-		settings.selectedLanguages = [...selectedLanguages];
-		settings.customLyricsStore = customLyricsStore;
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  // 1. Get values from the currently visible form inputs
+  const currentFormSettings = getSettingsFromForm();
+  
+  // 2. Load existing storage to preserve data for things NOT currently on screen
+  let savedSettings = {};
+  try {
+    savedSettings = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
+  } catch (e) { }
+
+  // 3. Merge Global Settings (These inputs always exist, so we trust the form)
+  savedSettings.bgColor = currentFormSettings.bgColor;
+  savedSettings.highlightColor = currentFormSettings.highlightColor;
+  savedSettings.underlineColor = currentFormSettings.underlineColor;
+  savedSettings.dotColor = currentFormSettings.dotColor;
+  savedSettings.showDots = currentFormSettings.showDots;
+  savedSettings.showUnderline = currentFormSettings.showUnderline;
+  savedSettings.showProgressBar = currentFormSettings.showProgressBar;
+  savedSettings.transitionSpeed = currentFormSettings.transitionSpeed;
+  savedSettings.lyricsWidth = currentFormSettings.lyricsWidth;
+
+  // 4. Merge Language Settings Smartly
+  savedSettings.languages = savedSettings.languages || {};
+  
+  languageOrder.forEach(lang => {
+    // Check if the input for this language actually exists in the DOM right now
+    if (document.getElementById(`fontSize-${lang}`)) {
+        // CASE A: The inputs exist. The user might have changed them. Save the Form value.
+        savedSettings.languages[lang] = currentFormSettings.languages[lang];
+    } 
+    else if (!savedSettings.languages[lang]) {
+         // CASE B: Brand New Language (e.g., just added Custom) AND no saved data yet.
+         // FIX: Do NOT use defaults. Inherit settings from the main language (e.g., English)
+         // so it matches the user's current theme.
+         
+         const refLang = languageOrder.find(l => l !== lang && savedSettings.languages[l]) || 'English';
+         const refSettings = savedSettings.languages[refLang] || DEFAULTS.languages.English;
+         
+         // Clone the reference settings (e.g., make Custom look like English)
+         savedSettings.languages[lang] = { ...refSettings };
+    }
+    // CASE C: Input doesn't exist, but we already have saved data. 
+    // Do nothing (keep the saved data), so we don't accidentally overwrite it.
+  });
+
+  // 5. Save Arrays
+  savedSettings.languageOrder = [...languageOrder];
+  savedSettings.selectedLanguages = [...selectedLanguages];
+  savedSettings.customLyricsStore = customLyricsStore;
+
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(savedSettings));
 }
 
 // song.js (Around line 47)
@@ -138,10 +186,23 @@ function initializeColorPalette() {
 }
 
 document.addEventListener('keydown', (event) => {
-  const isTyping = ['INPUT', 'TEXTAREA'].includes(event.target.tagName);
-  if (event.code === 'Space' && !isTyping) {
-    event.preventDefault();
-  }
+  const isTyping = ['INPUT', 'TEXTAREA'].includes(event.target.tagName);
+  
+  // 1. Prevent Spacebar scrolling (unless typing)
+  if (event.code === 'Space' && !isTyping) {
+    event.preventDefault();
+  }
+
+  // 2. F2 Key: Toggle Play / Stop
+  if (event.code === 'F2') {
+    event.preventDefault(); // Prevent default browser actions
+    
+    if (isPlaying) {
+        stopHymn(); // Stop and reset to the beginning
+    } else {
+        playHymn(); // Start from the beginning
+    }
+  }
 });
 
 function handleArrowKeys(event) {
@@ -194,6 +255,12 @@ function toggleManualControl() {
     if (!isPlaying) {
         console.log("Setting isPlaying = true for manual control.");
         isPlaying = true; // Allow index advancement via arrow key
+    }
+    
+    if (currentIndex < 0) {
+        setCurrentIndex(0, true);
+    } else {
+        setCurrentIndex(currentIndex, true);
     }
 
   } else {
@@ -761,7 +828,10 @@ function setView(viewName) {
     
     // --- THIS IS THE CORRECTED LINE ---
     // The last argument is now 'false', not '!hasAudio'
-    enablePlaybackControls(isPlaying, audio && audio.paused && !isPlaying, false); // Update controls based on state
+    // This prevents the Stop button from lighting up immediately upon load.
+    const isPausedState = audio && audio.paused && !isPlaying && audio.currentTime > 0;
+    
+    enablePlaybackControls(isPlaying, isPausedState, false);
     
     $('customLyricsTextarea').blur(); // Remove focus from textarea
     
@@ -839,7 +909,11 @@ function loadCustomLyrics() {
   
   updateLiveCounter();
   renderLanguageList();
-  saveSettings();
+  saveSettings();     // <--- Keeps settings saved
+  
+  // ADD THIS LINE HERE:
+  updateLanguageSettings(); // <--- This rebuilds the settings panel row
+  
   setView('hymn');
 }
 
@@ -1089,7 +1163,7 @@ function setCurrentIndex(newIdx, instant = false) {
   if (!nextLineEl) return;
   
   const viewportHeight = lyricsViewport.clientHeight;
-  const targetScrollTop = nextLineEl.offsetTop - (viewportHeight / 2) + (nextLineEl.offsetHeight / 2);
+  const targetScrollTop = nextLineEl.offsetTop - (viewportHeight * 0.35) + (nextLineEl.offsetHeight / 2);
   
   if (instant) {
     lyricsContainer.style.transition = 'none';
@@ -1182,7 +1256,8 @@ function togglePauseResume() {
 }
 
 async function initializeAudio(hymnNumber, wasPlaying = false, currentTime = 0, onManualSetup = null) {
-  resetTempo();
+	loadTempoForCurrentHymn();
+	
   if (!hymnNumber) return console.warn("initializeAudio called with no hymn number.");
 
   const trackType = $('trackType').checked ? 'voice' : 'accompaniment';
@@ -1207,6 +1282,7 @@ async function initializeAudio(hymnNumber, wasPlaying = false, currentTime = 0, 
   if (audio) { audio.pause(); audio = null; }
 
   audio = new Audio(audioURL);
+  audio.playbackRate = playbackRate;
   audio.preload = 'metadata';
   audio.currentTime = currentTime;
 
@@ -1289,24 +1365,24 @@ function playHymn() {
     }
     updateCounter();
     const hymnEntry = allHymnsData['English']?.[currentHymnNumber] || {};
-    let lineTimings = [];
+    currentLineTimings = [];
     let defaultSecondsPerLine = 0;
     if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
-      lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
+      currentLineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
     }
-    if (lineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
+    if (currentLineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
       defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
-    } else if (lineTimings.length === 0) {
+    } else if (currentLineTimings.length === 0) {
       const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
       defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
     }
     if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
     const targetLineCount = getMaxLineCount();
-    while (lineTimings.length < targetLineCount) {
-      lineTimings.push(defaultSecondsPerLine);
+    while (currentLineTimings.length < targetLineCount) {
+      currentLineTimings.push(defaultSecondsPerLine);
     }
-    lineTimings = lineTimings.slice(0, targetLineCount);
-    const avgSecondsPerLine = lineTimings.reduce((sum, t) => sum + t, 0) / lineTimings.length;
+    currentLineTimings = currentLineTimings.slice(0, targetLineCount);
+    const avgSecondsPerLine = currentLineTimings.reduce((sum, t) => sum + t, 0) / currentLineTimings.length;
     $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)}s/line`;
 
   lyricsViewport.classList.add('intro-active');
@@ -1324,7 +1400,7 @@ function playHymn() {
 			enablePlaybackControls(true);
 	
 			// Run the intro countdown AFTER audio is audibly going
-			await startIntroCountdown(introLength);
+			await startIntroCountdown(introLength / playbackRate);
 	
 	} catch (err) {
 			handlePlayError(err);
@@ -1335,7 +1411,7 @@ function playHymn() {
 	setCurrentIndex(0);  // now highlight + active colors
 	
 	if (!$('manualControlOverride').checked) {
-			startAutoScroll(lineTimings);
+			startAutoScroll(currentLineTimings);
 	} else {
 			lyricsViewport.focus();
 	}
@@ -1687,34 +1763,43 @@ function initializePage() {
 			$('autoWidthBtn')?.addEventListener('click', setAutoWidth);
 			
 
-      const fullscreenBtn = $('fullscreenToggleBtn');
+			const fullscreenBtn = $('fullscreenToggleBtn');
       if (fullscreenBtn) {
         fullscreenBtn.addEventListener('click', () => {
-				const page = document.querySelector('.page');
-				const controls = document.querySelector('.controls-panel');
-			
-				const isNowFullscreen = page.classList.toggle('fullscreen-active');
-				fullscreenBtn.innerHTML = isNowFullscreen ? '&laquo;' : '&raquo;';
-			
-				if (isNowFullscreen) {
-					// COLLAPSING — hide immediately
-					controls.classList.add('is-hidden');
-			
-					// Apply settings after grid change
-					setTimeout(() => {
-						applySettings(getSettingsFromForm());
-					}, 10);
-			
-				} else {
-					// EXPANDING — wait for grid to settle first
-					setTimeout(() => {
-						// Now fade it in smoothly (no awkward jump)
-						controls.classList.remove('is-hidden');
-			
-						applySettings(getSettingsFromForm());
-					}, 120);
-				}
-			});
+            const page = document.querySelector('.page');
+            const controls = document.querySelector('.controls-panel');
+        
+            const isNowFullscreen = page.classList.toggle('fullscreen-active');
+            fullscreenBtn.innerHTML = isNowFullscreen ? '&laquo;' : '&raquo;';
+        
+            // Helper to restore focus if Manual Mode is active
+            const restoreFocus = () => {
+                if ($('manualControlOverride').checked) {
+                    lyricsViewport.focus();
+                }
+            };
+
+            if (isNowFullscreen) {
+                // COLLAPSING — hide immediately
+                controls.classList.add('is-hidden');
+        
+                // Apply settings after grid change
+                setTimeout(() => {
+                    applySettings(getSettingsFromForm());
+                    restoreFocus(); // <--- FIX 1: Restore focus after expanding
+                }, 10);
+        
+            } else {
+                // EXPANDING — wait for grid to settle first
+                setTimeout(() => {
+                    // Now fade it in smoothly (no awkward jump)
+                    controls.classList.remove('is-hidden');
+        
+                    applySettings(getSettingsFromForm());
+                    restoreFocus(); // <--- FIX 2: Restore focus after collapsing
+                }, 120);
+            }
+        });
       }
 
       console.log("InitializePage .then(): Event listeners set up.");
@@ -1771,77 +1856,119 @@ function getSettingsFromForm() {
 }
 
 function applySettings(settings) {
-  root.style.setProperty('--lyric-bg-color', settings.bgColor);
-  root.style.setProperty('--lyric-highlight-color', settings.highlightColor);
-  root.style.setProperty('--underline-glow-color', settings.underlineColor);
-  root.style.setProperty('--dot-color', settings.dotColor);
-  root.style.setProperty('--transition-speed', `${settings.transitionSpeed}s`);
-  lyricsViewport.classList.toggle('dots-hidden', !settings.showDots);
-  lyricsViewport.classList.toggle('underline-hidden', !settings.showUnderline);
-	lyricsViewport.classList.toggle('progress-bar-hidden', !settings.showProgressBar);
-  $('toggleDotLabel').classList.toggle('disabled', !settings.showDots);
-  $('toggleUnderlineLabel').classList.toggle('disabled', !settings.showUnderline);
-  const pageEl = document.querySelector('.page');
-	if (pageEl) {
-		if (pageEl.classList.contains('fullscreen-active')) {
-			// Fullscreen: teleprompter takes full width
-			pageEl.style.gridTemplateColumns = '1fr';
-		} else {
-			// Normal: use configured lyrics width + 400px controls
-			pageEl.style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
-		}
-	}
+  root.style.setProperty('--lyric-bg-color', settings.bgColor);
+  root.style.setProperty('--lyric-highlight-color', settings.highlightColor);
+  root.style.setProperty('--underline-glow-color', settings.underlineColor);
+  root.style.setProperty('--dot-color', settings.dotColor);
+  root.style.setProperty('--transition-speed', `${settings.transitionSpeed}s`);
+  lyricsViewport.classList.toggle('dots-hidden', !settings.showDots);
+  lyricsViewport.classList.toggle('underline-hidden', !settings.showUnderline);
+  lyricsViewport.classList.toggle('progress-bar-hidden', !settings.showProgressBar);
+  $('toggleDotLabel').classList.toggle('disabled', !settings.showDots);
+  $('toggleUnderlineLabel').classList.toggle('disabled', !settings.showUnderline);
+  
+  const pageEl = document.querySelector('.page');
+  if (pageEl) {
+    if (pageEl.classList.contains('fullscreen-active')) {
+      // Fullscreen: teleprompter takes full width
+      pageEl.style.gridTemplateColumns = '1fr';
+    } else {
+      // Normal: use configured lyrics width + 400px controls
+      pageEl.style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
+    }
+  }
 
-  let topLang = languageOrder.length > 0 ? languageOrder[0] : 'English';
-  if (topLang === 'Custom' && !selectedLanguages.includes('Custom')) {
-    topLang = languageOrder.find(lang => selectedLanguages.includes(lang)) || 'English';
-  }
-  const topLangSettings = settings.languages[topLang] || DEFAULTS.languages.English;
-  root.style.setProperty('--countdown-color', topLangSettings.fontColorInactive);
-  languageOrder.forEach(lang => {
-    if (settings.languages[lang]) {
-      root.style.setProperty(`--lyric-font-size-${lang}`, `${settings.languages[lang].fontSize}rem`);
-      root.style.setProperty(`--lyric-font-color-active-${lang}`, settings.languages[lang].fontColorActive);
-      root.style.setProperty(`--lyric-font-color-inactive-${lang}`, settings.languages[lang].fontColorInactive);
-    }
-  });
-  const maxFontSize = Math.max(...languageOrder.map(lang => parseFloat(settings.languages[lang]?.fontSize) || 3));
-  const singleLineHeightRem = maxFontSize * (1.3 + 1.0);
-  const viewportHeightRem = singleLineHeightRem * 3 * selectedLanguages.length;
-  lyricsViewport.style.height = `${viewportHeightRem}rem`;
-  const spacerHeightRem = (viewportHeightRem / 2) - (singleLineHeightRem / 2);
-  document.querySelectorAll('.spacer').forEach(el => {
-    el.style.height = `${spacerHeightRem < 0 ? 0 : spacerHeightRem}rem`;
-  });
-  setCurrentIndex(currentIndex, true);
+  let topLang = languageOrder.length > 0 ? languageOrder[0] : 'English';
+  if (topLang === 'Custom' && !selectedLanguages.includes('Custom')) {
+    topLang = languageOrder.find(lang => selectedLanguages.includes(lang)) || 'English';
+  }
+  const topLangSettings = settings.languages[topLang] || DEFAULTS.languages.English;
+  root.style.setProperty('--countdown-color', topLangSettings.fontColorInactive);
+  
+  languageOrder.forEach(lang => {
+    if (settings.languages[lang]) {
+      root.style.setProperty(`--lyric-font-size-${lang}`, `${settings.languages[lang].fontSize}rem`);
+      root.style.setProperty(`--lyric-font-color-active-${lang}`, settings.languages[lang].fontColorActive);
+      root.style.setProperty(`--lyric-font-color-inactive-${lang}`, settings.languages[lang].fontColorInactive);
+    }
+  });
 
-	if (currentIndex === 0) {
-		document.querySelectorAll('.lyric-line-group:first-child .lyric-line')
-			.forEach(line => {
-				const lang = line.className.match(/lyric-line-(\w+)/)[1];
-				line.style.color = getComputedStyle(root).getPropertyValue(`--lyric-font-color-inactive-${lang}`).trim();
-			});
-	}
+  // --- NEW POSITIONING LOGIC (35% from Top) ---
+
+  // 1. Remove the forced height. Let CSS Flexbox fill the window.
+  lyricsViewport.style.height = ''; 
+
+  // 2. Calculate line height for spacer math
+  const maxFontSize = Math.max(...languageOrder.map(lang => parseFloat(settings.languages[lang]?.fontSize) || 3));
+  // 1.3 is line-height, 1.0 is margin-bottom approximation
+  const singleLineHeightRem = maxFontSize * 2.3; 
+
+  // 3. Get the ACTUAL height of the viewport (in pixels) now that CSS has stretched it
+  const viewportHeightPx = lyricsViewport.clientHeight;
+  
+  // Convert REM to PX for the single line
+  const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const singleLineHeightPx = singleLineHeightRem * rootFontSize;
+
+  // 4. Calculate Spacers
+  // Top Spacer: Pushes the first line down to the 35% mark
+  const topSpacerPx = (viewportHeightPx * 0.35) - (singleLineHeightPx / 2);
+  
+  // Bottom Spacer: Allows the last line to scroll UP to the 35% mark (needs 65% space below)
+  const bottomSpacerPx = (viewportHeightPx * 0.65) - (singleLineHeightPx / 2);
+
+  const spacers = document.querySelectorAll('.spacer');
+  if (spacers.length > 0) {
+      // First spacer (Top)
+      spacers[0].style.height = `${topSpacerPx < 0 ? 0 : topSpacerPx}px`;
+      
+      // Last spacer (Bottom)
+      if (spacers.length > 1) {
+          spacers[spacers.length - 1].style.height = `${bottomSpacerPx < 0 ? 0 : bottomSpacerPx}px`;
+      }
+  }
+
+  // 5. Re-center the current line
+  setCurrentIndex(currentIndex, true);
+
+  if (currentIndex === 0) {
+    document.querySelectorAll('.lyric-line-group:first-child .lyric-line')
+      .forEach(line => {
+        const lang = line.className.match(/lyric-line-(\w+)/)[1];
+        line.style.color = getComputedStyle(root).getPropertyValue(`--lyric-font-color-inactive-${lang}`).trim();
+      });
+  }
 }
 
 function enablePlaybackControls(isPlaying, isPaused = false, forceDisableAll = false) {
     const hasAudio = !!audio; // Use the audio object status
-    const playButtonDisabled = forceDisableAll || isPlaying || isPaused || !hasAudio;
-    const pauseResumeDisabled = forceDisableAll || (!isPlaying && !isPaused) || !hasAudio;
-    const stopButtonDisabled = forceDisableAll || (!isPlaying && !isPaused) || !hasAudio;
+    
+    // --- FIX: Allow Play if we have audio OR if we have Custom Lyrics loaded ---
+    const canPlay = hasAudio || usingCustomLyrics;
+
+    // Play is disabled if: Forced, Already Playing, Paused (implies resume), or Nothing to play
+    const playButtonDisabled = forceDisableAll || isPlaying || isPaused || !canPlay;
+    
+    // Stop is disabled if: Forced, Not Playing AND Not Paused, or Nothing loaded
+    const stopButtonDisabled = forceDisableAll || (!isPlaying && !isPaused) || !canPlay;
 
     $('btnPlay').disabled = playButtonDisabled;
+    
+    // Handle the optional Pause button
     const pauseBtn = $('btnPauseResume');
-		if (pauseBtn) {
-				pauseBtn.disabled = pauseResumeDisabled;
-				pauseBtn.innerHTML = isPlaying ? '&#9208; Pause' : '&#9199; Resume';
-		}
+    if (pauseBtn) {
+        // Pause is only available if we have actual Audio
+        const pauseResumeDisabled = forceDisableAll || (!isPlaying && !isPaused) || !hasAudio;
+        pauseBtn.disabled = pauseResumeDisabled;
+        pauseBtn.innerHTML = isPlaying ? '&#9208; Pause' : '&#9199; Resume';
+    }
+    
     $('btnStop').disabled = stopButtonDisabled;
 
-    // This is your new, simplified logic
+    // Disable inputs while playing
     const inputsDisabled = isPlaying;
     $('trackType').disabled = inputsDisabled || !hasAudio || forceDisableAll;
-    $('introLength').disabled = inputsDisabled || forceDisableAll; // Added forceDisableAll just in case
+    $('introLength').disabled = inputsDisabled || forceDisableAll; 
 }
 
 function getHymnTitleFromJSON(hymnNumber) {
@@ -1942,23 +2069,50 @@ function switchAudioTrack() {
 
 function startAutoScroll(lineTimings) {
   clearTimer();
-  
-  // --- FIX: Use Max Line Count for the bounds check ---
   const totalLines = getMaxLineCount();
-  
   if (!isPlaying || currentIndex >= totalLines) return;
-  // ----------------------------------------------------
-  
-  // Get base time and adjust for tempo
-  const baseSeconds = lineTimings[currentIndex] || 0.2;
-  const adjustedSeconds = baseSeconds / playbackRate; 
 
-  if (isNaN(adjustedSeconds) || adjustedSeconds <= 0) return;
-  
+  // Use global if argument not provided (safety)
+  const timings = lineTimings || currentLineTimings;
+
+  let adjustedSeconds = 0;
+
+  // --- AUDIO SYNC LOGIC ---
+  // If we have audio, calculate exact time remaining for this line
+  if (audio && !audio.paused && !usingCustomLyrics) {
+      
+      // 1. Calculate cumulative time to the END of the current line
+      let cumulativeTime = 0;
+      for (let i = 0; i <= currentIndex; i++) {
+          cumulativeTime += (timings[i] || 5);
+      }
+      
+			// 2. Add Intro only (Trust the user's Intro setting)
+      const introLen = parseFloat($("introLength").value) || 0;
+      
+      // Removed 'offset' to prevent visual lag
+      const targetAudioTime = introLen + cumulativeTime;;
+      
+      // 3. How much audio time is left?
+      const audioTimeLeft = targetAudioTime - audio.currentTime;
+      
+      // 4. Convert to "Wall Clock" time (e.g. if 2s audio left, but 2x speed, we wait 1s)
+      adjustedSeconds = (audioTimeLeft > 0 ? audioTimeLeft : 0) / playbackRate;
+      
+      // Safety minimum to prevent instant-skip loops
+      if (adjustedSeconds < 0.1) adjustedSeconds = 0.1;
+
+  } else {
+      // --- MANUAL / CUSTOM LOGIC ---
+      // No audio clock to sync to, so we just use the line duration
+      const baseSeconds = timings[currentIndex] || 5; 
+      adjustedSeconds = baseSeconds / playbackRate;
+  }
+
   const currentLineEl = $(`line-${currentIndex}`);
   
   if (currentLineEl) {
-    // 1. Handle BEAT animations
+    // 1. Handle BEAT animations (Recalculate speed)
     const activeLanguages = languageOrder.filter(lang => selectedLanguages.includes(lang));
     activeLanguages.forEach(lang => {
         const lineText = usingCustomLyrics && lang === 'Custom'
@@ -1970,9 +2124,14 @@ function startAutoScroll(lineTimings) {
         if (isSignLanguage) {
             const lyricLineEl = currentLineEl.querySelector(`.lyric-line-${lang}`);
             const beatElements = lyricLineEl ? lyricLineEl.querySelectorAll('.beat-segment') : [];
-            if (beatElements.length > 0) {
+            // Only animate beats if we have plenty of time, otherwise it looks chaotic mid-line
+            if (beatElements.length > 0 && adjustedSeconds > 0.5) {
                 const timePerBeat = adjustedSeconds / beatElements.length;
                 beatElements.forEach((beatEl, i) => {
+                    // Clear previous animations to avoid stacking
+                    beatEl.classList.remove('is-glowing'); 
+                    void beatEl.offsetWidth; // Force reflow
+                    
                     setTimeout(() => {
                         if (!isPlaying) return;
                         beatEl.style.setProperty('--beat-duration', `${timePerBeat}s`);
@@ -1985,11 +2144,16 @@ function startAutoScroll(lineTimings) {
     });
 
     // 2. Handle PROGRESS LINE Animation
+    // We reset the transition to match the NEW remaining time
     const progressBar = currentLineEl.querySelector('.line-progress-bar');
     if (progressBar) {
+        // We don't reset width to 0% because that looks jumpy.
+        // Ideally, we'd calculate current width %, but resetting to 0 for a speed change
+        // is often visually cleaner than a "jump" in the bar.
         progressBar.style.transition = 'none';
         progressBar.style.width = '0%';
-        void progressBar.offsetWidth; // Force reflow
+        void progressBar.offsetWidth; 
+        
         progressBar.style.transition = `width ${adjustedSeconds}s linear`;
         progressBar.style.width = '100%';
     }
@@ -1997,24 +2161,18 @@ function startAutoScroll(lineTimings) {
   
   mainTimer = setTimeout(() => {
     if (!isPlaying) return;
-    
-    // --- FIX: Check against totalLines here too ---
     if (currentIndex < totalLines - 1) {
       setCurrentIndex(currentIndex + 1);
-      startAutoScroll(lineTimings); 
+      startAutoScroll(timings); 
     } else {
-      // End of song logic
       isPlaying = false;
       clearTimer();
-
       const activeLine = lyricsContainer.querySelector('.is-current');
       if (activeLine) activeLine.classList.remove('is-current');
-
       document.querySelectorAll('.line-progress-bar').forEach(bar => {
           bar.style.transition = 'none';
           bar.style.width = '0%';
       });
-
       enablePlaybackControls(false);
     }
   }, adjustedSeconds * 1000);
@@ -2370,6 +2528,7 @@ function loadRunlistIndex(idx) {
     updateLiveCounter();
     $('introLength').value = entry?.intro_length !== undefined ? parseFloat(entry.intro_length).toFixed(1) : 5;
     
+    loadTempoForCurrentHymn();
     populateLyricsContainer();
     updateLineCountDisplay();
     updateAudioLanguageDisplay();
@@ -2391,40 +2550,95 @@ function loadRunlistIndex(idx) {
   }
 }
 
-// --- Tempo / Speed Control Logic ---
-let currentBPM = 100; // Visual BPM (Base 100)
-let playbackRate = 1.0; // Actual Audio Rate
 
-function adjustTempo(bpmChange) {
-  currentBPM += bpmChange;
+function adjustTempo(change) {
+  currentSpeed += change;
   
-  // Safety Limits (40 BPM to 220 BPM is standard metronome range)
-  if (currentBPM < 40) currentBPM = 40;
-  if (currentBPM > 220) currentBPM = 220;
+  if (currentSpeed < -12) currentSpeed = -12;
+  if (currentSpeed > 40) currentSpeed = 40;
   
-  // Calculate new rate: 100 is considered "1.0" (Original Speed)
-  playbackRate = currentBPM / 100;
+  calculatePlaybackRate();
+  saveTempoForCurrentHymn(); 
+  updateTempoUI();
   
+  // --- FIX: Apply new timing immediately to the running line ---
+  if (isPlaying) {
+      startAutoScroll(currentLineTimings);
+  }
+}
+
+function calculatePlaybackRate() {
+// Old: 1 + (currentSpeed / 100)  -> 1% per step
+  // New: 1 + (currentSpeed * 0.05) -> 5% per step
+  playbackRate = 1 + (currentSpeed * 0.05);
+  
+  // Safety floor to prevent audio from stopping or reversing
+  if (playbackRate < 0.25) playbackRate = 0.25;
+}
+
+function loadTempoForCurrentHymn() {
+  const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+  // We use a NEW storage key 'hymnSpeedOffsets' to avoid conflict with old 'hymnTempos' data
+  const stored = JSON.parse(localStorage.getItem('hymnSpeedOffsets') || '{}');
+  
+  if (stored[hymnKey] !== undefined) {
+    currentSpeed = parseInt(stored[hymnKey]);
+  } else {
+    currentSpeed = 0; // Default
+  }
+  
+  calculatePlaybackRate();
   updateTempoUI();
 }
 
+function saveTempoForCurrentHymn() {
+  const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
+  const stored = JSON.parse(localStorage.getItem('hymnSpeedOffsets') || '{}');
+  
+  if (currentSpeed === 0) {
+    delete stored[hymnKey]; // Save space if default
+  } else {
+    stored[hymnKey] = currentSpeed;
+  }
+  
+  localStorage.setItem('hymnSpeedOffsets', JSON.stringify(stored));
+}
+
 function resetTempo() {
-  currentBPM = 100;
-  playbackRate = 1.0;
+  currentSpeed = 0;
+  calculatePlaybackRate();
+  saveTempoForCurrentHymn(); 
   updateTempoUI();
 }
 
 function updateTempoUI() {
-  // 1. Update the Number Display
+  // 1. Update the Display
   const display = $('tempoDisplay');
-  if (display) display.textContent = currentBPM;
+  if (display) {
+    // Add a plus sign for positive numbers for clarity
+    const sign = currentSpeed > 0 ? '+' : '';
+    display.textContent = `${sign}${currentSpeed}`;
+    
+    // --- WARNING LOGIC ---
+    if (currentSpeed !== 0) {
+      // Modified Speed: Turn Orange
+      display.style.backgroundColor = '#f59e0b'; 
+      display.style.color = '#000000';
+      display.style.fontWeight = 'bold';
+      display.title = "Speed modified (0 is default)";
+    } else {
+      // Default Speed: Reset styles
+      display.style.backgroundColor = ''; 
+      display.style.color = '';
+      display.style.fontWeight = '';
+      display.title = "Standard Speed";
+    }
+  }
 
   // 2. Update Audio immediately if playing
   if (audio) {
     audio.playbackRate = playbackRate;
   }
-  
-  // Note: startAutoScroll uses the 'playbackRate' global variable automatically
 }
 
 function getMaxLineCount() {
@@ -2503,4 +2717,3 @@ function waitForActualPlayback(audio, thresholdSeconds = 0.05) {
     audio.addEventListener('timeupdate', onTimeUpdate);
   });
 }
-
