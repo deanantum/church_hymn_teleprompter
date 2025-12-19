@@ -1144,24 +1144,22 @@ function populateLyricsContainer() {
     });
 }
 
-function setCurrentIndex(newIdx, instant = false) {
+function setCurrentIndex(newIdx, instant = false, shouldHighlight = true) {
+  // Remove highlight from previous line
   const currentLineEl = lyricsContainer.querySelector('.is-current');
   if (currentLineEl) currentLineEl.classList.remove('is-current');
   
-  // --- FIX: Use the shared Max Line Count logic ---
-  // Previously: const lineArray = usingCustomLyrics ? lines : initialHymnLines;
   const totalLines = getMaxLineCount();
   
-  // Check against the TOTAL available visual lines, not just the active array
   if (newIdx < 0 || newIdx >= totalLines) {
     currentIndex = -1;
     return;
   }
-  // ------------------------------------------------
 
   const nextLineEl = $(`line-${newIdx}`);
   if (!nextLineEl) return;
   
+  // Calculate Scroll Position (35% from top)
   const viewportHeight = lyricsViewport.clientHeight;
   const targetScrollTop = nextLineEl.offsetTop - (viewportHeight * 0.35) + (nextLineEl.offsetHeight / 2);
   
@@ -1175,7 +1173,11 @@ function setCurrentIndex(newIdx, instant = false) {
     lyricsContainer.style.transform = `translateY(-${targetScrollTop}px)`;
   }
   
-  nextLineEl.classList.add('is-current');
+  // --- FIX: Only add the class if requested ---
+  if (shouldHighlight) {
+      nextLineEl.classList.add('is-current');
+  }
+  
   currentIndex = newIdx;
 }
 
@@ -1197,51 +1199,59 @@ function updateCounter() {
 
 function startIntroCountdown(duration) {
   return new Promise(resolve => {
+    window.introResolver = resolve;
+
     const countdownEl = $('countdown-display');
     const countdownNumEl = countdownEl.querySelector('.countdown-number');
     
-    // Visuals still need whole numbers (rounding up)
     let secondsLeft = Math.ceil(duration);
 
-    // If duration is very short (<= 3s), we just wait the precise time and exit
-    if (duration <= 3) {
+    // If intro is shorter than 3s, just show lyrics immediately
+    if (duration <= 3) { 
       lyricsViewport.classList.remove('is-counting-down');
-      // Use precise decimal duration here
-      introTimeout = setTimeout(resolve, duration * 1000); 
+      resolve(); 
       return;
     }
 
-    // Setup Visuals
     lyricsViewport.classList.add('is-counting-down');
     countdownEl.classList.add('is-visible');
     countdownNumEl.textContent = secondsLeft;
     
     clearTimer();
 
-    // 1. THE LOGIC TIMER (Precise)
-    // This triggers exactly at 5.3s (or whatever decimal is entered)
+    // --- FIX: LOGIC TIMER (Finish 3 seconds EARLY) ---
+    // We calculate how long to wait until the "T-minus 3" mark
+    const timeToWait = Math.max(0, duration - 3); 
+
     introTimeout = setTimeout(() => {
-        clearTimer(); // Stop the visual ticker
-        // Clean up visual state immediately
+        clearTimer(); 
         countdownEl.classList.remove('is-visible');
         lyricsViewport.classList.remove('is-counting-down');
-        resolve(); // Start the song
-    }, duration * 1000);
+        lyricsViewport.classList.remove('intro-active'); 
+        resolve(); // Show lyrics now!
+    }, timeToWait * 1000);
+    // -------------------------------------------------
 
-    // 2. THE VISUAL TIMER (Approximate)
-    // This updates the big numbers on screen every second
+    // 2. VISUAL TIMER (Updates the numbers)
     mainTimer = setInterval(() => {
-      secondsLeft--;
-      if (secondsLeft > 0) { countdownNumEl.textContent = secondsLeft; }
+      if (audio) {
+          const introLen = parseFloat($("introLength").value) || 0;
+          const remainingAudioTime = introLen - audio.currentTime;
+          secondsLeft = Math.ceil(remainingAudioTime / playbackRate);
+      } else {
+          secondsLeft--;
+      }
       
-      // Hide the visuals when we get close to the end (3 seconds left)
+      if (secondsLeft > 0) { 
+          countdownNumEl.textContent = secondsLeft; 
+      }
+      
+      // Sync visual hiding with the logic timer
       if (secondsLeft <= 3) {
         countdownEl.classList.remove('is-visible');
         lyricsViewport.classList.remove('is-counting-down');
       }
-      
-      // Note: We do NOT resolve() here anymore. The introTimeout handles that.
-    }, 1000);
+    }, 200); 
   });
 }
 
@@ -1408,7 +1418,8 @@ function playHymn() {
 	}
 	
 	lyricsViewport.classList.remove('intro-active');
-	setCurrentIndex(0);  // now highlight + active colors
+	// Scroll to line 0, but false (no highlight) so startAutoScroll handles the delay
+	setCurrentIndex(0, false, false);
 	
 	if (!$('manualControlOverride').checked) {
 			startAutoScroll(currentLineTimings);
@@ -2072,47 +2083,53 @@ function startAutoScroll(lineTimings) {
   const totalLines = getMaxLineCount();
   if (!isPlaying || currentIndex >= totalLines) return;
 
-  // Use global if argument not provided (safety)
   const timings = lineTimings || currentLineTimings;
 
-  let adjustedSeconds = 0;
+  let realDelay = 0;
+  let realDuration = (timings[currentIndex] || 5) / playbackRate;
 
   // --- AUDIO SYNC LOGIC ---
-  // If we have audio, calculate exact time remaining for this line
   if (audio && !audio.paused && !usingCustomLyrics) {
-      
-      // 1. Calculate cumulative time to the END of the current line
-      let cumulativeTime = 0;
-      for (let i = 0; i <= currentIndex; i++) {
-          cumulativeTime += (timings[i] || 5);
+      let cumulativeTimeStart = 0;
+      for (let i = 0; i < currentIndex; i++) {
+          cumulativeTimeStart += (timings[i] || 5);
       }
       
-			// 2. Add Intro only (Trust the user's Intro setting)
       const introLen = parseFloat($("introLength").value) || 0;
+      const lineStartAudioTime = introLen + cumulativeTimeStart;
+      const lineEndAudioTime = lineStartAudioTime + (timings[currentIndex] || 5);
       
-      // Removed 'offset' to prevent visual lag
-      const targetAudioTime = introLen + cumulativeTime;;
-      
-      // 3. How much audio time is left?
-      const audioTimeLeft = targetAudioTime - audio.currentTime;
-      
-      // 4. Convert to "Wall Clock" time (e.g. if 2s audio left, but 2x speed, we wait 1s)
-      adjustedSeconds = (audioTimeLeft > 0 ? audioTimeLeft : 0) / playbackRate;
-      
-      // Safety minimum to prevent instant-skip loops
-      if (adjustedSeconds < 0.1) adjustedSeconds = 0.1;
+      const delayAudio = lineStartAudioTime - audio.currentTime;
+      realDelay = (delayAudio > 0 ? delayAudio : 0) / playbackRate;
 
-  } else {
-      // --- MANUAL / CUSTOM LOGIC ---
-      // No audio clock to sync to, so we just use the line duration
-      const baseSeconds = timings[currentIndex] || 5; 
-      adjustedSeconds = baseSeconds / playbackRate;
-  }
+      const startPoint = Math.max(lineStartAudioTime, audio.currentTime);
+      const durationAudio = lineEndAudioTime - startPoint;
+      realDuration = (durationAudio > 0 ? durationAudio : 0) / playbackRate;
+      
+      if (realDuration < 0.1 && realDelay <= 0) realDuration = 0.1;
+  } 
 
   const currentLineEl = $(`line-${currentIndex}`);
   
   if (currentLineEl) {
-    // 1. Handle BEAT animations (Recalculate speed)
+    // --- FIX: Schedule the Highlight ---
+    if (realDelay > 0.05) {
+        // If there is a delay, ensure highlight is OFF initially
+        currentLineEl.classList.remove('is-current');
+        
+        // Wait for the delay, then turn it ON
+        setTimeout(() => {
+            if (isPlaying && currentIndex === parseInt(currentLineEl.id.split('-')[1])) {
+                currentLineEl.classList.add('is-current');
+            }
+        }, realDelay * 1000);
+    } else {
+        // No delay? Highlight immediately
+        currentLineEl.classList.add('is-current');
+    }
+    // -----------------------------------
+
+    // 1. Handle BEAT animations
     const activeLanguages = languageOrder.filter(lang => selectedLanguages.includes(lang));
     activeLanguages.forEach(lang => {
         const lineText = usingCustomLyrics && lang === 'Custom'
@@ -2124,37 +2141,32 @@ function startAutoScroll(lineTimings) {
         if (isSignLanguage) {
             const lyricLineEl = currentLineEl.querySelector(`.lyric-line-${lang}`);
             const beatElements = lyricLineEl ? lyricLineEl.querySelectorAll('.beat-segment') : [];
-            // Only animate beats if we have plenty of time, otherwise it looks chaotic mid-line
-            if (beatElements.length > 0 && adjustedSeconds > 0.5) {
-                const timePerBeat = adjustedSeconds / beatElements.length;
+            
+            if (beatElements.length > 0 && realDuration > 0.5) {
+                const timePerBeat = realDuration / beatElements.length;
                 beatElements.forEach((beatEl, i) => {
-                    // Clear previous animations to avoid stacking
                     beatEl.classList.remove('is-glowing'); 
-                    void beatEl.offsetWidth; // Force reflow
+                    void beatEl.offsetWidth; 
                     
                     setTimeout(() => {
                         if (!isPlaying) return;
                         beatEl.style.setProperty('--beat-duration', `${timePerBeat}s`);
                         beatEl.classList.add('is-glowing');
                         setTimeout(() => beatEl.classList.remove('is-glowing'), timePerBeat * 1000);
-                    }, i * timePerBeat * 1000);
+                    }, (realDelay * 1000) + (i * timePerBeat * 1000));
                 });
             }
         }
     });
 
     // 2. Handle PROGRESS LINE Animation
-    // We reset the transition to match the NEW remaining time
     const progressBar = currentLineEl.querySelector('.line-progress-bar');
     if (progressBar) {
-        // We don't reset width to 0% because that looks jumpy.
-        // Ideally, we'd calculate current width %, but resetting to 0 for a speed change
-        // is often visually cleaner than a "jump" in the bar.
         progressBar.style.transition = 'none';
         progressBar.style.width = '0%';
         void progressBar.offsetWidth; 
         
-        progressBar.style.transition = `width ${adjustedSeconds}s linear`;
+        progressBar.style.transition = `width ${realDuration}s linear ${realDelay}s`;
         progressBar.style.width = '100%';
     }
   }
@@ -2162,7 +2174,8 @@ function startAutoScroll(lineTimings) {
   mainTimer = setTimeout(() => {
     if (!isPlaying) return;
     if (currentIndex < totalLines - 1) {
-      setCurrentIndex(currentIndex + 1);
+      // --- FIX: Scroll to next line, but DON'T highlight yet (let loop handle it) ---
+      setCurrentIndex(currentIndex + 1, false, false); 
       startAutoScroll(timings); 
     } else {
       isPlaying = false;
@@ -2175,7 +2188,7 @@ function startAutoScroll(lineTimings) {
       });
       enablePlaybackControls(false);
     }
-  }, adjustedSeconds * 1000);
+  }, (realDelay + realDuration) * 1000);
 }
 
 function toggleCollapsibleById(id, forceOpen = null) {
@@ -2561,9 +2574,61 @@ function adjustTempo(change) {
   saveTempoForCurrentHymn(); 
   updateTempoUI();
   
-  // --- FIX: Apply new timing immediately to the running line ---
   if (isPlaying) {
-      startAutoScroll(currentLineTimings);
+      if (lyricsViewport.classList.contains('is-counting-down') || lyricsViewport.classList.contains('intro-active')) {
+          
+          clearTimer();
+          
+          const introLen = parseFloat($("introLength").value) || 0;
+          const audioTimeLeft = introLen - audio.currentTime;
+          
+          // --- FIX: Recalculate delay to target T-minus 3 seconds ---
+          // "How much audio time is left until the 3-second mark?"
+          const audioTimeUntilTrigger = Math.max(0, audioTimeLeft - 3);
+          
+          // Convert that to Real Time based on speed
+          const newDelay = audioTimeUntilTrigger / playbackRate;
+          // -----------------------------------------------------------
+          
+          introTimeout = setTimeout(() => {
+              clearTimer();
+              $('countdown-display').classList.remove('is-visible');
+              lyricsViewport.classList.remove('is-counting-down');
+              lyricsViewport.classList.remove('intro-active');
+              
+              if (window.introResolver) window.introResolver(); 
+          }, newDelay * 1000);
+
+          const countdownNumEl = document.querySelector('.countdown-number');
+          
+          if (countdownNumEl) {
+             const immediateLeft = Math.ceil(audioTimeLeft / playbackRate);
+             if (immediateLeft > 0) countdownNumEl.textContent = immediateLeft;
+             
+             if (immediateLeft <= 3) {
+                 $('countdown-display').classList.remove('is-visible');
+                 lyricsViewport.classList.remove('is-counting-down');
+                 // If we are already past the 3s mark, resolve immediately
+                 if (window.introResolver) {
+                     clearTimer(); // Stop the re-queued timer
+                     window.introResolver();
+                 }
+             }
+          }
+
+          mainTimer = setInterval(() => {
+             const timeLeft = Math.ceil((introLen - audio.currentTime) / playbackRate);
+             if (timeLeft > 0 && countdownNumEl) countdownNumEl.textContent = timeLeft;
+             
+             if (timeLeft <= 3) {
+                 $('countdown-display').classList.remove('is-visible');
+                 lyricsViewport.classList.remove('is-counting-down');
+             }
+          }, 200);
+
+      } else {
+          startAutoScroll(currentLineTimings);
+      }
   }
 }
 
