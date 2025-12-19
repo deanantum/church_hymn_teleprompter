@@ -26,8 +26,9 @@ body {
   background-color: #f3f4f6;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
-  height: 100vh;
+  /*height: 100vh;*/
   overflow-y: auto;
+  /*overflow: hidden; /* Prevent the whole page from scrolling */
   padding: 1rem;
 }
 button {
@@ -62,7 +63,11 @@ input::placeholder {
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 1.5rem;
-  min-height: 100vh;
+  
+  /* 1. Ensure page fills the visible screen (minus body padding) */
+  min-height: calc(100vh - 2rem); 
+  height: auto;
+  
   padding: 0;
   box-sizing: border-box;
 }
@@ -80,6 +85,9 @@ input::placeholder {
   }
   .lyrics-panel {
     flex-shrink: 0;
+    height: auto; 
+    position: static; 
+    min-height: 60vh;
   }
   .controls-panel {
     flex-grow: 1;
@@ -99,6 +107,13 @@ input::placeholder {
 .lyrics-panel {
   gap: 1rem;
   align-self: start;
+  height: calc(100vh - 3rem);
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0; /* Ensure it fills the grid column */
 }
 .lyrics-panel.custom-view-active {
   align-self: stretch;
@@ -147,17 +162,21 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   border: 1px solid #e5e7eb;
 }
 .lyrics-viewport {
+  /* 3. This is the key: Force viewport to fill remaining space */
+  flex-grow: 1; 
+  height: 100%; /* Override JS inline styles */
+  /*min-height: 300px; /* Safety minimum */
+  
+  width: 100%;
   overflow: hidden;
-  background: var(--lyric-bg-color);
-  border-radius: 8px;
   position: relative;
-  display: block;
 }
 .lyrics-viewport.is-counting-down #lyrics-container {
   visibility: hidden;
 }
 #lyrics-container {
-  padding: 0 1.5rem;
+  padding: 0; /* CHANGED: Was padding: 0 1.5rem; */
+  width: 100%;
   transition: transform var(--transition-speed) ease-in-out;
 }
 .lyric-line-group {
@@ -165,41 +184,45 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   flex-direction: column;
   align-items: center;
   margin-bottom: 1rem;
+  /* Force full width */
+  width: 100% !important;
+  /* MOVE PADDING HERE: Permanent padding ensures consistent width for JS calculation */
+  padding: 0.5rem 2rem;
+  box-sizing: border-box;
 }
 .lyric-line {
+  /* Visual Styles */
   line-height: 1.2;
-  padding: 0.25em 0;
-  margin: 0.1rem 0;
   text-align: center;
   flex-shrink: 0;
   font-weight: normal;
-  
-  /* --- UPDATES START --- */
-  width: fit-content;   /* Hug the text width */
-  position: relative;   /* Anchor for the progress bar */
-  /* --- UPDATES END --- */
-  
   transition: color 0.2s ease-in-out, background-color var(--transition-speed);
+  position: relative;
+ 
+  /* Layout & Width Styles (The Fixes) */
+  width: fit-content !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+ 
+  /* Reset margins/padding */
+  margin: 0.1rem 0 !important;
+  padding: 0.25em 0 !important;
 }
 .lyric-line-group.is-current {
   background-color: var(--lyric-highlight-color);
   border-radius: 8px;
-  padding: 0.5rem 0;
+  /* Padding is now handled by the parent class to prevent layout shifts */
   display: flex;
   width: 100%;
 }
 .lyric-line-English { font-size: var(--lyric-font-size-English); color: var(--lyric-font-color-inactive-English); }
 .lyric-line-group.is-current .lyric-line-English { color: var(--lyric-font-color-active-English); }
-
 .lyric-line-Spanish { font-size: var(--lyric-font-size-Spanish); color: var(--lyric-font-color-inactive-Spanish); }
 .lyric-line-group.is-current .lyric-line-Spanish { color: var(--lyric-font-color-active-Spanish); }
-
 .lyric-line-ASL { font-size: var(--lyric-font-size-ASL); color: var(--lyric-font-color-inactive-ASL); text-align: center; }
 .lyric-line-group.is-current .lyric-line-ASL { color: var(--lyric-font-color-active-ASL); }
-
 .lyric-line-Custom { font-size: var(--lyric-font-size-Custom); color: var(--lyric-font-color-inactive-Custom); text-align: center; }
 .lyric-line-group.is-current .lyric-line-Custom { color: var(--lyric-font-color-active-Custom); }
-
 .lyrics-viewport.intro-active .lyric-line-group.is-current {
   background-color: transparent;
 }
@@ -207,20 +230,49 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   height: 0;
 }
 #countdown-display {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  font-weight: 700; 
+  /* Position and Layout */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Mask Styles */
+  background-color: var(--lyric-bg-color);
   color: var(--countdown-color);
-  z-index: 10;
-  opacity: 0; transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
+  z-index: 100;
+
+  /* Animation State */
+  opacity: 0;
   pointer-events: none;
+  
+  /* CRITICAL: Keep this for the fade effect */
+  transition: opacity 0.5s ease-in-out;
 }
-#countdown-display.is-visible { opacity: 1; }
+
+/* When active, it becomes opaque */
+#countdown-display.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Keep your existing font styling */
 #countdown-display .countdown-symbol { font-size: calc(var(--lyric-font-size-English) * 3.5); line-height: 1; }
 #countdown-display .countdown-number { font-size: calc(var(--lyric-font-size-English) * 1.5); line-height: 1; margin-top: 1rem; }
-.controls-panel { overflow-y: visible; }
+
+.controls-panel { 
+	height: auto;
+  overflow-y: visible;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  /*height: 100%;
+  overflow-y: auto; /* Scrollbar INSIDE this panel only */
+}
 .controls-panel h2 { margin: 0 0 1rem 0; font-size: 1.25rem; }
 .controls-panel h2:first-of-type { margin-top: 0; }
 .lyric-order-header {
@@ -267,15 +319,11 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   background: #ADD8E6;
   cursor: pointer; font-size: 1rem; font-weight: 500;
 }
-
-
-
 /* Parent containers */
 .lyric-order-controls {
   margin: 0;
   padding: 0;
 }
-
 .lyric-order-grid {
   margin: 0;
   padding: 0;
@@ -284,13 +332,11 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   opacity: 1;
   transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
 }
-
 .language-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .language-item {
   padding: 0.2rem 0.75rem 0.2rem 1rem; /* Left padding for border-to-checkbox */
   border: 1px solid #d1d5db;
@@ -301,7 +347,6 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   align-items: center;
   overflow: hidden;
 }
-
 .language-item .checkbox-group {
   flex-grow: 1;
   margin: 0;
@@ -311,16 +356,14 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   overflow: hidden;
   gap: 0.5rem; /* This adds the space */
 }
-
 .language-item .checkbox-group input[type="checkbox"] {
   flex-shrink: 0;
   padding: 0;
-  /* Conflicting margin rules removed */
+  /* Conflicting margin margin removed */
   width: 1.2em;
   height: 1.2em;
   cursor: pointer;
 }
-
 .language-item .checkbox-group label {
   margin: 0;
   padding: 0;
@@ -332,16 +375,13 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   line-height: 1.2;
   font-weight: 600;
 }
-
 .language-item:hover {
   background-color: #f3f4f6;
 }
-
 /* Reduce controls-panel padding to minimize visual gap */
 .controls-panel {
   padding: 1.5rem 0.5rem;
 }
-
 /* Consolidated global checkbox-group styles */
 .checkbox-group {
   display: flex;
@@ -349,13 +389,11 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   gap: 0.5rem;
   flex-grow: 1;
 }
-
 .checkbox-group label {
   margin-bottom: 0;
   font-weight: 600;
   cursor: pointer;
 }
-
 .checkbox-group input[type="checkbox"] {
   margin: 0;
   padding: 0;
@@ -363,12 +401,10 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   height: 1.2em;
   cursor: pointer;
 }
-
 /* Add gap above Manual Control Override checkbox */
 #playback-controls .row .checkbox-group {
   margin-top: 0.75rem; /* Keep spacing above checkbox */
 }
-
 /* Other relevant styles */
 .line-count-display {
   padding: 8px 10px;
@@ -377,40 +413,30 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   line-height: 1.4;
   min-height: 40px;
 }
-
 .line-count-display strong {
   font-weight: 700;
 }
-
 .count-item {
   font-size: 0.9rem;
   color: #4b5563;
 }
-
 .count-item strong {
   color: #111827;
 }
-
 .count-item strong.count-mismatch {
   color: #b91c1c;
 }
-
 #playback-controls {
   display: block;
 }
-
 .controls-panel .row {
   margin-bottom: 1rem;
 }
-
 .controls-panel label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
-
-
-
 .checkbox-group label {
   margin-bottom: 0;
   font-weight: 600;
@@ -504,7 +530,8 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
 }
 .settings-grid {
   display: block;
-  overflow: auto;
+  /*overflow: auto;*/
+  overflow: visible;
   max-height: none;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
@@ -597,7 +624,6 @@ input[type="color"].active-color-input {
     border: 2px solid #2b6cb0;
     box-shadow: 0 0 5px rgba(43, 108, 176, 0.5);
 }
-
 /* --- Underline Glow Styles --- */
 #toggleDotLabel, #toggleUnderlineLabel {
   cursor: pointer;
@@ -674,12 +700,10 @@ input[type="color"].active-color-input {
     opacity: 0;
   }
 }
-
 /* --- Styles for Runlist in song.html --- */
 #runlist-panel {
   margin-bottom: 1.5rem; /* Add some spacing */
 }
-
 #runlist-display {
   list-style: none;
   padding: 0;
@@ -690,7 +714,6 @@ input[type="color"].active-color-input {
   border: 1px solid #d1d5db;
   border-radius: 8px;
 }
-
 #runlist-display li {
   padding: 0.6rem 0.7rem;
   cursor: pointer; /* Change from 'grab' to 'pointer' */
@@ -699,26 +722,20 @@ input[type="color"].active-color-input {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 #runlist-display li:last-child {
   border-bottom: none;
 }
-
 #runlist-display li:hover {
    background-color: #f3f4f6; /* Add a hover effect */
 }
-
 /* Style for the currently active/selected song */
 #runlist-display li.active { /* Using .active as per song.js */
   background: #dbeafe; /* Light blue background */
   font-weight: 600; /* Bold text */
 }
-
 /* Add these new rules to your style.css file */
 /* --- Custom Color Picker Styles --- */
-
 /* --- Custom Color Picker Styles --- */
-
 .custom-color-picker {
   position: relative; /* Required for the hidden input positioning */
   display: flex; /* <-- THIS IS THE KEY for side-by-side layout */
@@ -729,7 +746,6 @@ input[type="color"].active-color-input {
   border-radius: 6px;
   padding: 0 4px; /* A little internal padding */
 }
-
 .color-display {
   flex-grow: 1; /* Makes the color bar fill available horizontal space */
   height: 25px; /* Height of the color bar itself */
@@ -738,7 +754,6 @@ input[type="color"].active-color-input {
   border: 1px solid #000; /* Thin black border around the color */
   transition: box-shadow 0.2s ease, outline 0.2s ease;
 }
-
 .edit-color-btn {
   background: none;
   border: none;
@@ -754,11 +769,9 @@ input[type="color"].active-color-input {
   justify-content: center;
   flex-shrink: 0; /* Prevent button from shrinking */
 }
-
 .edit-color-btn:hover {
   color: #111827;
 }
-
 .color-input-hidden {
   /* Hides the native input visually but keeps it functional */
   position: absolute;
@@ -773,16 +786,13 @@ input[type="color"].active-color-input {
   /* Optional: Make it completely inaccessible to pointer events */
   pointer-events: none;
 }
-
 /* Style for when the color bar is active (for jewel tones) */
 .color-display.active-color-input {
   box-shadow: 0 0 5px rgba(43, 108, 176, 0.5);
   outline: 2px solid #2b6cb0;
   outline-offset: 1px;
 }
-
 /* --- Jewel Tone Palette Visibility Control --- */
-
 #jewel-tone-palette {
   /* Style for when it's VISIBLE */
   display: flex; /* Or keep your existing display style */
@@ -795,7 +805,6 @@ input[type="color"].active-color-input {
   transition: max-height 0.3s ease-out, opacity 0.2s ease-out, padding-top 0.3s ease-out;
   margin-top: 0.5rem; /* Add some space above */
 }
-
 #jewel-tone-palette.is-hidden {
   /* Style for when it's HIDDEN */
   max-height: 0;
@@ -804,21 +813,17 @@ input[type="color"].active-color-input {
   margin-top: 0; /* Remove space above when hidden */
   /* pointer-events: none; /* Optional: Prevent accidental interaction */
 }
-
 .intro-active .lyric-line-group.is-current .lyric-line {
   color: var(--lyric-font-color-inactive-English) !important; /* default */
 }
 .intro-active .lyric-line-group.is-current .lyric-line-Spanish { color: var(--lyric-font-color-inactive-Spanish) !important; }
 .intro-active .lyric-line-group.is-current .lyric-line-ASL { color: var(--lyric-font-color-inactive-ASL) !important; }
 .intro-active .lyric-line-group.is-current .lyric-line-Custom { color: var(--lyric-font-color-inactive-Custom) !important; }
-
 /* --- Fullscreen Toggle Logic --- */
-
 /* Ensure the parent panel allows absolute positioning of the button */
 #main-panel {
-  position: relative; 
+  position: relative;
 }
-
 /* Style the toggle button */
 .fullscreen-toggle {
   position: absolute;
@@ -826,58 +831,50 @@ input[type="color"].active-color-input {
   right: 1rem;
   background: transparent;
   border: none;
-  font-size: 2rem;     /* Large chevron size */
+  font-size: 2rem; /* Large chevron size */
   line-height: 1;
-  color: #9ca3af;      /* Subtle gray */
+  color: #9ca3af; /* Subtle gray */
   cursor: pointer;
   padding: 0;
   z-index: 50;
   transition: color 0.2s ease, transform 0.2s ease;
 }
-
 .fullscreen-toggle:hover {
-  color: #111827;      /* Darker on hover */
+  color: #111827; /* Darker on hover */
   background: transparent; /* Remove default button bg */
   transform: scale(1.1);
 }
-
 /* The Class that hides the 2nd column */
 .page.fullscreen-active {
   grid-template-columns: 1fr; /* Only one column */
 }
-
 .page.fullscreen-active .controls-panel {
   display: none; /* Completely hide the controls */
 }
-
 /* --- Mini Controls Styles --- */
-
 .mini-controls {
-  display: none;      /* Hidden by default */
+  display: none; /* Hidden by default */
   position: absolute;
   
   /* CHANGED: Hangs the buttons outside the right edge */
-  top: 0;             
-  right: -3.5rem;     
+  top: 0;
+  right: -3.5rem;
   
   gap: 0.5rem;
   z-index: 50;
   flex-direction: column;
 }
-
 .page.fullscreen-active .mini-controls {
-  position: fixed;   /* instead of absolute */
-  right: 1rem;   /* stays inside the margin space */
-  top: 3.5rem;   /* below the chevron */
-  display: flex;     /* keep them visible */
-  z-index: 100;      /* ensure they sit above everything */
+  position: fixed; /* instead of absolute */
+  right: 1rem; /* stays inside the margin space */
+  top: 3.5rem; /* below the chevron */
+  display: flex; /* keep them visible */
+  z-index: 100; /* ensure they sit above everything */
 }
-
 .page.fullscreen-active #main-panel {
   /* margin-right removed so the panel stays full size */
   overflow: visible; /* This allows the buttons to be seen outside the border */
 }
-
 .mini-controls button {
   width: 36px;
   height: 36px;
@@ -895,19 +892,15 @@ input[type="color"].active-color-input {
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: background-color 0.2s, color 0.2s;
 }
-
 .mini-controls button:hover {
   background-color: #f3f4f6;
   color: #111827;
   border-color: #9ca3af;
 }
-
 .mini-controls button:active {
   background-color: #e5e7eb;
 }
-
 /* --- Runlist Indicator Styles --- */
-
 .runlist-indicator {
   display: none; /* Hidden by default */
   position: absolute;
@@ -921,12 +914,10 @@ input[type="color"].active-color-input {
   pointer-events: none; /* Clicks pass through */
   font-family: system-ui, sans-serif;
 }
-
 /* Only show when fullscreen is active */
 .page.fullscreen-active .runlist-indicator {
   display: block;
 }
-
 /* Tempo Display Style */
 #tempoDisplay {
   background-color: #e5e7eb;
@@ -939,43 +930,38 @@ input[type="color"].active-color-input {
   display: inline-block;
   text-align: center;
 }
-
 /* --- Lyric Progress Bar Styles --- */
-
 /* Ensure the group can contain the absolute bar */
 .lyric-line-group {
-  position: relative; 
+  position: relative;
   /* existing styles... */
 }
-
 .line-progress-container {
   position: absolute;
-  bottom: 0;          /* Align to bottom of the text line */
+  bottom: 0; /* Align to bottom of the text line */
   left: 0;
-  width: 100%;        /* Matches the text width exactly */
+  width: 100%; /* Matches the text width exactly */
   height: 4px;
   z-index: 10;
   opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
 }
-
 .lyric-line-group.is-current .line-progress-container {
   opacity: 1;
 }
-
 .line-progress-bar {
   width: 0%;
   height: 100%;
   background-color: var(--underline-glow-color);
   position: relative;
   border-radius: 2px;
-  transition-timing-function: linear; 
+  transition-timing-function: linear;
 }
-
 .line-progress-knob {
   position: absolute;
-  right: -6px; 
+  right: -6px;
+  top: 50%;
   top: 50%;
   transform: translateY(-50%);
   width: 12px;
@@ -984,12 +970,10 @@ input[type="color"].active-color-input {
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
-
 /* --- Hide Progress Bar State --- */
 .lyrics-viewport.progress-bar-hidden .line-progress-container {
   display: none !important;
 }
-
 #lyricsWidth {
   border-right: none !important;
   border-top-right-radius: 0 !important;
@@ -1002,7 +986,6 @@ input[type="color"].active-color-input {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
 }
-
 .input-group .input-group-append button {
   border-left: none !important;
 }
@@ -1018,50 +1001,62 @@ input[type="color"].active-color-input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;          /* base, we’ll tweak corners below */
+  border-radius: 0; /* base, we’ll tweak corners below */
 }
-
 /* Left button (Auto) – middle segment */
 #autoWidthBtn {
-  border-right: none;        /* so it shares a border with Apply */
+  border-right: none; /* so it shares a border with Apply */
 }
-
 /* Right button (Apply) – rounded right edge */
 #applyWidthBtn {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
-
-
 .lyrics-width-group {
   position: relative;
   width: 100%;
 }
-
 .lyrics-width-group .form-control {
   border-radius: 8px;
-  border-right: none;       /* So there isn't a double border under the buttons */
-  padding-right: 7rem;      /* Space for Auto + Apply buttons */
+  border-right: none; /* So there isn't a double border under the buttons */
+  padding-right: 7rem; /* Space for Auto + Apply buttons */
 }
 .lyrics-width-buttons {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
-  display: flex;             /* side-by-side */
+  display: flex; /* side-by-side */
   flex-direction: row;
   align-items: stretch;
 }
 /* In fullscreen mode, leave space on the right for mini-controls */
 .page.fullscreen-active #main-panel {
-  margin-right: 50px;   /* ← adjust to taste (80–120px works well) */
+  margin-right: 50px; /* ← adjust to taste (80–120px works well) */
 }
-
 .controls-panel.is-hidden {
     opacity: 0;
     pointer-events: none;
 }
-
 .controls-panel {
     transition: opacity 0.25s ease;
+}
+
+/* NEW: This wrapper hugs the text tightly */
+.lyric-text-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* UPDATED: Anchor the progress bar to the wrapper, not the full line */
+.line-progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Now 100% of the WRAPPER, not the screen */
+  height: 4px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
 }
