@@ -11575,7 +11575,7 @@
   "259": {
     "title": "Hope of Israel",
     "safe_title": "",
-    "voiceURL": "https://assets.churchofjesuschrist.org/ae/94/ae940e788a4fb94e8f0fcd39de712c6a5ef86ef0/o_thou_rock_of_our_salvation_accompaniment_eng.mp3",
+    "voiceURL": "https://assets.churchofjesuschrist.org/cc/81/cc8115fd9b384d5430eb95834dd7035baae84c85/hope_of_israel_vocal_accompaniment_eng.mp3",
     "accompanimentURL": "https://assets.churchofjesuschrist.org/ae/94/ae940e788a4fb94e8f0fcd39de712c6a5ef86ef0/o_thou_rock_of_our_salvation_accompaniment_eng.mp3",
     "intro_length": 10,
     "line_time": 0,
@@ -11583,8 +11583,7 @@
     "lines": [
       "1: Hope of Israel, Zion’s army,",
       "Children of the promised day,",
-      "See, the Chieftain signals onward,",
-      "And the battle’s in array!",
+      "See, the Chieftain signals onward,",<audio preload="metadata" src="https://assets.churchofjesuschrist.org/cc/81/cc8115fd9b384d5430eb95834dd7035baae84c85/hope_of_israel_vocal_accompaniment_eng.mp3" volume="1" class="Audio__NativeAudio-sc-8zst6b-1 ymvDZ"></audio>      "And the battle’s in array!",
       "Ch: Hope of Israel, rise in might",
       "With the sword of truth and right;",
       "Sound the war-cry, “Watch and pray!”",
