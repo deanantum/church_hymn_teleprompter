@@ -2090,6 +2090,8 @@ function startAutoScroll(lineTimings) {
 
   // --- AUDIO SYNC LOGIC ---
   if (audio && !audio.paused && !usingCustomLyrics) {
+      
+      // 1. Calculate when this line is SUPPOSED to start (Audio Time)
       let cumulativeTimeStart = 0;
       for (let i = 0; i < currentIndex; i++) {
           cumulativeTimeStart += (timings[i] || 5);
@@ -2099,9 +2101,14 @@ function startAutoScroll(lineTimings) {
       const lineStartAudioTime = introLen + cumulativeTimeStart;
       const lineEndAudioTime = lineStartAudioTime + (timings[currentIndex] || 5);
       
+      // 2. Calculate Delay (Are we early?)
       const delayAudio = lineStartAudioTime - audio.currentTime;
+      
+      // --- CRITICAL FIX: Update realDelay here ---
       realDelay = (delayAudio > 0 ? delayAudio : 0) / playbackRate;
+      // -------------------------------------------
 
+      // 3. Calculate Duration (How much of the line is left?)
       const startPoint = Math.max(lineStartAudioTime, audio.currentTime);
       const durationAudio = lineEndAudioTime - startPoint;
       realDuration = (durationAudio > 0 ? durationAudio : 0) / playbackRate;
@@ -2112,7 +2119,7 @@ function startAutoScroll(lineTimings) {
   const currentLineEl = $(`line-${currentIndex}`);
   
   if (currentLineEl) {
-    // --- FIX: Schedule the Highlight ---
+    // 1. Schedule the Highlight
     if (realDelay > 0.05) {
         // If there is a delay, ensure highlight is OFF initially
         currentLineEl.classList.remove('is-current');
@@ -2127,9 +2134,8 @@ function startAutoScroll(lineTimings) {
         // No delay? Highlight immediately
         currentLineEl.classList.add('is-current');
     }
-    // -----------------------------------
 
-    // 1. Handle BEAT animations
+    // 2. Handle BEAT animations
     const activeLanguages = languageOrder.filter(lang => selectedLanguages.includes(lang));
     activeLanguages.forEach(lang => {
         const lineText = usingCustomLyrics && lang === 'Custom'
@@ -2159,13 +2165,14 @@ function startAutoScroll(lineTimings) {
         }
     });
 
-    // 2. Handle PROGRESS LINE Animation
+    // 3. Handle PROGRESS LINE Animation
     const progressBar = currentLineEl.querySelector('.line-progress-bar');
     if (progressBar) {
         progressBar.style.transition = 'none';
         progressBar.style.width = '0%';
         void progressBar.offsetWidth; 
         
+        // CSS transition handles the delay natively
         progressBar.style.transition = `width ${realDuration}s linear ${realDelay}s`;
         progressBar.style.width = '100%';
     }
@@ -2174,7 +2181,7 @@ function startAutoScroll(lineTimings) {
   mainTimer = setTimeout(() => {
     if (!isPlaying) return;
     if (currentIndex < totalLines - 1) {
-      // --- FIX: Scroll to next line, but DON'T highlight yet (let loop handle it) ---
+      // Scroll to next line, but DON'T highlight yet (let the loop calculate delay)
       setCurrentIndex(currentIndex + 1, false, false); 
       startAutoScroll(timings); 
     } else {
