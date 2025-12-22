@@ -1062,7 +1062,7 @@ function populateLyricsContainer() {
 
             let lineText = '';
 
-            // Get text safely (handles cases where index > length of specific language)
+            // Get text safely
             if (lang === 'Custom' && usingCustomLyrics) {
                 lineText = (lines[index] || '').replace(/-/g, '\u2011');
             } else if (allHymnsData[lang]?.[currentHymnNumber]?.lines) {
@@ -1076,6 +1076,11 @@ function populateLyricsContainer() {
             const p = document.createElement('p');
             p.className = `lyric-line lyric-line-${lang}`;
             
+            // This variable determines where the progress bar gets attached.
+            // By default, it attaches to the Paragraph, but if we split the lyrics,
+            // we will point this to the specific lyric span.
+            let contentTarget = p; 
+
             // Handle Beats (Dots)
             if ((lang.includes('SL') || (lang === 'Custom' && lineText.includes('|')))) {
                 const beats = lineText.split('|').map(s => s.trim());
@@ -1092,44 +1097,79 @@ function populateLyricsContainer() {
                     }
                 });
             } else if (lineText) {
-                p.textContent = lineText;
+                // --- NEW LOGIC: SEPARATE LABEL FROM LYRICS ---
+                // Regex looks for "1:", "Ch:", "Bridge:", "V1:", etc, followed by space
+                const match = lineText.match(/^(\d+:|Ch:|Chorus:|Bridge:|V\d+:)\s+(.*)/i);
+                
+                if (match) {
+                    const label = match[1];  // e.g., "1:"
+                    const lyrics = match[2]; // e.g., "Amazing Grace"
+
+                    // 1. Create Label Span (No progress bar here)
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'lyric-prefix';
+                    labelSpan.textContent = label;
+                    labelSpan.style.marginRight = '0.4em'; // Add a little space
+
+                    // 2. Create Content Span (Progress bar goes HERE)
+                    const contentSpan = document.createElement('span');
+                    contentSpan.className = 'lyric-text-content';
+                    contentSpan.textContent = lyrics;
+                    contentSpan.style.position = 'relative'; // Essential for bar positioning
+                    contentSpan.style.display = 'inline-block'; 
+
+                    // 3. Assemble
+                    p.appendChild(labelSpan);
+                    p.appendChild(contentSpan);
+
+                    // 4. Update the target so the bar appends to the lyrics only
+                    contentTarget = contentSpan;
+
+                } else {
+                    // No label found, but we wrap in a span anyway for consistency
+                    // so the bar behaves the same way (under the text)
+                    const contentSpan = document.createElement('span');
+                    contentSpan.className = 'lyric-text-content';
+                    contentSpan.textContent = lineText;
+                    contentSpan.style.position = 'relative';
+                    contentSpan.style.display = 'inline-block';
+
+                    p.appendChild(contentSpan);
+                    contentTarget = contentSpan;
+                }
+                // --- END NEW LOGIC ---
+
             } else if (lang !== 'Custom') {
-                 // Only show "not available" if the WHOLE hymn is missing, 
-                 // not just because this specific line is shorter than the max.
                  if (index === 0 && !allHymnsData[lang]?.[currentHymnNumber]?.lines) {
                     p.textContent = `${lang} lyrics not available`;
                  }
             }
 
-            // Insert Bar INSIDE the <p> tag
+            // Insert Bar
             if (p.hasChildNodes()) {
-                // Logic: Add bar if it hasn't been added to this group yet.
-                // Even if lineText is empty (because this language is shorter), 
-                // we might still want the bar if it's the top-most selected language 
-                // to show the timing flow.
-                // However, usually we only want it on visible text. 
-                // We check `lineText.trim() !== ''` to ensure we attach to visible text if possible.
                 if (!progressBarAdded && lineText && lineText.trim() !== '') {
                     const progressContainer = document.createElement('div');
                     progressContainer.className = 'line-progress-container';
+                    // Ensure the bar is positioned absolutely relative to the contentSpan
+                    progressContainer.style.position = 'absolute'; 
+                    progressContainer.style.bottom = '0';
+                    progressContainer.style.left = '0';
+                    progressContainer.style.width = '100%';
+
                     progressContainer.innerHTML = `
                         <div class="line-progress-bar">
                             <div class="line-progress-knob"></div>
                         </div>
                     `;
-                    p.appendChild(progressContainer);
+                    
+                    // Attach to the specific target (the lyrics span), not the whole P
+                    contentTarget.appendChild(progressContainer);
                     progressBarAdded = true;
                 }
                 div.appendChild(p);
             }
         });
         
-        // Edge Case: If we looped through all languages and NO bar was added 
-        // (e.g. because the top language line was empty but the second language had text),
-        // the loop above handles attaching to the next available text because of the order.
-        // But if ALL text is empty for this line (shouldn't happen due to maxLines logic),
-        // we just append the div empty.
-
         if (div.hasChildNodes()) {
             lyricsContainer.appendChild(div);
         }
@@ -1161,7 +1201,7 @@ function setCurrentIndex(newIdx, instant = false, shouldHighlight = true) {
   
   // Calculate Scroll Position (35% from top)
   const viewportHeight = lyricsViewport.clientHeight;
-  const targetScrollTop = nextLineEl.offsetTop - (viewportHeight * 0.35) + (nextLineEl.offsetHeight / 2);
+  const targetScrollTop = nextLineEl.offsetTop - (viewportHeight * 0.22) + (nextLineEl.offsetHeight / 2);
   
   if (instant) {
     lyricsContainer.style.transition = 'none';
@@ -1207,14 +1247,13 @@ function startIntroCountdown(duration) {
     // Get the full Intro Length from the settings
     const introLen = parseFloat($("introLength").value) || 0;
     
-    // Calculate the Audio Time marker where we should stop counting (T-minus 3 seconds)
-    // Example: If intro is 17.5s, we stop counting when audio reaches 14.5s
+    // --- RESTORED: Stop counting 3 seconds early (at 3, 2, 1...) ---
+    // This gives you a "Get Ready" gap where lyrics are visible but not highlighted.
     const targetAudioTime = Math.max(0, introLen - 3 * playbackRate);
 
     lyricsViewport.classList.add('is-counting-down');
     countdownEl.classList.add('is-visible');
     
-    // Set initial number immediately so it doesn't blink empty
     if (audio) {
         const initialRem = Math.max(0, introLen - audio.currentTime);
         countdownNumEl.textContent = Math.ceil(initialRem / playbackRate);
@@ -1223,30 +1262,29 @@ function startIntroCountdown(duration) {
     clearTimer();
 
     mainTimer = setInterval(() => {
-      // Safety check
       if (!audio || audio.paused) return;
 
       const currentTime = audio.currentTime;
       const remainingTime = introLen - currentTime;
 
-      // 1. VISUAL: Update the countdown number based on Audio Time
       const secondsLeft = Math.ceil(remainingTime / playbackRate);
       if (secondsLeft > 0) {
-         countdownNumEl.textContent = secondsLeft;
+          countdownNumEl.textContent = secondsLeft;
       }
 
-      // 2. LOGIC: Check if we have reached the target audio time
-      // We use >= to catch it even if the time ticks slightly past
       if (currentTime >= targetAudioTime) {
         clearTimer();
         
+        // Hide the countdown overlay
         countdownEl.classList.remove('is-visible');
         lyricsViewport.classList.remove('is-counting-down');
-        lyricsViewport.classList.remove('intro-active');
         
-        resolve(); // Show the lyrics!
+        // --- NEW: Immediately reveal lyrics (remove gray overlay) ---
+        lyricsViewport.classList.remove('intro-active'); 
+        
+        resolve(); 
       }
-    }, 100); // Check frequently (every 100ms) for smoothness
+    }, 100);
   });
 }
 
@@ -1390,7 +1428,11 @@ function playHymn() {
     const avgSecondsPerLine = currentLineTimings.reduce((sum, t) => sum + t, 0) / currentLineTimings.length;
     $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)}s/line`;
 
-  lyricsViewport.classList.add('intro-active');
+  	lyricsViewport.classList.add('intro-active');
+  
+		const accidentalHighlight = lyricsContainer.querySelector('.is-current');
+    if (accidentalHighlight) accidentalHighlight.classList.remove('is-current');
+  
 	isPlaying = true;
 	
 	try {
@@ -1419,7 +1461,7 @@ function playHymn() {
 	
 	lyricsViewport.classList.remove('intro-active');
 	// Scroll to line 0, but false (no highlight) so startAutoScroll handles the delay
-	setCurrentIndex(0, false, false);
+	setCurrentIndex(0, true, true);
 	
 	if (!$('manualControlOverride').checked) {
 			startAutoScroll(currentLineTimings);
@@ -1930,10 +1972,10 @@ function applySettings(settings) {
 
   // 4. Calculate Spacers
   // Top Spacer: Pushes the first line down to the 35% mark
-  const topSpacerPx = (viewportHeightPx * 0.35) - (singleLineHeightPx / 2);
+  const topSpacerPx = (viewportHeightPx * 0.22) - (singleLineHeightPx / 2);
   
   // Bottom Spacer: Allows the last line to scroll UP to the 35% mark (needs 65% space below)
-  const bottomSpacerPx = (viewportHeightPx * 0.65) - (singleLineHeightPx / 2);
+  const bottomSpacerPx = (viewportHeightPx * 0.78) - (singleLineHeightPx / 2);
 
   const spacers = document.querySelectorAll('.spacer');
   if (spacers.length > 0) {
