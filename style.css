@@ -1060,3 +1060,11 @@ input[type="color"].active-color-input {
   transition: opacity 0.2s;
   pointer-events: none;
 }
+
+/* --- Prefix Styling (1:, 2:, Ch:) --- */
+.lyric-prefix {
+  color: var(--dot-color) !important; /* Forces the color even if line is inactive gray */
+  font-weight: 800;
+  margin-right: 0.3rem;
+  display: inline-block;
+}
