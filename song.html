@@ -71,11 +71,13 @@
           </div>
         </div>
 
-        <div class="btns" style="margin-bottom: 1rem;">
-          <button id="btnPlay" onclick="playHymn()">&#9654; Play</button>
-          <!-- ><button id="btnPauseResume" onclick="togglePauseResume()" disabled>&#9208; Pause</button> -->
-          <button id="btnStop" onclick="stopHymn()" disabled>&#9209; Stop</button>
-        </div>
+<div class="btns" style="margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+  <button id="btnPlay" onclick="playHymn()" style="height: 60px; font-size: 1.5rem;">▶ Play</button>
+  <button id="btnStop" onclick="stopHymn()" disabled style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+    <span style="font-size: 2.5rem; line-height: 1;">⏹</span>
+    <span style="font-size: 1.5rem;">Stop</span>
+  </button>
+</div>
 
         <div class="row">
           <div class="checkbox-group">
