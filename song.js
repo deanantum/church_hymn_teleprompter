@@ -516,6 +516,14 @@ function renderLanguageList() {
       }
     });
     
+    // Re-attach manual control listener if it was active
+		if ($('manualControlOverride')?.checked) {
+			$('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
+			$('lyricsDisplay').addEventListener('keydown', handleArrowKeys);
+			lyricsViewport.focus();
+		}
+    
+    
     item.querySelector('input').addEventListener('change', (e) => {
         const lang = item.dataset.lang;
         const isChecked = e.target.checked;
@@ -1182,6 +1190,13 @@ function populateLyricsContainer() {
             setCurrentIndex(currentIndex, true);
         }
     });
+    
+    // Re-attach manual control if active
+		if ($('manualControlOverride')?.checked) {
+			$('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
+			$('lyricsDisplay').addEventListener('keydown', handleArrowKeys);
+			lyricsViewport.focus();
+		}
 }
 
 function setCurrentIndex(newIdx, instant = false, shouldHighlight = true) {
@@ -1917,6 +1932,7 @@ function getSettingsFromForm() {
 
 function applySettings(settings) {
   root.style.setProperty('--lyric-bg-color', settings.bgColor);
+	root.style.setProperty('--lyric-bg-color', settings.bgColor);
   root.style.setProperty('--lyric-highlight-color', settings.highlightColor);
   root.style.setProperty('--underline-glow-color', settings.underlineColor);
   root.style.setProperty('--dot-color', settings.dotColor);
