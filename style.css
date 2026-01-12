@@ -542,6 +542,12 @@ h1 { margin: 0; font-size: 1.75rem; text-align: center; border-bottom: 1px solid
   max-height: 0;
   opacity: 0;
   height: 0;
+  
+  /* ADD THIS LINE: */
+  visibility: hidden; 
+  
+  /* Optional: Prevents clicks immediately, but allows opacity to fade out */
+  transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
 }
 .control-group { margin-bottom: 0.5rem; }
 .control-group label { font-size: 0.9rem; }
@@ -1037,9 +1043,11 @@ input[type="color"].active-color-input {
 .controls-panel.is-hidden {
     opacity: 0;
     pointer-events: none;
+    visibility: hidden; /* <--- Forces it to be truly "gone" */
 }
 .controls-panel {
-    transition: opacity 0.25s ease;
+    /* We add a delay to visibility so it waits for opacity to finish fading */
+    transition: opacity 0.25s ease, visibility 0s 0.25s;
 }
 
 /* NEW: This wrapper hugs the text tightly */
@@ -1075,7 +1083,7 @@ input[type="color"].active-color-input {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 350px; /* Adjust height as needed */
+  height: 400px; /* Adjust height as needed */
   background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0) 20%, var(--lyric-bg-color) 100%);
   pointer-events: none;
   z-index: 10;
@@ -1086,4 +1094,73 @@ input[type="color"].active-color-input {
 }
 #countdown-display {
   background-color: var(--lyric-bg-color);
+}
+
+/* --- Loading Spinner for Play Button --- */
+#btnPlay {
+  position: relative; /* Allows absolute positioning of spinner */
+}
+
+/* Wrap the text so we can hide it */
+#btnPlay .btn-content {
+  transition: opacity 0.2s;
+}
+
+/* The Spinner Icon */
+.btn-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centering */
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #2c4294; /* Dark Blue for visibility */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: none; /* Hidden by default */
+}
+
+/* The Animation Keyframes */
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* --- STATE: When button is loading --- */
+#btnPlay.loading {
+  pointer-events: none; /* Prevent double clicks */
+  background-color: #d1d5db; /* Gray out slightly */
+}
+
+#btnPlay.loading .btn-content {
+  opacity: 0; /* Hide the "Play" text */
+}
+
+#btnPlay.loading .btn-spinner {
+  display: block; /* Show the spinner */
+}
+
+/* Verse Selection Styles */
+#verse-selection-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.skipped-indicator {
+    color: #ef4444; /* Red color */
+    font-style: italic;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
+
+/* Ensure the verse list behaves like the other collapsible menus */
+#verse-selection-content.is-collapsed {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    margin: 0;
+    padding: 0;
 }
