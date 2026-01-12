@@ -663,7 +663,7 @@ input[type="color"].active-color-input {
   display: inline-block;
 }
 .lyrics-viewport.dots-hidden .beat-separator {
-    display: none;
+    display: none !important;
 }
 .beat-segment::after {
   content: '';
