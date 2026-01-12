@@ -26,6 +26,11 @@ let currentRunlistIndex = 0;
 let currentSpeed = 0; // Default 0 means "Standard Speed"
 let playbackRate = 1.0;
 let currentLineTimings = [];
+let lineStartTimestamp = 0;
+let hasPausedForCurrentVerse = false;
+// Add these with your other let variables
+let currentVerseMap = []; // Stores start/end index and duration for each verse
+let skippedVerseLabels = []; // Stores ["1:", "2:"] etc.
 
 
 const JEWEL_TONES = [
@@ -37,7 +42,7 @@ const JEWEL_TONES = [
     '#f4ffff', '#bea0ae', '#82bbe0', '#8de6ed', '#fce6e1', '#d5d7d0'
 ];
 const DEFAULTS = {
-  bgColor: '#d5d7d0',
+  bgColor: '#ffffff',
   highlightColor: '#2c4294',
   underlineColor: '#f4ffff',
   dotColor: '#82bbe0',
@@ -47,7 +52,7 @@ const DEFAULTS = {
   transitionSpeed: '0.5',
   lyricsWidth: '700',
   languages: {
-    English: { fontSize: '3', fontColorActive: '#f4ffff', fontColorInactive: '#4b5563' },
+    English: { fontSize: '3', fontColorActive: '#ffffff', fontColorInactive: '#4b5563' },
     Spanish: { fontSize: '3', fontColorActive: '#1e88e5', fontColorInactive: '#8ab4f8' },
     ASL: { fontSize: '3', fontColorActive: '#d5d7d0', fontColorInactive: '#287796' },
     Custom: { fontSize: '3', fontColorActive: '#ffe0af', fontColorInactive: '#953659' }
@@ -1008,6 +1013,8 @@ function resetLyrics() {
   currentHymnNumber = params.get("n");
   const title = getHymnTitleFromJSON(currentHymnNumber);
   $('pageHeader').textContent = `Hymn ${currentHymnNumber} - ${title}`;
+	analyzeVerses();
+  renderVerseSelection();
   $('introLength').value = allHymnsData['English']?.[currentHymnNumber]?.intro_length !== undefined ? parseFloat(allHymnsData['English'][currentHymnNumber].intro_length).toFixed(1) : 5;
   setView('hymn');
   loadAvailableLanguages().then(() => {
@@ -1085,8 +1092,6 @@ function populateLyricsContainer() {
             p.className = `lyric-line lyric-line-${lang}`;
             
             // This variable determines where the progress bar gets attached.
-            // By default, it attaches to the Paragraph, but if we split the lyrics,
-            // we will point this to the specific lyric span.
             let contentTarget = p; 
 
             // Handle Beats (Dots)
@@ -1119,6 +1124,19 @@ function populateLyricsContainer() {
                     labelSpan.textContent = label;
                     labelSpan.style.marginRight = '0.4em'; // Add a little space
 
+                    // *** SKIP CHECK INSERTED HERE ***
+                    // Check if this label is in our global skip list
+                    if (typeof skippedVerseLabels !== 'undefined' && skippedVerseLabels.includes(label)) {
+                        const skipSpan = document.createElement('span');
+                        skipSpan.className = 'skipped-indicator';
+                        skipSpan.textContent = "(Skip)";
+                        labelSpan.appendChild(skipSpan);
+                        
+                        // Optional: Gray out the text if skipped
+                        p.style.opacity = "0.6"; 
+                    }
+                    // ********************************
+
                     // 2. Create Content Span (Progress bar goes HERE)
                     const contentSpan = document.createElement('span');
                     contentSpan.className = 'lyric-text-content';
@@ -1135,7 +1153,6 @@ function populateLyricsContainer() {
 
                 } else {
                     // No label found, but we wrap in a span anyway for consistency
-                    // so the bar behaves the same way (under the text)
                     const contentSpan = document.createElement('span');
                     contentSpan.className = 'lyric-text-content';
                     contentSpan.textContent = lineText;
@@ -1192,14 +1209,18 @@ function populateLyricsContainer() {
     });
     
     // Re-attach manual control if active
-		if ($('manualControlOverride')?.checked) {
-			$('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
-			$('lyricsDisplay').addEventListener('keydown', handleArrowKeys);
-			lyricsViewport.focus();
-		}
+    if ($('manualControlOverride')?.checked) {
+        $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
+        $('lyricsDisplay').addEventListener('keydown', handleArrowKeys);
+        lyricsViewport.focus();
+    }
 }
-
 function setCurrentIndex(newIdx, instant = false, shouldHighlight = true) {
+  
+  if (newIdx !== currentIndex) {
+      hasPausedForCurrentVerse = false;
+  }
+  
   // Remove highlight from previous line
   const currentLineEl = lyricsContainer.querySelector('.is-current');
   if (currentLineEl) currentLineEl.classList.remove('is-current');
@@ -1304,74 +1325,160 @@ function startIntroCountdown(duration) {
 }
 
 function togglePauseResume() {
-  if (isPlaying) {
-    pauseHymn();
-    $('btnPauseResume').innerHTML = '&#9199; Resume';
-  } else {
-    resumeHymn();
-    $('btnPauseResume').innerHTML = '&#9208; Pause';
-  }
+  const icon = $('pauseIcon');
+  const text = $('pauseText');
+
+  if (isPlaying) {
+    // We are currently playing, so we want to PAUSE
+    pauseHymn();
+    if(icon) icon.innerHTML = '&#9654;'; // Play/Resume icon
+    if(text) text.textContent = 'Resume';
+  } else {
+    // We are paused, so we want to RESUME
+    resumeHymn();
+    if(icon) icon.innerHTML = '&#9208;'; // Pause icon
+    if(text) text.textContent = 'Pause';
+  }
 }
 
-async function initializeAudio(hymnNumber, wasPlaying = false, currentTime = 0, onManualSetup = null) {
-	loadTempoForCurrentHymn();
-	
-  if (!hymnNumber) return console.warn("initializeAudio called with no hymn number.");
+function initializeAudio(hymnNumber, wasPlaying = false, currentTime = 0, onManualSetup = null) {
+    loadTempoForCurrentHymn();
 
-  const trackType = $('trackType').checked ? 'voice' : 'accompaniment';
-  let topLanguage = languageOrder[0] || 'English';
-  if (topLanguage === 'Custom' && languageOrder.length > 1) topLanguage = languageOrder[1];
-  if (topLanguage === 'ASL') topLanguage = 'English';
+    if (!hymnNumber) return console.warn("initializeAudio called with no hymn number.");
 
-  $('audioLanguage')?.setTextContent?.(`${topLanguage} Music`);
-
-  const hymnEntry = allHymnsData[topLanguage]?.[hymnNumber] || allHymnsData['English']?.[hymnNumber];
-  if (!hymnEntry) return forceManualMode("No hymn data");
-
-  let audioURL = trackType === 'voice' ? hymnEntry.voiceURL : hymnEntry.accompanimentURL;
-
-  if (!audioURL?.trim()) {
+    const trackType = $('trackType').checked ? 'voice' : 'accompaniment';
     const folder = trackType === 'voice' ? 'voice' : 'accompaniment';
-    audioURL = `audio/${topLanguage}/${folder}/${hymnNumber}.mp3`;
-  }
 
-  console.log(`Loading audio: ${audioURL}`);
+    // 1. Determine Source Language
+    let requestedLang = languageOrder[0] || 'English';
+    if (requestedLang === 'Custom' && languageOrder.length > 1) requestedLang = languageOrder[1];
+    if (requestedLang === 'ASL') requestedLang = 'English';
 
-  if (audio) { audio.pause(); audio = null; }
+    let hymnEntry = null;
+    let sourceLang = requestedLang;
 
-  audio = new Audio(audioURL);
-  audio.playbackRate = playbackRate;
-  audio.preload = 'metadata';
-  audio.currentTime = currentTime;
-
-  audio.onloadedmetadata = () => {
-    startCounterTick();
-    audio.addEventListener('timeupdate', updateCounter);
-    audio.addEventListener('ended', onAudioEnded);
-    if ($('manualControlOverride')?.checked) {
-      $('manualControlOverride').checked = false;
-      toggleManualControl();
+    // Follow the data
+    if (allHymnsData[requestedLang]?.[hymnNumber]) {
+        hymnEntry = allHymnsData[requestedLang][hymnNumber];
+        sourceLang = requestedLang;
+    } else if (allHymnsData['English']?.[hymnNumber]) {
+        hymnEntry = allHymnsData['English'][hymnNumber];
+        sourceLang = 'English'; 
     }
-    if (wasPlaying) audio.play().catch(handlePlayError);
-    enablePlaybackControls(wasPlaying, !wasPlaying && currentTime > 0);
-  };
 
-  audio.onerror = () => {
-    console.error("Audio failed:", audioURL);
-    showNotice(`No ${trackType} audio for ${topLanguage} hymn ${hymnNumber}`);
-    audio = null;
-    forceManualMode();
-    if (onManualSetup) onManualSetup();
-  };
+    $('audioLanguage')?.setTextContent?.(`${sourceLang} Music`);
 
-  function forceManualMode(msg = "No audio available") {
-    audio = null;
-    showNotice(`${msg}. Manual Control enabled.`);
-    const cb = $('manualControlOverride');
-    if (cb && !cb.checked) { cb.checked = true; toggleManualControl(); }
-    enablePlaybackControls(false, false, false);
-    setCurrentIndex(0, true);
-  }
+    if (!hymnEntry) return forceManualMode("No hymn data");
+
+    const rawURL = trackType === 'voice' ? hymnEntry.voiceURL : hymnEntry.accompanimentURL;
+    const isCopyrightListed = rawURL && rawURL.toLowerCase().includes('copyright');
+
+    // 2. Define Local Path Variants
+    // Variant A: Exact Number (e.g., "86.mp3" or "219.mp3")
+    const localPathNormal = `audio/${sourceLang}/${folder}/${hymnNumber}.mp3`;
+    
+    // Variant B: Padded Number (e.g., "086.mp3"). 
+    // Note: For "219", this is still "219.mp3", which causes the loop if we aren't careful.
+    const paddedNumber = hymnNumber.toString().padStart(3, '0'); 
+    const localPathPadded = `audio/${sourceLang}/${folder}/${paddedNumber}.mp3`;
+
+    // 3. Start Source
+    let currentSource = "";
+
+    if (isCopyrightListed || !rawURL || !rawURL.trim()) {
+        currentSource = localPathNormal;
+    } else {
+        currentSource = rawURL;
+    }
+
+    console.log(`[Audio Init] Hymn ${hymnNumber} | Trying: ${currentSource}`);
+
+    if (audio) { 
+        audio.pause(); 
+        audio.onerror = null; // Remove old listeners to be safe
+        audio = null; 
+    }
+
+    audio = new Audio(currentSource);
+    audio.playbackRate = playbackRate;
+    audio.preload = 'metadata';
+    audio.currentTime = currentTime;
+
+    // --- SUCCESS HANDLER ---
+    audio.onloadedmetadata = () => {
+        console.log(`[Audio Success] Loaded: ${currentSource}`);
+        startCounterTick();
+        audio.addEventListener('timeupdate', updateCounter);
+        audio.addEventListener('ended', onAudioEnded);
+        
+        if ($('manualControlOverride')?.checked) {
+            $('manualControlOverride').checked = false;
+            toggleManualControl();
+        }
+        
+        if (wasPlaying) {
+            audio.play().catch(err => console.warn("Auto-play blocked:", err));
+        }
+        enablePlaybackControls(wasPlaying, !wasPlaying && currentTime > 0);
+    };
+
+    // --- ERROR / FALLBACK HANDLER ---
+    audio.onerror = (e) => {
+        const failedSource = currentSource; // Capture what failed
+        
+        // Prevent infinite recursion by removing listener if we are done
+        // (We will re-add logic below if we decide to retry)
+
+        console.warn(`[Audio 404] Failed to load: ${failedSource}`);
+
+        // STEP 1: If Internet URL failed, try Local Normal
+        if (failedSource !== localPathNormal && failedSource !== localPathPadded) {
+            console.log(`[Audio Fallback 1] Switching to local: ${localPathNormal}`);
+            currentSource = localPathNormal;
+            audio.src = localPathNormal;
+            audio.load();
+            return;
+        }
+
+        // STEP 2: If Local Normal failed, try Local Padded
+        // CRITICAL FIX: Only try this if padded is DIFFERENT from normal
+        // This prevents the infinite loop on 3-digit hymns (where 219 == 219)
+        if (failedSource === localPathNormal && localPathNormal !== localPathPadded) {
+            console.log(`[Audio Fallback 2] ${hymnNumber}.mp3 failed. Trying padded: ${localPathPadded}`);
+            currentSource = localPathPadded;
+            audio.src = localPathPadded;
+            audio.load();
+            return;
+        }
+
+        // STEP 3: Total Failure
+        // Stop the listener so it doesn't loop
+        audio.onerror = null; 
+
+        if (isCopyrightListed) {
+            console.warn("[Audio Blocked] Copyrighted & Local file missing.");
+            showNotice(`Copyrighted audio. Local file (${hymnNumber}.mp3) not found.`);
+            forceManualMode("Copyrighted Content");
+        } else {
+            console.error(`[Audio Failed] Could not find ${hymnNumber}.mp3 in audio/${sourceLang}/${folder}/`);
+            showNotice(`Audio not found locally: ${hymnNumber}.mp3`);
+            forceManualMode("Audio file not found");
+        }
+    };
+
+    function forceManualMode(msg = "No audio available") {
+        if (audio) { audio.pause(); audio = null; }
+				setPlayLoading(false);
+				showNotice(msg); 
+				const cb = $('manualControlOverride');
+        if (cb && !cb.checked) { 
+            cb.checked = true; 
+            toggleManualControl(); 
+        } else {
+             enablePlaybackControls(false, false, false);
+             setCurrentIndex(0, true);
+        }
+    }
 }
 
 function playHymn() {
@@ -1384,6 +1491,9 @@ function playHymn() {
     showNotice("No lyrics available to display for the current selection.");
     return;
   }
+  
+  // 1. START LOADING SPINNER
+  setPlayLoading(true);
 
   stopHymn();
   console.log("playHymn: Called. State reset.");
@@ -1441,7 +1551,7 @@ function playHymn() {
     }
     currentLineTimings = currentLineTimings.slice(0, targetLineCount);
     const avgSecondsPerLine = currentLineTimings.reduce((sum, t) => sum + t, 0) / currentLineTimings.length;
-    $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)}s/line`;
+    $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)} sec/line`;
 
   	lyricsViewport.classList.add('intro-active');
   
@@ -1457,7 +1567,10 @@ function playHymn() {
 			// 2) Wait until playback is *actually* moving
 			await waitForActualPlayback(audio);
 	
-			// 3) Now that we know sound is really happening, start timing
+			// 3. STOP SPINNER (Success!)
+        setPlayLoading(false);
+
+			// 4) Now that we know sound is really happening, start timing
 			startCounterTick();
 			enablePlaybackControls(true);
 	
@@ -1488,31 +1601,50 @@ function playHymn() {
 }
 
 function stopHymn() {
-	clearInterval(window.counterInterval);
-  isPlaying = false;
-	showNotice('');
-  if (audio) { audio.pause(); audio.currentTime = 0; }
-  clearTimer();
-  document.querySelectorAll('.beat-segment.is-glowing').forEach(el => {
-    el.classList.remove('is-glowing');
-  });
-  $('metaCounter').textContent = "- / -";
-  if (!currentHymnNumber) $('audioLanguage').textContent = '';
-  $('countdown-display').classList.remove('is-visible');
+  setPlayLoading(false); 
+  clearInterval(window.counterInterval);
+  isPlaying = false;
+  showNotice('');
+  
+  if (audio) { 
+    audio.pause(); 
+    audio.currentTime = 0; 
+  }
+  
+  clearTimer();
 
-	document.querySelectorAll('.line-progress-bar').forEach(bar => {
+  // Reset animations
+  document.querySelectorAll('.beat-segment.is-glowing').forEach(el => {
+    el.classList.remove('is-glowing');
+  });
+
+  // Reset UI elements
+  $('metaCounter').textContent = "- / -";
+  if (!currentHymnNumber) $('audioLanguage').textContent = '';
+  $('countdown-display').classList.remove('is-visible');
+
+  document.querySelectorAll('.line-progress-bar').forEach(bar => {
       bar.style.transition = 'none';
       bar.style.width = '0%';
   });
 
-  lyricsViewport.classList.remove('is-counting-down', 'intro-active');
-  enablePlaybackControls(false);
-  populateLyricsContainer();
-  setTimeout(() => {
-    setCurrentIndex(0, true);
-    lyricsContainer.style.transform = 'translateY(0px)';
-  }, 0);
-  $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
+  lyricsViewport.classList.remove('is-counting-down', 'intro-active');
+  enablePlaybackControls(false);
+
+  // --- CRITICAL FIX ---
+  // 1. Reset the index tracker to 0 immediately so the rebuild knows where to look
+  currentIndex = 0;
+
+  // 2. Force the container to the top immediately (bypass transition)
+  lyricsContainer.style.transition = 'none';
+  lyricsContainer.style.transform = 'translateY(0px)';
+
+  // 3. Rebuild lyrics 
+  // (Because currentIndex is now 0, this will automatically highlight the first line)
+  populateLyricsContainer();
+
+  // 4. Cleanup listeners
+  $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
 }
 
 function onAudioEnded() {
@@ -1626,6 +1758,8 @@ function initializePage() {
     try {
       if (runlistNumbers.length > 0) {
         console.log("InitializePage .then(): Processing runlist...");
+        localStorage.removeItem('skippedVersesStore'); 
+    		skippedVerseLabels = [];
         currentHymnNumber = runlistNumbers[0];
         currentRunlistIndex = 0;
         // Set initial indicator to 1
@@ -1676,6 +1810,9 @@ function initializePage() {
 
           renderLanguageList();
           updateLanguageSettings();   // ← now after hymn loaded
+          
+          analyzeVerses(); 
+					renderVerseSelection();
         } else {
           if (runlistPanel) runlistPanel.style.display = 'none';
         }
@@ -2017,31 +2154,34 @@ function applySettings(settings) {
 }
 
 function enablePlaybackControls(isPlaying, isPaused = false, forceDisableAll = false) {
-    const hasAudio = !!audio; // Use the audio object status
-    
-    // --- FIX: Allow Play if we have audio OR if we have Custom Lyrics loaded ---
+    const hasAudio = !!audio; 
     const canPlay = hasAudio || usingCustomLyrics;
 
-    // Play is disabled if: Forced, Already Playing, Paused (implies resume), or Nothing to play
+    // Play/Stop Logic
     const playButtonDisabled = forceDisableAll || isPlaying || isPaused || !canPlay;
-    
-    // Stop is disabled if: Forced, Not Playing AND Not Paused, or Nothing loaded
     const stopButtonDisabled = forceDisableAll || (!isPlaying && !isPaused) || !canPlay;
 
     $('btnPlay').disabled = playButtonDisabled;
-    
-    // Handle the optional Pause button
-    const pauseBtn = $('btnPauseResume');
-    if (pauseBtn) {
-        // Pause is only available if we have actual Audio
-        const pauseResumeDisabled = forceDisableAll || (!isPlaying && !isPaused) || !hasAudio;
-        pauseBtn.disabled = pauseResumeDisabled;
-        pauseBtn.innerHTML = isPlaying ? '&#9208; Pause' : '&#9199; Resume';
-    }
-    
     $('btnStop').disabled = stopButtonDisabled;
 
-    // Disable inputs while playing
+    // --- PAUSE BUTTON LOGIC ---
+    const pauseBtn = $('btnPauseResume');
+    const pauseIcon = $('pauseIcon');
+    const pauseText = $('pauseText');
+
+    if (pauseBtn) {
+        // Only enable Pause if we are actually Playing OR Paused
+        const pauseResumeDisabled = forceDisableAll || (!isPlaying && !isPaused);
+        pauseBtn.disabled = pauseResumeDisabled;
+
+        // Reset the look if we are fully stopped
+        if (!isPlaying && !isPaused) {
+            if(pauseIcon) pauseIcon.innerHTML = '&#9208;'; // Reset to Pause icon
+            if(pauseText) pauseText.textContent = 'Pause';
+        }
+    }
+
+    // Input disabling logic
     const inputsDisabled = isPlaying;
     $('trackType').disabled = inputsDisabled || !hasAudio || forceDisableAll;
     $('introLength').disabled = inputsDisabled || forceDisableAll; 
@@ -2086,55 +2226,96 @@ function clearTimer() {
 }
 
 function pauseHymn() {
-  isPlaying = false;
-  if (!audio) return;
-  audio.pause();
-  clearTimer();
-  enablePlaybackControls(false, true);
-  $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
+  isPlaying = false;
+  if (!audio) return;
+  audio.pause();
+  clearTimer();
+  enablePlaybackControls(false, true);
+  $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys);
+
+  // 1. Freeze Progress Bar
+  const currentBar = lyricsContainer.querySelector('.is-current .line-progress-bar');
+  if (currentBar) {
+      const computedStyle = window.getComputedStyle(currentBar);
+      const currentWidth = computedStyle.width; 
+      currentBar.style.transition = 'none';
+      currentBar.style.width = currentWidth;
+  }
+
+  // 2. Freeze Beat Animations (Underlines)
+  // Instead of removing the class (which hides them), we pause the animation
+  document.querySelectorAll('.beat-segment.is-glowing').forEach(el => {
+      el.style.animationPlayState = 'paused';
+  });
 }
 
 function resumeHymn() {
-  if (!audio) return;
-  const splText = ($('metaSPL').textContent || "").split(': ')[1];
-  const spl = splText ? parseFloat(splText) : 0;
-  if (isNaN(spl) || spl <= 0) return;
-  isPlaying = true;
-  document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
-  if ($('manualControlOverride').checked) {
-    lyricsViewport.focus();
-  }
-  try {
-    audio.play();
-		startCounterTick();
-  } catch (err) {
-    handlePlayError(err);
-  }
-  enablePlaybackControls(true);
-  const hymnEntry = allHymnsData['English'][currentHymnNumber];
-  let lineTimings = [];
-  let defaultSecondsPerLine = 0;
-  if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
-    lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
-  }
-  if (lineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
-    defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
-  } else if (lineTimings.length === 0) {
-    const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
-    const introLength = parseFloat($("introLength").value);
-    defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
-  }
-  if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
-  while (lineTimings.length < (hymnEntry?.lines?.length || initialHymnLines.length)) {
-    lineTimings.push(defaultSecondsPerLine);
-  }
+  // 1. Resume Audio (if it exists)
+  if (audio) {
+    try {
+      audio.play();
+      startCounterTick();
+    } catch (err) {
+      handlePlayError(err);
+      return;
+    }
+  }
 
-	if (!$('manualControlOverride').checked) {
-			startAutoScroll(lineTimings);
-	} else {
-			 lyricsViewport.focus(); // Ensure focus if resuming in manual
-	}
+  // 2. Update Global State
+  isPlaying = true;
+  document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
+  enablePlaybackControls(true);
 
+  // --- NEW CHECK: Are we paused inside the Countdown? ---
+  // If yes, we restart the countdown logic and RETURN.
+  // We do NOT start auto-scrolling yet; playHymn() is still waiting 
+  // and will trigger the scroll automatically when the countdown finishes.
+  if (lyricsViewport.classList.contains('is-counting-down')) {
+    console.log("Resuming countdown logic...");
+    resumeIntroCountdown();
+    return; 
+  }
+
+  // 3. Manual Mode Check
+  if ($('manualControlOverride').checked) {
+    lyricsViewport.focus();
+    return;
+  }
+
+  // 4. Standard Resume (Auto-Scroll)
+  // Recalculate timings to ensure scroll speed is correct
+  const hymnEntry = allHymnsData['English']?.[currentHymnNumber];
+  let lineTimings = [];
+  let defaultSecondsPerLine = 0;
+
+  if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
+    lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
+  }
+
+  if (lineTimings.length === 0) {
+    if (hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
+      defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
+    } else {
+      const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
+      const introLength = parseFloat($("introLength").value) || 5;
+      const currentLen = (usingCustomLyrics ? lines.length : (hymnEntry?.lines?.length || initialHymnLines.length)) || 1;
+      
+      if (audio && audio.duration > 0) {
+        defaultSecondsPerLine = (audio.duration - introLength - offset) / currentLen;
+      } else {
+        defaultSecondsPerLine = 5;
+      }
+    }
+  }
+
+  if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
+
+  const targetLen = getMaxLineCount() || 1;
+  while (lineTimings.length < targetLen) {
+    lineTimings.push(defaultSecondsPerLine);
+  }
+
+  startAutoScroll(lineTimings);
 }
 
 function switchAudioTrack() {
@@ -2150,20 +2331,84 @@ function startAutoScroll(lineTimings) {
   clearTimer();
   const totalLines = getMaxLineCount();
   if (!isPlaying || currentIndex >= totalLines) return;
+  
+  const verseToSkip = currentVerseMap.find(v => v.startIndex === currentIndex && skippedVerseLabels.includes(v.label));
+  
+  if (verseToSkip) {
+      console.log(`Skipping Verse ${verseToSkip.label}. Duration: ${verseToSkip.totalDuration}s`);
+      
+      // 1. Jump Audio
+      if (audio) {
+          audio.currentTime += (verseToSkip.totalDuration); 
+      }
+      
+      // 2. Jump Lyric Index
+      // We set index to the line AFTER this verse
+      setCurrentIndex(verseToSkip.endIndex + 1, true);
+      
+      // 3. Recursive Call to handle the next line immediately
+      // We use a tiny timeout to allow the audio.currentTime to settle
+      setTimeout(() => {
+          startAutoScroll(lineTimings);
+      }, 50);
+      return; // STOP execution of the current loop
+  }
+  
+  // --- NEW: VERSE DELAY LOGIC ---
+  const verseDelay = parseFloat($('verseDelay').value) || 0;
+  
+  // 1. Check if we should pause (Only if delay > 0, not on line 0, and not already paused)
+  if (verseDelay > 0 && currentIndex > 0 && !hasPausedForCurrentVerse) {
+      // 2. Get text to check for "1:", "2:", "V1:", etc.
+      let textToCheck = "";
+      // Prefer the first selected language to check for markers
+      const checkLang = selectedLanguages[0] || 'English';
+      
+      if (checkLang === 'Custom' && usingCustomLyrics) {
+          textToCheck = lines[currentIndex] || "";
+      } else {
+          textToCheck = allHymnsData[checkLang]?.[currentHymnNumber]?.lines[currentIndex] || "";
+      }
+      
+      // Regex looks for "1:", "2:", "3:", "V1:", "V2:" at start of line
+      if (/^(\d+:|V\d+:)/i.test(textToCheck.trim())) {
+          console.log(`Verse detected. Pausing for ${verseDelay} seconds.`);
+          
+          // A. Pause Audio
+          if (audio) audio.pause();
+          
+          // B. Set Flag (so we don't loop forever)
+          hasPausedForCurrentVerse = true;
+          
+          // C. Wait...
+          mainTimer = setTimeout(() => {
+              console.log("Verse Delay finished. Resuming.");
+              if (audio) audio.play();
+              // Recursively call this function. 
+              // The flag is now true, so it will skip this block and proceed to scroll.
+              startAutoScroll(lineTimings); 
+          }, verseDelay * 1000);
+          
+          return; // STOP execution here to create the pause
+      }
+  }
+  // -------------------------------------
+
   const timings = lineTimings || currentLineTimings;
+
   // --- 1. Define Variables ---
   let realDelay = 0;
   let realDuration = (timings[currentIndex] || 5) / playbackRate;
-  let lineStartAudioTime = undefined; // for logging
+  const totalLineDuration = (timings[currentIndex] || 5) / playbackRate;
 
-  // --- 2. AUDIO SYNC LOGIC ---
-  if (audio && !audio.paused && !usingCustomLyrics) {
+  // --- 2. SYNC LOGIC (Audio OR Silent) ---
+  if (audio && !audio.paused) {
     let cumulativeTimeStart = 0;
     for (let i = 0; i < currentIndex; i++) {
       cumulativeTimeStart += (timings[i] || 5);
     }
     const introLen = parseFloat($("introLength").value) || 0;
-    lineStartAudioTime = introLen + cumulativeTimeStart;
+    const lineStartAudioTime = introLen + cumulativeTimeStart;
     const lineEndAudioTime = lineStartAudioTime + (timings[currentIndex] || 5);
 
     const delayAudio = lineStartAudioTime - audio.currentTime;
@@ -2172,15 +2417,22 @@ function startAutoScroll(lineTimings) {
     const startPoint = Math.max(lineStartAudioTime, audio.currentTime);
     const durationAudio = lineEndAudioTime - startPoint;
     realDuration = (durationAudio > 0 ? durationAudio : 0) / playbackRate;
-
+    
     if (realDuration < 0.1 && realDelay <= 0) realDuration = 0.1;
+
+  } else {
+    // SILENT MODE SYNC
+    const now = Date.now();
+    if (!lineStartTimestamp || realDuration === totalLineDuration) {
+        lineStartTimestamp = now;
+    }
+    const timeAlreadyPassed = (now - lineStartTimestamp) / 1000;
+    if (timeAlreadyPassed > 0 && timeAlreadyPassed < totalLineDuration) {
+        realDuration = totalLineDuration - timeAlreadyPassed;
+    }
   }
 
   const currentLineEl = $(`line-${currentIndex}`);
-
-  console.log(`Highlighting line ${currentIndex} ${realDelay > 0.05 ? `after delay ${realDelay.toFixed(3)}s` : 'immediately'}`);
-
-  console.log(`Line ${currentIndex}: lineStartAudioTime=${lineStartAudioTime?.toFixed(3) ?? 'N/A'}s, audio.currentTime=${audio?.currentTime.toFixed(3) ?? 'N/A'}s, realDelay=${realDelay.toFixed(3)}s, realDuration=${realDuration.toFixed(3)}s`);
 
   if (currentLineEl) {
     // --- 3. SCHEDULE HIGHLIGHT ---
@@ -2189,33 +2441,59 @@ function startAutoScroll(lineTimings) {
       setTimeout(() => {
         if (isPlaying && currentIndex === parseInt(currentLineEl.id.split('-')[1])) {
           currentLineEl.classList.add('is-current');
+          lineStartTimestamp = Date.now(); 
         }
       }, realDelay * 1000);
     } else {
       currentLineEl.classList.add('is-current');
+      if (realDelay <= 0) lineStartTimestamp = Date.now(); 
     }
 
     // --- 4. BEAT ANIMATIONS ---
     const activeLanguages = languageOrder.filter(lang => selectedLanguages.includes(lang));
     activeLanguages.forEach(lang => {
-      const lineText = usingCustomLyrics && lang === 'Custom'
+       const lineText = usingCustomLyrics && lang === 'Custom'
         ? (lines[currentIndex] || '')
         : (allHymnsData[lang]?.[currentHymnNumber]?.lines[currentIndex] || '');
       const isSignLanguage = lang.includes('SL') || (lang === 'Custom' && lineText.includes('|'));
+      
       if (isSignLanguage) {
         const lyricLineEl = currentLineEl.querySelector(`.lyric-line-${lang}`);
         const beatElements = lyricLineEl ? lyricLineEl.querySelectorAll('.beat-segment') : [];
-        if (beatElements.length > 0 && realDuration > 0.5) {
-          const timePerBeat = realDuration / beatElements.length;
+        
+        if (beatElements.length > 0 && totalLineDuration > 0.5) {
+          const timePerBeat = totalLineDuration / beatElements.length;
+          const timeElapsed = Math.max(0, totalLineDuration - realDuration);
+
           beatElements.forEach((beatEl, i) => {
-            beatEl.classList.remove('is-glowing');
-            void beatEl.offsetWidth;
-            setTimeout(() => {
-              if (!isPlaying) return;
-              beatEl.style.setProperty('--beat-duration', `${timePerBeat}s`);
-              beatEl.classList.add('is-glowing');
-              setTimeout(() => beatEl.classList.remove('is-glowing'), timePerBeat * 1000);
-            }, (realDelay * 1000) + (i * timePerBeat * 1000));
+             beatEl.classList.remove('is-glowing');
+             beatEl.style.animationPlayState = 'running';
+             void beatEl.offsetWidth; 
+
+             const beatStartTime = i * timePerBeat;
+             const beatEndTime = (i + 1) * timePerBeat;
+
+             if (beatEndTime <= timeElapsed) return;
+
+             if (beatStartTime <= timeElapsed && beatEndTime > timeElapsed) {
+                 const remainingBeatTime = beatEndTime - timeElapsed;
+                 setTimeout(() => {
+                   if (!isPlaying) return;
+                   beatEl.style.setProperty('--beat-duration', `${remainingBeatTime}s`);
+                   beatEl.classList.add('is-glowing');
+                   setTimeout(() => beatEl.classList.remove('is-glowing'), remainingBeatTime * 1000);
+                 }, realDelay * 1000);
+             }
+
+             if (beatStartTime > timeElapsed) {
+                 const delayUntilBeat = beatStartTime - timeElapsed;
+                 setTimeout(() => {
+                   if (!isPlaying) return;
+                   beatEl.style.setProperty('--beat-duration', `${timePerBeat}s`);
+                   beatEl.classList.add('is-glowing');
+                   setTimeout(() => beatEl.classList.remove('is-glowing'), timePerBeat * 1000);
+                 }, (realDelay * 1000) + (delayUntilBeat * 1000));
+             }
           });
         }
       }
@@ -2224,8 +2502,15 @@ function startAutoScroll(lineTimings) {
     // --- 5. PROGRESS BAR ---
     const progressBar = currentLineEl.querySelector('.line-progress-bar');
     if (progressBar) {
+      let startPercentage = 0;
+      if (realDelay <= 0.05) {
+          const timeElapsed = totalLineDuration - realDuration;
+          if (timeElapsed > 0 && totalLineDuration > 0) {
+              startPercentage = (timeElapsed / totalLineDuration) * 100;
+          }
+      }
       progressBar.style.transition = 'none';
-      progressBar.style.width = '0%';
+      progressBar.style.width = `${startPercentage}%`;
       void progressBar.offsetWidth;
       progressBar.style.transition = `width ${realDuration}s linear ${realDelay}s`;
       progressBar.style.width = '100%';
@@ -2567,6 +2852,8 @@ function loadRunlistIndex(idx) {
 
     currentRunlistIndex = idx;
     currentHymnNumber = num;
+    analyzeVerses(); 
+    renderVerseSelection();
     
     // --- NEW: Update the indicator number ---
     const indicator = $('runlistIndicator');
@@ -2805,4 +3092,192 @@ function waitForActualPlayback(audio, thresholdSeconds = 0.05) {
 
     audio.addEventListener('timeupdate', onTimeUpdate);
   });
+}
+
+function setPlayLoading(isLoading) {
+    const btn = $('btnPlay');
+    if (!btn) return;
+    
+    if (isLoading) {
+        btn.classList.add('loading');
+    } else {
+        btn.classList.remove('loading');
+    }
+}
+
+function resumeIntroCountdown() {
+  const countdownEl = $('countdown-display');
+  const countdownNumEl = countdownEl.querySelector('.countdown-number');
+  const introLen = parseFloat($("introLength").value) || 0;
+  // This target time matches the one in startIntroCountdown (stop 3s early)
+  const targetAudioTime = Math.max(0, introLen - 3 * playbackRate);
+
+  clearTimer(); // Clear any existing interval
+
+  mainTimer = setInterval(() => {
+    if (!audio || audio.paused) return;
+
+    const currentTime = audio.currentTime;
+    const remainingTime = introLen - currentTime;
+
+    // Update the big number
+    const secondsLeft = Math.ceil(remainingTime / playbackRate);
+    if (secondsLeft > 0 && countdownNumEl) {
+      countdownNumEl.textContent = secondsLeft;
+    }
+
+    // Check if we reached the end of the countdown
+    if (currentTime >= targetAudioTime) {
+      clearTimer();
+      
+      // Hide the countdown overlay
+      if (countdownEl) countdownEl.classList.remove('is-visible');
+      if (lyricsViewport) {
+        lyricsViewport.classList.remove('is-counting-down');
+        // Immediately reveal lyrics
+        lyricsViewport.classList.remove('intro-active');
+      }
+
+      // CRITICAL: Resolve the original Promise that playHymn is waiting for
+      if (window.introResolver) {
+        window.introResolver();
+        window.introResolver = null; // Clean up
+      }
+    }
+  }, 100);
+}
+
+/* --- VERSE SKIPPING LOGIC --- */
+
+function analyzeVerses() {
+    currentVerseMap = [];
+    const hymnEntry = allHymnsData['English']?.[currentHymnNumber];
+    if (!hymnEntry || !hymnEntry.lines) return;
+
+    // Use raw JSON timings for accurate skipping
+    const rawTimings = hymnEntry.line_timings || []; 
+    
+    // If no raw timings, we can't accurately skip audio, so we might need fallback logic
+    // but for now, we assume rawTimings exist as per your description.
+    
+    let currentBlock = null;
+
+    hymnEntry.lines.forEach((line, index) => {
+        // Regex to find start of verse (e.g., "1:", "2:", "Ch:", "V1:")
+        const match = line.match(/^(\d+:|Ch:|Chorus:|Bridge:|V\d+:)/i);
+        
+        if (match) {
+            // Close previous block
+            if (currentBlock) {
+                currentVerseMap.push(currentBlock);
+            }
+            
+            // Start new block
+            currentBlock = {
+                label: match[1], // "1:", "Ch:", etc.
+                startIndex: index,
+                endIndex: index,
+                totalDuration: parseFloat(rawTimings[index] || 0)
+            };
+        } else {
+            // Continuation of current block
+            if (currentBlock) {
+                currentBlock.endIndex = index;
+                currentBlock.totalDuration += parseFloat(rawTimings[index] || 0);
+            } else {
+                // Handling lines before the first labeled verse (rare, but possible)
+                currentBlock = {
+                    label: "Intro/Start",
+                    startIndex: index,
+                    endIndex: index,
+                    totalDuration: parseFloat(rawTimings[index] || 0)
+                };
+            }
+        }
+    });
+
+    // Push the final block
+    if (currentBlock) {
+        currentVerseMap.push(currentBlock);
+    }
+    
+    console.log("Verse Map Analyzed:", currentVerseMap);
+}
+
+function renderVerseSelection() {
+    const panel = $('verse-selection-panel');
+    const container = $('verse-selection-content');
+    
+    if (!currentVerseMap.length || !currentHymnNumber) {
+        panel.style.display = 'none';
+        return;
+    }
+
+    panel.style.display = 'block';
+    container.innerHTML = '';
+
+    // Retrieve saved skips for this specific song
+    const savedSkips = JSON.parse(localStorage.getItem('skippedVersesStore') || '{}');
+    skippedVerseLabels = savedSkips[currentHymnNumber] || [];
+
+    currentVerseMap.forEach((verse, idx) => {
+        // Don't show "Intro/Start" unlabeled blocks usually, unless you want to
+        if(verse.label === "Intro/Start") return;
+
+        const div = document.createElement('div');
+        div.className = 'checkbox-group';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `verse-check-${idx}`;
+        checkbox.dataset.label = verse.label;
+        
+        // CHECKED means PLAY. UNCHECKED means SKIP.
+        // If label is in skippedVerseLabels, it should be UNCHECKED.
+        checkbox.checked = !skippedVerseLabels.includes(verse.label);
+        
+        checkbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                // Removed from skip list (Play it)
+                skippedVerseLabels = skippedVerseLabels.filter(l => l !== verse.label);
+            } else {
+                // Add to skip list
+                if (!skippedVerseLabels.includes(verse.label)) {
+                    skippedVerseLabels.push(verse.label);
+                }
+            }
+            
+            // Save to storage
+            const store = JSON.parse(localStorage.getItem('skippedVersesStore') || '{}');
+            store[currentHymnNumber] = skippedVerseLabels;
+            localStorage.setItem('skippedVersesStore', JSON.stringify(store));
+
+            // Re-render lyrics to show/hide "(Skip)" text
+            populateLyricsContainer();
+        });
+
+        const label = document.createElement('label');
+        label.htmlFor = `verse-check-${idx}`;
+        label.textContent = `Verse ${verse.label.replace(':', '')}`;
+
+        div.appendChild(checkbox);
+        div.appendChild(label);
+        container.appendChild(div);
+    });
+    
+    // Wire up the toggle click
+    const toggleBtn = $('verse-selection-toggle');
+    // Remove old listener to avoid duplicates
+    const newBtn = toggleBtn.cloneNode(true);
+    toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
+    
+    newBtn.addEventListener('click', () => {
+        toggleCollapsibleById('verse-selection-content'); 
+        // Note: You might need to adjust toggleCollapsibleById to handle div IDs directly 
+        // or just use the logic inline:
+        const c = $('verse-selection-content');
+        const isCollapsed = c.classList.toggle('is-collapsed');
+        const icon = $('verse-selection-icon');
+        if(icon) icon.textContent = isCollapsed ? '▶' : '▼';
+    });
 }
