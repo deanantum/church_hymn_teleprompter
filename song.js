@@ -244,31 +244,13 @@ function toggleManualControl() {
   const manualCheckbox = $('manualControlOverride');
   const isManual = manualCheckbox.checked;
 
+  // Toggle UI elements for Manual Mode
   $('metaSPL').style.display = isManual ? 'none' : 'inline-block';
   lyricsViewport.classList.toggle('manual-active', isManual);
 
-	$('metaSPL').style.display = isManual ? 'none' : 'inline-block';
-  lyricsViewport.classList.toggle('manual-active', isManual);
-
-  // 1. Get current settings (reads the current state of buttons)
-  const settings = getSettingsFromForm();
-  
-  // 2. FORCE the dots setting based on Manual Mode
-  // If Manual is TRUE, showDots becomes FALSE.
-  settings.showDots = !isManual; 
-
-  // 3. Apply changes visually (this adds the .dots-hidden class)
-  applySettings(settings);
-  
-  // 4. Save (so it persists if we navigate)
-  saveSettings();
-  
-  // 5. Update the visual toggle button in Settings panel
-  updateFormFromSettings(settings);
-
   if (isManual) {
     lyricsViewport.focus(); // Set focus to receive key events
-    $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys); // Remove first to be safe
+    $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys); 
     $('lyricsDisplay').addEventListener('keydown', handleArrowKeys);
     console.log("Manual mode ENABLED, added keydown listener.");
 
@@ -284,6 +266,7 @@ function toggleManualControl() {
         isPlaying = true; 
     }
     
+    // Ensure we start at a valid index
     if (currentIndex < 0) {
         setCurrentIndex(0, true);
     } else {
