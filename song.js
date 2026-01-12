@@ -25,12 +25,14 @@ let runlistNumbers = [];
 let currentRunlistIndex = 0;
 let currentSpeed = 0; // Default 0 means "Standard Speed"
 let playbackRate = 1.0;
+let sessionSpeedStore = {};
 let currentLineTimings = [];
 let lineStartTimestamp = 0;
 let hasPausedForCurrentVerse = false;
 // Add these with your other let variables
 let currentVerseMap = []; // Stores start/end index and duration for each verse
 let skippedVerseLabels = []; // Stores ["1:", "2:"] etc.
+ 
 
 
 const JEWEL_TONES = [
@@ -147,10 +149,14 @@ function updateFormFromSettings(settings) {
   $('dotColor').value = settings.dotColor || DEFAULTS.dotColor;
   $('transitionSpeed').value = settings.transitionSpeed || DEFAULTS.transitionSpeed;
   $('lyricsWidth').value = settings.lyricsWidth || DEFAULTS.lyricsWidth;
+  
+  if ($('skipIntro')) {
+      $('skipIntro').checked = settings.skipIntro === true;
+  }
 
   const showDots = settings.showDots !== false;
   const showUnderline = settings.showUnderline !== false;
-  $('toggleDotLabel').classList.toggle('disabled', !showDots);
+  
   $('toggleUnderlineLabel').classList.toggle('disabled', !showUnderline);
 
   // Language-specific colors & sizes
@@ -241,25 +247,41 @@ function toggleManualControl() {
   $('metaSPL').style.display = isManual ? 'none' : 'inline-block';
   lyricsViewport.classList.toggle('manual-active', isManual);
 
+	$('metaSPL').style.display = isManual ? 'none' : 'inline-block';
+  lyricsViewport.classList.toggle('manual-active', isManual);
+
+  // 1. Get current settings (reads the current state of buttons)
+  const settings = getSettingsFromForm();
+  
+  // 2. FORCE the dots setting based on Manual Mode
+  // If Manual is TRUE, showDots becomes FALSE.
+  settings.showDots = !isManual; 
+
+  // 3. Apply changes visually (this adds the .dots-hidden class)
+  applySettings(settings);
+  
+  // 4. Save (so it persists if we navigate)
+  saveSettings();
+  
+  // 5. Update the visual toggle button in Settings panel
+  updateFormFromSettings(settings);
+
   if (isManual) {
     lyricsViewport.focus(); // Set focus to receive key events
     $('lyricsDisplay').removeEventListener('keydown', handleArrowKeys); // Remove first to be safe
     $('lyricsDisplay').addEventListener('keydown', handleArrowKeys);
     console.log("Manual mode ENABLED, added keydown listener.");
 
-    // ----> ADD THIS BLOCK <----
-    // If we are enabling manual mode WHILE audio is playing (and potentially auto-scrolling),
-    // stop the auto-scroll timer.
-    if (isPlaying && mainTimer) { // Check if isPlaying and if a timer exists
+    // If we are enabling manual mode WHILE audio is playing, stop timer
+    if (isPlaying && mainTimer) { 
       console.log("Manual mode enabled during playback: Stopping auto-scroll timer.");
-      clearTimer(); // Stop the automatic advancement
+      clearTimer(); 
     }
-    // ----> END OF ADDED BLOCK <----
 
     // Set isPlaying if entering manual mode when not already playing
     if (!isPlaying) {
         console.log("Setting isPlaying = true for manual control.");
-        isPlaying = true; // Allow index advancement via arrow key
+        isPlaying = true; 
     }
     
     if (currentIndex < 0) {
@@ -276,29 +298,29 @@ function toggleManualControl() {
     // If we were playing audio and switch manual OFF, restart auto-scroll
     if (isPlaying && audio && !audio.paused) {
         console.log("Restarting auto-scroll after disabling manual mode.");
-        clearTimer(); // Stop any pending manual timer edge cases
+        clearTimer(); 
 
-        const hymnEntry = allHymnsData['English']?.[currentHymnNumber]; // Use optional chaining
+        const hymnEntry = allHymnsData['English']?.[currentHymnNumber]; 
         if (hymnEntry) {
             let lineTimings = [];
             let defaultSecondsPerLine = 0;
-            // Recalculate timings (ensure audio.duration is valid)
+            
             if (hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
                  lineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
             }
              if (lineTimings.length === 0 && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
                 defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
-            } else if (lineTimings.length === 0 && audio && audio.duration > 0) { // Check audio exists and has duration
+            } else if (lineTimings.length === 0 && audio && audio.duration > 0) { 
                 const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
                 const introLength = parseFloat($("introLength").value);
                  const currentLyricsLength = (usingCustomLyrics ? lines : initialHymnLines).length;
-                 if (currentLyricsLength > 0 && (audio.duration - introLength - offset) > 0) { // Ensure positive duration remaining
+                 if (currentLyricsLength > 0 && (audio.duration - introLength - offset) > 0) { 
                      defaultSecondsPerLine = (audio.duration - introLength - offset) / currentLyricsLength;
                  } else {
-                     defaultSecondsPerLine = 5; // Fallback
+                     defaultSecondsPerLine = 5; 
                  }
             } else {
-                 defaultSecondsPerLine = 5; // General fallback
+                 defaultSecondsPerLine = 5; 
             }
 
             if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
@@ -308,14 +330,13 @@ function toggleManualControl() {
             }
             lineTimings = lineTimings.slice(0, targetLineCount);
 
-            startAutoScroll(lineTimings); // Restart autoscroll
+            startAutoScroll(lineTimings); 
         } else {
              console.warn("Cannot restart autoscroll: hymnEntry not found for:", currentHymnNumber);
         }
     } else {
-        // If exiting manual mode and audio wasn't playing or doesn't exist.
-        // Update isPlaying based on actual audio state ONLY IF audio exists.
-         isPlaying = !!(audio && !audio.paused); // Set isPlaying strictly based on audio state
+         // Update isPlaying based on actual audio state
+         isPlaying = !!(audio && !audio.paused); 
          console.log("Exiting manual mode. isPlaying set to:", isPlaying);
     }
   }
@@ -1023,6 +1044,15 @@ function resetLyrics() {
   });
 }
 
+function resetVerseDelay() {
+    const el = document.getElementById('verseDelay');
+    if (el) {
+        el.value = 0;
+        // Dispatch event to trigger the color change listener we added earlier
+        el.dispatchEvent(new Event('input')); 
+    }
+}
+
 function updateLineCountDisplay() {
   const displayEl = $('lineCountDisplay');
   if (!displayEl) return;
@@ -1153,6 +1183,7 @@ function populateLyricsContainer() {
 
                 } else {
                     // No label found, but we wrap in a span anyway for consistency
+                    // so the bar behaves the same way (under the text)
                     const contentSpan = document.createElement('span');
                     contentSpan.className = 'lyric-text-content';
                     contentSpan.textContent = lineText;
@@ -1506,98 +1537,124 @@ function playHymn() {
     if (manualCheckbox && !manualCheckbox.checked) manualCheckbox.checked = true;
     toggleManualControl();
     enablePlaybackControls(true, false);
-    currentIndex = -1;                // ← no line highlighted
-    populateLyricsContainer();        // ← all inactive colors
+    currentIndex = -1;                
+    populateLyricsContainer();        
     return;
   }
 
   // Normal hymn with audio
   console.log(`playHymn: Attempting to initialize audio for Hymn ${currentHymnNumber}...`);
-  currentIndex = -1;                  // ← start with NO highlight/active colors
-  populateLyricsContainer();          // ← render all lines inactive
+  currentIndex = -1;                  
+  populateLyricsContainer();          
   enablePlaybackControls(false, false, false);
   document.querySelectorAll('input, textarea, button').forEach(el => el.blur());
 
-  const introLength = parseFloat($("introLength").value);
+  // --- NEW: Calculate Start Time & Fade Logic ---
+  const rawIntroLength = parseFloat($("introLength").value) || 0;
+  const skipIntro = $('skipIntro') ? $('skipIntro').checked : false;
+  
+  let startTime = 0;
+  let shouldFade = false;
 
-  initializeAudio(currentHymnNumber, false, 0, () => {
+  // Only skip if intro is longer than 5 seconds
+  if (skipIntro && rawIntroLength > 5) {
+      startTime = rawIntroLength - 5;
+      shouldFade = true;
+      console.log(`Skipping Intro. Starting at ${startTime}s (Intro is ${rawIntroLength}s)`);
+  }
+  // ----------------------------------------------
+
+  initializeAudio(currentHymnNumber, false, startTime, () => {
     isPlaying = true;
     enablePlaybackControls(false, false, true);
   });
 
   audio.onloadedmetadata = async () => {
-    if (introLength >= audio.duration) {
+    // Safety check for intro vs duration
+    if (rawIntroLength >= audio.duration) {
       showNotice("Intro length exceeds audio duration. Playback stopped.");
       stopHymn();
       return;
     }
-    updateCounter();
-    const hymnEntry = allHymnsData['English']?.[currentHymnNumber] || {};
-    currentLineTimings = [];
-    let defaultSecondsPerLine = 0;
-    if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
-      currentLineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
-    }
-    if (currentLineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
-      defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
-    } else if (currentLineTimings.length === 0) {
-      const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
-      defaultSecondsPerLine = (audio.duration - introLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
-    }
-    if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
-    const targetLineCount = getMaxLineCount();
-    while (currentLineTimings.length < targetLineCount) {
-      currentLineTimings.push(defaultSecondsPerLine);
-    }
-    currentLineTimings = currentLineTimings.slice(0, targetLineCount);
-    const avgSecondsPerLine = currentLineTimings.reduce((sum, t) => sum + t, 0) / currentLineTimings.length;
+    
+    updateCounter();
+    
+    // --- Timing Calculation (Same as before) ---
+    const hymnEntry = allHymnsData['English']?.[currentHymnNumber] || {};
+    currentLineTimings = [];
+    let defaultSecondsPerLine = 0;
+    if (hymnEntry && hymnEntry.line_timings && Array.isArray(hymnEntry.line_timings) && hymnEntry.line_timings.length > 0) {
+      currentLineTimings = hymnEntry.line_timings.map(t => parseFloat(t) || 0.2);
+    }
+    if (currentLineTimings.length === 0 && hymnEntry && hymnEntry.line_time !== undefined && parseFloat(hymnEntry.line_time) > 0) {
+      defaultSecondsPerLine = parseFloat(hymnEntry.line_time);
+    } else if (currentLineTimings.length === 0) {
+      const offset = parseInt(currentHymnNumber) >= 1000 ? 3 : 5;
+      defaultSecondsPerLine = (audio.duration - rawIntroLength - offset) / (hymnEntry?.lines?.length || initialHymnLines.length);
+    }
+    if (defaultSecondsPerLine < 0.2) defaultSecondsPerLine = 0.2;
+    const targetLineCount = getMaxLineCount();
+    while (currentLineTimings.length < targetLineCount) {
+      currentLineTimings.push(defaultSecondsPerLine);
+    }
+    currentLineTimings = currentLineTimings.slice(0, targetLineCount);
+    const avgSecondsPerLine = currentLineTimings.reduce((sum, t) => sum + t, 0) / currentLineTimings.length;
     $('metaSPL').textContent = `Speed: ${avgSecondsPerLine.toFixed(2)} sec/line`;
 
-  	lyricsViewport.classList.add('intro-active');
+    lyricsViewport.classList.add('intro-active');
   
-		const accidentalHighlight = lyricsContainer.querySelector('.is-current');
+    const accidentalHighlight = lyricsContainer.querySelector('.is-current');
     if (accidentalHighlight) accidentalHighlight.classList.remove('is-current');
   
-	isPlaying = true;
-	
-	try {
-			// 1) Ask browser to start playback (this may buffer or delay)
-			await audio.play();
-	
-			// 2) Wait until playback is *actually* moving
-			await waitForActualPlayback(audio);
-	
-			// 3. STOP SPINNER (Success!)
-        setPlayLoading(false);
+    isPlaying = true;
+    
+    try {
+            // --- NEW: Apply Fade In ---
+            if (shouldFade) {
+                fadeInAudio(audio, 2500); // 2.5 second fade
+            } else {
+                audio.volume = 1.0; // Ensure full volume if not fading
+            }
+            // --------------------------
 
-			// 4) Now that we know sound is really happening, start timing
-			startCounterTick();
-			enablePlaybackControls(true);
-	
-			// Run the intro countdown AFTER audio is audibly going
-			await startIntroCountdown(introLength / playbackRate);
-			// Wait until audio has actually passed the intro (safety for early resolution)
-			while (audio.currentTime < introLength && !audio.paused) {
-				await new Promise(r => setTimeout(r, 50));
-			}
-			console.log("Countdown ended, starting auto-scroll for line 0");
-	
-	} catch (err) {
-			handlePlayError(err);
-			return; // stop if play fails
-	}
-	
-	lyricsViewport.classList.remove('intro-active');
-	// Scroll to line 0, but false (no highlight) so startAutoScroll handles the delay
-	setCurrentIndex(0, true, true);
-	
-	if (!$('manualControlOverride').checked) {
-			startAutoScroll(currentLineTimings);
-	} else {
-			lyricsViewport.focus();
-	}
+            // 1) Ask browser to start playback 
+            await audio.play();
+    
+            // 2) Wait until playback is actually moving
+            await waitForActualPlayback(audio);
+    
+            // 3. STOP SPINNER
+            setPlayLoading(false);
 
-};
+            // 4) Start timing
+            startCounterTick();
+            enablePlaybackControls(true);
+    
+            // Run the intro countdown
+            // NOTE: The countdown logic automatically calculates (IntroLength - CurrentTime)
+            // So if we skipped ahead, the countdown will naturally start at 5.
+            await startIntroCountdown(rawIntroLength / playbackRate);
+            
+            // Wait loop
+            while (audio.currentTime < rawIntroLength && !audio.paused) {
+                await new Promise(r => setTimeout(r, 50));
+            }
+            console.log("Countdown ended, starting auto-scroll for line 0");
+    
+    } catch (err) {
+            handlePlayError(err);
+            return; 
+    }
+    
+    lyricsViewport.classList.remove('intro-active');
+    setCurrentIndex(0, true, true);
+    
+    if (!$('manualControlOverride').checked) {
+            startAutoScroll(currentLineTimings);
+    } else {
+            lyricsViewport.focus();
+    }
+  };
 }
 
 function stopHymn() {
@@ -1886,14 +1943,6 @@ function initializePage() {
         });
       });
 
-      $('toggleDotLabel')?.addEventListener('click', () => {
-        const settings = getSettingsFromForm();
-        settings.showDots = !settings.showDots;
-        applySettings(settings);
-        saveSettings();
-        updateFormFromSettings(settings);
-      });
-
       $('toggleUnderlineLabel')?.addEventListener('click', () => {
         const settings = getSettingsFromForm();
         settings.showUnderline = !settings.showUnderline;
@@ -1965,6 +2014,9 @@ function initializePage() {
       $('lyric-order-toggle')?.addEventListener('click', () => toggleCollapsibleById('lyric-order'));
       $('playback-toggle')?.addEventListener('click', () => toggleCollapsibleById('playback'));
       $('manualControlOverride')?.addEventListener('change', toggleManualControl);
+      $('skipIntro')?.addEventListener('change', () => {
+          saveSettings();
+      });
 			$('autoWidthBtn')?.addEventListener('click', setAutoWidth);
 			
 			// Ensure default speed on page load
@@ -1974,6 +2026,26 @@ function initializePage() {
 					updateTempoUI();
 					if (audio) audio.playbackRate = playbackRate;
 			}
+			
+			const verseDelayInput = $('verseDelay');
+      if (verseDelayInput) {
+          // Function to toggle color
+          const updateDelayColor = () => {
+              if (parseFloat(verseDelayInput.value) > 0) {
+                  verseDelayInput.style.backgroundColor = '#f59e0b'; // Light Yellow
+                  verseDelayInput.style.borderColor = '#b45309';     // Darker Yellow Border
+              } else {
+                  verseDelayInput.style.backgroundColor = '';        // Reset to white
+                  verseDelayInput.style.borderColor = '';            // Reset border
+              }
+          };
+
+          // Run immediately on load (in case settings loaded a value)
+          updateDelayColor();
+
+          // Run whenever user types/changes it
+          verseDelayInput.addEventListener('input', updateDelayColor);
+      }
 
 			const fullscreenBtn = $('fullscreenToggleBtn');
       if (fullscreenBtn) {
@@ -2045,7 +2117,7 @@ function getSettingsFromForm() {
     highlightColor: $('highlightColor').value || DEFAULTS.highlightColor,
     underlineColor: $('underlineColor').value || DEFAULTS.underlineColor,
     dotColor: $('dotColor').value || DEFAULTS.dotColor,
-    showDots: !$('toggleDotLabel').classList.contains('disabled'),
+    showDots: true, 
     showUnderline: !$('toggleUnderlineLabel').classList.contains('disabled'),
     
     // --- NEW: Read Progress Bar Toggle ---
@@ -2054,6 +2126,7 @@ function getSettingsFromForm() {
     
     transitionSpeed: $('transitionSpeed').value || DEFAULTS.transitionSpeed,
     lyricsWidth: $('lyricsWidth').value || DEFAULTS.lyricsWidth,
+    skipIntro: $('skipIntro') ? $('skipIntro').checked : false,
     languages: {}
   };
   languageOrder.forEach(lang => {
@@ -2069,24 +2142,26 @@ function getSettingsFromForm() {
 
 function applySettings(settings) {
   root.style.setProperty('--lyric-bg-color', settings.bgColor);
-	root.style.setProperty('--lyric-bg-color', settings.bgColor);
   root.style.setProperty('--lyric-highlight-color', settings.highlightColor);
   root.style.setProperty('--underline-glow-color', settings.underlineColor);
   root.style.setProperty('--dot-color', settings.dotColor);
   root.style.setProperty('--transition-speed', `${settings.transitionSpeed}s`);
+  
+  // This handles the actual hiding of dots in the view
   lyricsViewport.classList.toggle('dots-hidden', !settings.showDots);
+  
   lyricsViewport.classList.toggle('underline-hidden', !settings.showUnderline);
   lyricsViewport.classList.toggle('progress-bar-hidden', !settings.showProgressBar);
-  $('toggleDotLabel').classList.toggle('disabled', !settings.showDots);
-  $('toggleUnderlineLabel').classList.toggle('disabled', !settings.showUnderline);
+  
+  // Keep this one
+  const underlineLabel = $('toggleUnderlineLabel');
+  if(underlineLabel) underlineLabel.classList.toggle('disabled', !settings.showUnderline);
   
   const pageEl = document.querySelector('.page');
   if (pageEl) {
     if (pageEl.classList.contains('fullscreen-active')) {
-      // Fullscreen: teleprompter takes full width
       pageEl.style.gridTemplateColumns = '1fr';
     } else {
-      // Normal: use configured lyrics width + 400px controls
       pageEl.style.gridTemplateColumns = `${settings.lyricsWidth}px 400px`;
     }
   }
@@ -2106,42 +2181,24 @@ function applySettings(settings) {
     }
   });
 
-  // --- NEW POSITIONING LOGIC (35% from Top) ---
-
-  // 1. Remove the forced height. Let CSS Flexbox fill the window.
+  // --- POSITIONING LOGIC ---
   lyricsViewport.style.height = ''; 
-
-  // 2. Calculate line height for spacer math
   const maxFontSize = Math.max(...languageOrder.map(lang => parseFloat(settings.languages[lang]?.fontSize) || 3));
-  // 1.3 is line-height, 1.0 is margin-bottom approximation
   const singleLineHeightRem = maxFontSize * 2.3; 
-
-  // 3. Get the ACTUAL height of the viewport (in pixels) now that CSS has stretched it
   const viewportHeightPx = lyricsViewport.clientHeight;
-  
-  // Convert REM to PX for the single line
   const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
   const singleLineHeightPx = singleLineHeightRem * rootFontSize;
-
-  // 4. Calculate Spacers
-  // Top Spacer: Pushes the first line down to the 35% mark
   const topSpacerPx = (viewportHeightPx * 0.22) - (singleLineHeightPx / 2);
-  
-  // Bottom Spacer: Allows the last line to scroll UP to the 35% mark (needs 65% space below)
   const bottomSpacerPx = (viewportHeightPx * 0.78) - (singleLineHeightPx / 2);
 
   const spacers = document.querySelectorAll('.spacer');
   if (spacers.length > 0) {
-      // First spacer (Top)
       spacers[0].style.height = `${topSpacerPx < 0 ? 0 : topSpacerPx}px`;
-      
-      // Last spacer (Bottom)
       if (spacers.length > 1) {
-          spacers[spacers.length - 1].style.height = `${bottomSpacerPx < 0 ? 0 : bottomSpacerPx}px`;
+         spacers[spacers.length - 1].style.height = `${bottomSpacerPx < 0 ? 0 : bottomSpacerPx}px`;
       }
   }
 
-  // 5. Re-center the current line
   setCurrentIndex(currentIndex, true);
 
   if (currentIndex === 0) {
@@ -2945,13 +3002,12 @@ function calculatePlaybackRate() {
 
 function loadTempoForCurrentHymn() {
   const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
-  // We use a NEW storage key 'hymnSpeedOffsets' to avoid conflict with old 'hymnTempos' data
-  const stored = JSON.parse(localStorage.getItem('hymnSpeedOffsets') || '{}');
   
-  if (stored[hymnKey] !== undefined) {
-    currentSpeed = parseInt(stored[hymnKey]);
+  // Check our session variable instead of localStorage
+  if (sessionSpeedStore[hymnKey] !== undefined) {
+    currentSpeed = parseInt(sessionSpeedStore[hymnKey]);
   } else {
-    currentSpeed = 0; // Default
+    currentSpeed = 0; // Default if we haven't touched this song yet this session
   }
   
   calculatePlaybackRate();
@@ -2960,31 +3016,25 @@ function loadTempoForCurrentHymn() {
 
 function saveTempoForCurrentHymn() {
   const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
-  const stored = JSON.parse(localStorage.getItem('hymnSpeedOffsets') || '{}');
   
   if (currentSpeed === 0) {
-    delete stored[hymnKey]; // Save space if default
+    delete sessionSpeedStore[hymnKey]; // Don't store 0s
   } else {
-    stored[hymnKey] = currentSpeed;
+    sessionSpeedStore[hymnKey] = currentSpeed;
   }
-  
-  localStorage.setItem('hymnSpeedOffsets', JSON.stringify(stored));
+  // No localStorage.setItem needed!
 }
 
 function resetTempo() {
+  const hymnKey = currentHymnNumber || 'CUSTOM_ONLY';
   currentSpeed = 0;
   
-  // Clear all saved speed offsets
-	localStorage.removeItem('hymnSpeedOffsets');
-	// Force default for current hymn
-	currentSpeed = 0;
-	calculatePlaybackRate();
-	updateTempoUI();
-	if (audio) audio.playbackRate = playbackRate;
+  // Clear from session store
+  delete sessionSpeedStore[hymnKey];
   
   calculatePlaybackRate();
-  saveTempoForCurrentHymn(); 
   updateTempoUI();
+  if (audio) audio.playbackRate = playbackRate;
 }
 
 function updateTempoUI() {
@@ -3280,4 +3330,28 @@ function renderVerseSelection() {
         const icon = $('verse-selection-icon');
         if(icon) icon.textContent = isCollapsed ? '▶' : '▼';
     });
+}
+function fadeInAudio(audioObj, duration = 2000) {
+    if (!audioObj) return;
+    audioObj.volume = 0; // Start silent
+    
+    const interval = 50; // Update every 50ms
+    const step = interval / duration; // Amount to increase volume per step
+    
+    const fadeTimer = setInterval(() => {
+        // Safety check: if audio stopped or paused, stop fading
+        if (!audioObj || audioObj.paused) {
+            clearInterval(fadeTimer);
+            // Reset volume for next time if we stopped mid-fade
+            if(audioObj) audioObj.volume = 1.0; 
+            return;
+        }
+        
+        if (audioObj.volume + step >= 1) {
+            audioObj.volume = 1;
+            clearInterval(fadeTimer);
+        } else {
+            audioObj.volume += step;
+        }
+    }, interval);
 }
