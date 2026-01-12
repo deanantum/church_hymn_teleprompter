@@ -29,7 +29,7 @@
       </div>
       <div id="custom-lyrics-entry" style="display: none;">
         <div id="live-line-counter" class="line-count-display"></div>
-        <textarea id="customLyricsTextarea" placeholder="Paste or type your custom lyrics here, one line per line..."></textarea>
+        <textarea id="customLyricsTextarea" placeholder="Paste or type your custom lyrics here.&#10;Use the pipe symbol | to separate beats (example: God|Loves|You).'&#10;Press Enter after each line to start a new one."></textarea>
         <div class="custom-lyrics-actions">
           <button id="exitCustomBtn">Exit</button>
           <button id="loadExcelBtn">Import from Excel</button>
@@ -42,14 +42,21 @@
         <a href="index.html" class="songs-link">&larr; Back to Hymn Selection</a>
       </div>
       
-<div id="runlist-panel" style="display: none;">
+<div id="runlist-panel" style="display: none; margin-bottom: 0.2rem;">
     <h2>Runlist</h2>
     <ul id="runlist-display"></ul>
-  </div>
+</div>
+
+<div id="verse-selection-panel" style="display: none; margin-top: 0;">
+    <h2 class="settings-header" id="verse-selection-toggle" style="margin-top:0; padding-top: 0.5rem; border-top: none; font-size: 1.1rem;">
+        Verse Selection <span id="verse-selection-icon">▶</span>
+    </h2>
+    <div id="verse-selection-content" class="settings-grid is-collapsed">
+    </div>
+</div>
    
       
       
-      <h2>View</h2>
       <div class="view-controls">
         <div class="view-toggle">
           <button id="viewHymnBtn" class="toggle-btn active" onclick="setView('hymn')">Hymn Lyrics</button>
@@ -72,49 +79,52 @@
         </div>
 
 <div class="btns" style="margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-  <button id="btnPlay" onclick="playHymn()" style="height: 60px; font-size: 1.5rem;">▶ Play</button>
+	<button id="btnPlay" onclick="playHymn()" style="height: 60px; font-size: 1.5rem;">
+    <span class="btn-content">▶ Play</span>
+    <span class="btn-spinner"></span>
+  </button>
   <button id="btnStop" onclick="stopHymn()" disabled style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
     <span style="font-size: 2.5rem; line-height: 1;">⏹</span>
     <span style="font-size: 1.5rem;">Stop</span>
   </button>
 </div>
 
-        <div class="row">
-          <div class="checkbox-group">
-            <input type="checkbox" id="manualControlOverride">
-            <label for="manualControlOverride">Manual Control Override</label>
-          </div>
-          <div class="manual-instruction">* Use the down arrow for the next line</div>
-        </div>
+<div class="row">
+  <div class="checkbox-group">
+    <input type="checkbox" id="manualControlOverride">
+    <label for="manualControlOverride">Manual Control Override</label>
+  </div>
+  <div class="manual-instruction">* Use the down arrow for the next line</div>
+</div>
 
-        <div class="row" style="display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; overflow-x: auto;">
-          
-          <div style="display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0;">
-            <label for="introLength" style="margin: 0; white-space: nowrap;">Intro</label>
-            <input id="introLength" type="number" min="0" step="0.1" value="5" style="width: 4rem; padding: 0.3rem;" />
-          </div>
+<div class="row" style="display: flex; flex-wrap: nowrap; align-items: center; gap: 0.5rem; overflow-x: auto;">
+  
+  <div style="display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0;">
+    <label for="introLength" style="margin: 0; white-space: nowrap;">Intro</label>
+    <input id="introLength" type="number" min="0" step="0.1" value="5" style="width: 4rem; padding: 0.3rem;" />
+  </div>
 
-          <div style="width: 1px; height: 20px; background: #d1d5db; margin: 0 0.2rem;"></div>
+  <div style="width: 1px; height: 20px; background: #d1d5db; margin: 0 0.2rem;"></div>
 
-          <div style="display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0;">
-            <label style="margin: 0;">Speed</label> <div class="input-group" style="width: auto; display: flex; gap: 0.2rem;">
-              <button class="btn" onclick="adjustTempo(-1)" title="Slower" style="padding: 0.3rem 0.6rem;">-</button>
-              
-              <span id="tempoDisplay" class="pill" style="min-width: 35px; padding: 0 0.3rem; text-align: center; display: flex; align-items: center; justify-content: center;">0</span>
-              
-              <button class="btn" onclick="adjustTempo(1)" title="Faster" style="padding: 0.3rem 0.6rem;">+</button>
-              <button class="btn" onclick="resetTempo()" title="Reset" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">Reset</button>
-            </div>
-          </div>
+  <div style="display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0;">
+    <label style="margin: 0;">Speed</label> 
+    <div class="input-group" style="width: auto; display: flex; gap: 0.2rem;">
+      <button class="btn" onclick="adjustTempo(-1)" title="Slower" style="padding: 0.3rem 0.6rem;">-</button>
+      
+      <span id="tempoDisplay" class="pill" style="min-width: 35px; padding: 0 0.3rem; text-align: center; display: flex; align-items: center; justify-content: center;">0</span>
+      
+      <button class="btn" onclick="adjustTempo(1)" title="Faster" style="padding: 0.3rem 0.6rem;">+</button>
+      <button class="btn" onclick="resetTempo()" title="Reset" style="font-size: 0.8rem; padding: 0.3rem 0.5rem;">Reset</button>
+    </div>
+  </div>
 
-        </div>
+</div>
 
-        <div class="meta" id="meta">
-          <span class="pill" id="metaCounter">- / -</span>
-          <span class="pill" id="metaSPL">Speed: -</span>
-        </div>
-        <div id="notice" class="warn" style="display:none"></div>
-      </div>
+<div class="meta" id="meta">
+  <span class="pill" id="metaCounter">- / -</span>
+  <span class="pill" id="metaSPL">Speed: -</span>
+</div>
+<div id="notice" class="warn" style="display:none"></div>
       
       
       <h2 class="settings-header" id="settings-toggle">Settings <span id="settings-icon">▶</span></h2>
@@ -125,7 +135,7 @@
               <label for="transitionSpeed">Transition Speed (sec)</label>
               <div class="input-group">
                 <button class="btn" style="background-color: #ADD8E6; border: 1px solid #d1d5db; border-right: none; border-top-left-radius: 8px; border-bottom-left-radius: 8px; width: 2.5rem;" onclick="adjustTransitionSpeed(-0.1)">-</button>
-                <input type="number" id="transitionSpeed" class="form-control" min="0.1" max="2.0" step="0.1" value="0.5" style="width: 5rem; text-align: center; border-radius: 0; margin: 0; padding: 0.4rem;">
+                <input type="number" id="transitionSpeed" class="form-control" min="0.1" max="2.0" step="0.1" value="0.7" style="width: 5rem; text-align: center; border-radius: 0; margin: 0; padding: 0.4rem;">
                 <button class="btn" style="background-color: #ADD8E6; border: 1px solid #d1d5db; border-left: none; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 2.5rem;" onclick="adjustTransitionSpeed(0.1)">+</button>
               </div>
             </div>
@@ -145,6 +155,17 @@
       <button class="btn btn-primary" id="applyWidthBtn" type="button">Apply</button>
     </div>
   </div>
+</div>
+
+</div> 
+
+<div class="control-row">
+  <div class="control-subgroup">
+    <label for="verseDelay">Verse Delay between verses (sec)</label>
+    <input id="verseDelay" type="number" min="0" step="1" value="0" class="form-control" style="width: 35%; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+  </div>
+  
+  <div class="control-subgroup"></div>
 </div>
 
 
