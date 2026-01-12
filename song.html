@@ -69,7 +69,7 @@
           <ul id="language-list" class="language-list"></ul>
         </div>
       </div>
-<div id="playback-controls">
+			<div id="playback-controls">
         <div class="row">
           <div class="checkbox-group">
             <input type="checkbox" id="trackType" checked>
@@ -77,16 +77,31 @@
             <span id="audioLanguage" class="audio-language"></span>
           </div>
         </div>
+        
+        <div class="row">
+					<div class="checkbox-group">
+						<input type="checkbox" id="skipIntro">
+						<label for="skipIntro">Skip music introduction (start at 5s)</label>
+					</div>
+				</div>
 
-<div class="btns" style="margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-	<button id="btnPlay" onclick="playHymn()" style="height: 60px; font-size: 1.5rem;">
+<div class="btns" style="margin-bottom: 1rem; display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 0.5rem;">
+  
+  <button id="btnPlay" onclick="playHymn()" style="height: 60px; font-size: 1.5rem; padding: 0;">
     <span class="btn-content">▶ Play</span>
     <span class="btn-spinner"></span>
   </button>
-  <button id="btnStop" onclick="stopHymn()" disabled style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-    <span style="font-size: 2.5rem; line-height: 1;">⏹</span>
+
+  <button id="btnStop" onclick="stopHymn()" disabled style="height: 60px; display: flex; align-items: center; justify-content: center; gap: 0.3rem; padding: 0;">
+    <span style="font-size: 2rem; line-height: 1;">⏹</span>
     <span style="font-size: 1.5rem;">Stop</span>
   </button>
+
+  <button id="btnPauseResume" onclick="togglePauseResume()" disabled style="height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0;">
+    <span id="pauseIcon" style="font-size: 1.4rem; line-height: 1;">&#9208;</span>
+    <span id="pauseText" style="font-size: 0.85rem; font-weight: 600;">Pause</span>
+  </button>
+  
 </div>
 
 <div class="row">
@@ -162,7 +177,18 @@
 <div class="control-row">
   <div class="control-subgroup">
     <label for="verseDelay">Verse Delay between verses (sec)</label>
-    <input id="verseDelay" type="number" min="0" step="1" value="0" class="form-control" style="width: 35%; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 8px;">
+    
+    <div style="display: flex; align-items: stretch; width: 60%;"> 
+      
+      <input id="verseDelay" type="number" min="0" step="1" value="0" class="form-control" 
+             style="width: 100%; padding: 8px 10px; border: 1px solid #d1d5db; border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
+      
+      <button class="btn" onclick="resetVerseDelay()" title="Reset Delay" 
+              style="border-top-left-radius: 0; border-bottom-left-radius: 0; background: #e5e7eb; border: 1px solid #d1d5db; padding: 0 0.8rem; font-size: 1.8rem;">
+        ↺
+      </button>
+      
+    </div>
   </div>
   
   <div class="control-subgroup"></div>
@@ -209,13 +235,13 @@
     </div>
 
     <div class="control-subgroup">
-      <label id="toggleDotLabel"><span>Dot</span></label>
-      <div class="custom-color-picker">
-        <div class="color-display" data-for="dotColor"></div>
-        <button class="edit-color-btn" data-for="dotColor" aria-label="Edit Color">&#9998;</button>
-        <input type="color" id="dotColor" value="#d81b60" class="color-input-hidden">
-      </div>
-    </div>
+			<label for="dotColor">Dot Color</label>
+			<div class="custom-color-picker">
+				<div class="color-display" data-for="dotColor"></div>
+				<button class="edit-color-btn" data-for="dotColor" aria-label="Edit Color">&#9998;</button>
+				<input type="color" id="dotColor" value="#d81b60" class="color-input-hidden">
+			</div>
+		</div>
 
   </div>
 </div>
