@@ -1164,3 +1164,7 @@ input[type="color"].active-color-input {
     margin: 0;
     padding: 0;
 }
+/* Hide the entire progress bar (line and knob) when in Manual Mode */
+.lyrics-viewport.manual-active .line-progress-container {
+    display: none !important;
+}
