@@ -16269,9 +16269,9 @@
   "safe_title": "",
   "voiceURL": "https://assets.churchofjesuschrist.org/2b/f2/2bf25bb7ecd711ec9324eeeeac1e9466d661b66d/the_miracle_bradshaw.mp3",
   "accompanimentURL": "",
-  "intro_length": 0,
+  "intro_length": 14.5,
   "line_time": 0,
-  "line_timings": [],
+  "line_timings": [6.8, 6.7, 7.1, 6.8, 7.4, 3.4, 5.1, 6.7, 7.1, 2.3, 8.2, 7.3, 11.6, 6.5, 7.4, 6.7, 7, 7.1, 8.5, 7.1, 6.9, 2.1, 8.4, 9.3, 2.5, 8.6],
   "lines": [
 	  "1: Jesus walked upon the water.", 
 	  "He stilled the storm and calmed the angry sea.", 
@@ -16285,6 +16285,7 @@
 	  "But I know this:", 
 	  "Of all His miracles, the most incredible must be", 
 	  "The miracle that rescues me!", 
+	  "🎵 .   .   .   . 🎵",
 	  "2: Jesus bled and died to save me—", 
 	  "A price that I could never pay alone.", 
 	  "When He rose again, He gave me", 
@@ -16296,6 +16297,7 @@
 	  "But I know this:", 
 	  "Of all His miracles the most incredible must be", 
 	  "The miracle that rescues me,", 
+	  "🎵 .   .   .   . 🎵",
 	  "The miracle that rescues you and me!"
   ]
 },
