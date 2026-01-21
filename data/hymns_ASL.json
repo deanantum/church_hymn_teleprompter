@@ -5127,15 +5127,7 @@
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
-  "lines": []
-},
-"1029": {
-  "title": "I Can’t Count Them All",
-  "safe_title": "I Cant Count Them All",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": [
+    "lines": [
 	"1: Inside-me|Bright|<Chest-vibe|>Chest-vibe", 
 	"Inside-me|Bright|<Chest-vibe|>Chest-vibe", 
 	"Inside-me|Bright|<Chest-vibe|>Chest-vibe", 
@@ -5151,6 +5143,14 @@
 	"^Jesus|^Ray‑me|Chest-vibe|Vibe", 
 	"(cl:5)Cover-1(hold)|(no)|(cl:5)Cover-off-1|Chest-vibe" 
   ]
+},
+"1029": {
+  "title": "I Can’t Count Them All",
+  "safe_title": "I Cant Count Them All",
+  "intro_length": 0,
+  "line_time": 0,
+  "line_timings": [],
+	"lines": []
 },
 "1030": {
   "title": "Close as a Quiet Prayer",
