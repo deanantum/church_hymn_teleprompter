@@ -312,9 +312,40 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "(2h)Trees-around|(cl:C)Sunrise|(Rh)Ray-down-(Lh)Tree(hold)|(Rh)Tree-shadow",
+		 "Flower|(cl:5)Bloom(Lh-hold)|(Rh)Bee, (cl:1)Fly-to-flower~|~",
+		 "^<Nest|<Bird|(alt)Tweet+|Stretch-wings",
+		 ">(cl:B)Fly|Sound-float-around|Hands-on-Heart|#JS, Look-over",
+		 "(Rh)Sun-to-(Lh)Tree|(cl:5)Overlap-shadows|Walk+|(Rh)Tree-passed",
+		 "(Lh)Tree-passed|^Want|God|^Inform-me",
+		 "(Rh)Sun-to-(Lh)Tree|(cl:5)Overlap-shadows|Walk+|(Rh)Tree-passed",
+		 "(Lh)Tree-passed|^Want|God|^Inform-me",
+		 "(2h)Trees-around|#JS, Look-around|Area-empty|Kneel",
+		 "^Pray+|(2h)Speak|^(2h)HIM|^Inform-me",
+		 "Satan|>(2h)Mist-around|Over-me|Close-mouth",
+		 "(cl:5)Battle-back-forth~|~|!Fear!|!5-Depress!",
+		 "?Give-up?|Wave-no|^Father|^His, Love~",
+		 "~|Cherish|^Trust~|~",
+		 "?Give-up?|Wave-no|^Father|^His, Love~",
+		 "~|Cherish|^Trust~|~",
+		 "Kneel|Dark|(cl:5)Push-out|^Ray-down~",
+		 "~|(2h)Area|Satan|!5-Back-off-1!",
+		 "!Breath!|^!Bright!~|~|(2h)Block-eyes",
+		 "(lower-hands)|^(2h)Look|(2h)Trees-around|Bright",
+		 "^(Rh)(cl:2)Person(hold)|^(Lh)There|^Glory~|~",
+		 "God|^>Father~|~, Son~|~",
+		 "^(Rh)(cl:2)person(hold)|(Lh)There|Glory~|~",
+		 "God|^>Father~|~, Son~|~",
+		 "#JS|(2h)Wow|(2h)1-Wonder|^2-Come-down",
+		 "ME|^Interact~|~|^(2h)Look",
+		 "^>Father|Comment|#JS|<(2h)There",
+		 "My, Cherish~|~|Son|<Focus",
+		 "(2h)!Awe!~|~|!Inspire!~|~",
+		 "^Eye-contact|God|Live|^(2h)There",
+		 "(2h)!Awe!~|~|!Inspire!~|~",
+		 "^Eye-contact|God|Live|^(2h)There"
+		]
   },
   "27": {
     "title": "Praise to the Man",
@@ -705,9 +736,32 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "Future|!Time!|^(2h)Him|Lord",
+		 "1-Come-down|Globe|Take‑up|Reign",
+		 "(alt)Mistake+|Sin|Clean(Lh-hold)|(Rh)Push-away",
+		 "(2h)Area|(2h)YOU-ALL|^His|Children",
+		 "Gather|Swirl|Joy|<Eye‑contact",
+		 ">Hug|,<Hug|Peace|Come‑on",
+		 "Lift-up|Celebrate|Sing|Love",
+		 "Express|^(2h)HIM|Lord|^Glory",
+		 "Future|!Time!|^(2h)HIM|Savior",
+		 "1-Come-down|(2h)Awe|Beautiful|^Glory",
+		 "Claw‑many|Wicked|Clean(Lh-hold)|(Rh)Push-away",
+		 "Fear|Fade|Crowd-to|Swirl",
+		 "<Eye-contact|Hug|Hug|(2h)Area",
+		 "Peace|Joy|Lift-up|Celebrate",
+		 "Sing|Love|Express|^HIM",
+		 "Our|Savior|Lord|King",
+		 "Future|!Time!|^(2h)HIM|Lord",
+		 "1-Come-down|Sin|Clean(Lh-hold)|(Rh)Push-away",
+		 "Change|Truth|Light|^Ray-me",
+		 "(2h)Clean-chest|White|Crowd-to|Swirl",
+		 "<Eye-contact|Hug|Hug|(2h)Look-out",
+		 "Beautiful|Animal|(cl:5)Plants|Joy",
+		 "Lift-up|Celebrate|Sing|Love",
+		 "Express|Clap, Yay~|~|^(2h)HIM"
+		]
   },
   "59": {
     "title": "Come, O Thou King of Kings",
@@ -801,9 +855,40 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "Celebrate|Celebrate|King|Supreme",
+		 "(2h)Come|(2h)Kneel|Love|^(2h)Hold‑heart",
+		 "^Give‑heart|Joy+|Worship+|^Thank+",
+		 "^(2h)HIM|!Yay!|!Yay!|--",
+		 "Joy|Joy|King|Supreme",
+		 "(2h)Come‑on~|~|!Yay!|!Yay!",
+		 "Joy|Joy|King|Supreme",
+		 "Glory|(2h)Come‑on~|~|!Yay!|!Yay!|--",
+		 "Celebrate|Celebrate|Savior|Supreme",
+		 "^HE|Wise+|Love|^Ray‑me",
+		 "Heal|Sin|(alt)Stick‑on+|Fade",
+		 "^HE|^Sit‑down|Reign|--",
+		 "Joy|Joy|King|Supreme",
+		 "(2h)Come‑on~|~|!Yay!|!Yay!",
+		 "Joy|Joy|King|Supreme",
+		 "Glory|(2h)Come‑on~|~|!Yay!|!Yay!|--",
+		 "Celebrate|Celebrate|Christ|Supreme",
+		 "Reign|All‑over~|~|Past",
+		 "Tomb‑open(Lh‑hold)|(Rh)Resurrect‑from‑tomb~|~|Finish",
+		 "(2h)Come|Buried‑(Lh)open‑up(hold)|(Rh)Resurrect~|~",
+		 "Joy|Joy|King|Supreme",
+		 "(2h)Come‑on~|~|!Yay!|!Yay!",
+		 "Joy|Joy|King|Supreme",
+		 "Glory|(2h)Come‑on~|~|!Yay!|!Yay!|--",
+		 "Celebrate|Celebrate|King|Supreme",
+		 "Glory~|~|Look‑forward|^1‑Come‑down",
+		 "Group‑up~|~|Home|^(2h)Stay",
+		 "Eternity~|~|Celebrate|!Yay!+",
+		 "Joy|Joy|King|Supreme",
+		 "(2h)Come‑on~|~|!Yay!|!Yay!",
+		 "Joy|Joy|King|Supreme",
+		 "Glory|(2h)Come‑on~|~|!Yay!|!Yay!|--"
+		]
   },
   "67": {
     "title": "Glory to God on High",
@@ -1200,9 +1285,40 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|Kind|Supreme",
+		 "(2h)YOU‑ALL,^(Rh)HE(nod)|^(2h)Ray‑down|Inspire",
+		 "(2h)Warm|Peace|(2h)Wow",
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|Sunset|Sunrise",
+		 "Me, Need+|^(Rh)HIM|Jesus",
+		 "^(Rh)Nudge+|^(2h)Ray‑me|Love",
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|<Dark|Tempt",
+		 "<(cl:O-5)Throw-at-me(Lh‑hold)|>(Rh)Look‑up|^Hand‑clasp",
+		 "^(2h)Ray‑down|<(2h)Push‑back|<Protect",
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|Sunset|Sunrise",
+		 "Me, Need+|^(Rh)HIM|Jesus",
+		 "^(Rh)Nudge+|^(2h)Ray‑me|Love",
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|>Joy|<Pain",
+		 "^Hands‑clasp(rock)|(Lh)Hand‑unclasp|<Dark",
+		 "<(2h)Grab‑me|Wave‑no|<Trust",
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|Sunset|Sunrise",
+		 "Me, Need+|^(Rh)HIM|Jesus",
+		 "^(Rh)Nudge+|^(2h)Ray‑me|Love",
+		 "All‑day|All‑night|ME, Need",
+		 "^HIM|^(2h)HIM|Higher",
+		 "Cherish|Son|Hands‑out(Lh‑hold)",
+		 "(Rh)Grab‑heart, Offer(Lh‑hold)|^(Rh)Take‑it‑up|Hand‑clasp",
+		 "All‑day|All‑night|ME, Need",
+		 "^(Rh)HIM|Sunset|Sunrise",
+		 "Me, Need+|^(Rh)HIM|Jesus",
+		 "^(Rh)Nudge+|^(2h)Ray‑me|Love"
+		]
   },
   "99": {
     "title": "Nearer, Dear Savior, to Thee",
@@ -2398,14 +2514,37 @@
   "195": {
     "title": "How Great the Wisdom and the Love",
     "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "(2h)Long‑ago|Heaven|We, ^Social‑swarm~|~, (2h)Father|(rs)(2h)Look‑over|v_<(2h)Hey",
+		 "^Bring‑show|Save|Plan|>!Yay!|!Yay!",
+		 "^Bring‑down|(cl:5)Form‑earth|(cl:5)Hold‑earth|Jesus|(2h)Go|(Lh)Tree, (Rh)Kneel",
+		 "(alt)Suffer+|(Rh)A-Crucify|(Lh)A-Crucify, Bleed|Die~|~",
+		 "(2h)YOU‑ALL|All‑over‑earth|Sin|<Pull‑neck|^Separate‑down|God",
+		 "Jesus|Perfect|Sin|Atone~|~",
+		 "(pain)(cl:L)Crown‑on‑head|(cl:5)Crown‑bleed|(alt)Crucify+|Hands‑on‑cross|Life, Offer‑up(hold)|(head‑drop)",
+		 "Save|(2h)YOU‑ALL|Neck‑pull‑release|!Can!~|~",
+		 "(2h)Look‑down|Jesus|Finish|Kneel|>(2h)There|God",
+		 "^Your|Want|Go‑ahead|^Follow~|~",
+		 "Do‑act|Jesus|Time‑span|Life~|~|^Straight",
+		 "^Open‑gate|!Pah!|^<(rs)(2h)Come|(2h)Bring‑up|--",
+		 "^Glory|^(2h)Father|^Throne|<Heart‑expand|<(2h)Look‑down|Jesus",
+		 "<Serve|Teach+|>Love|>(Rh)Step|(Lh)Step",
+		 "Path‑up|(Rh)1-Walk, (Lh)5-Follow‑up~|~|^>Gate‑open|>Hug|^(2h)Father",
+		 "^>Social‑swarm|Eternal|Higher|!Pah!~|~",
+		 "<Bread|Tear‑bread|(Lh)(cl:)Pass‑tray(hold)|(Rh)Pick‑bread(Rh‑hold)|(Lh)Wonder|Jesus",
+		 "(Rh)(cl:1)Hand‑pierce(Lh‑hold)|(Rh)Eat|Water|<(Rh)(cl:A)Pour‑in, (Lh)cup|~",
+		 "(Lh)Pass‑tray(hold)|(Rh)(cl:G)Pick‑cup(hold)|(Lh)Wonder|Jesus|(Rh)Hand‑bleed(Lh‑hold)|(Rh)(cl:G)Drink‑cup",
+		 "Want|^Agree, ^Parallel|Jesus|^(Rh)Supreme~|~",
+		 "^Father|Cherish|(2h)YOU‑ALL|Bring‑show|Save, Plan~|~",
+		 "Know‑that|(2h)YOU‑ALL|^Lower|Grief~|~",
+		 "Jesus|<Atone|<Forgive+|^Higher|(2h)Awe|Save, Plan~",
+		 "~|Harmony|Bring‑up|!Pah!~|~"
+		]
   },
   "196": {
     "title": "Jesus, Once of Humble Birth",
@@ -2685,17 +2824,17 @@
 			">IX|(2h)Shine~|~|Jesus",
 			"Christ|Born|Hands-on-heart|>Past-total",
 			"Fear|Resolve|Hope|Wave-spread",
-			"Dark|Quiet|(2h)Area|Sleep~",
-			"~|Star|^(cl:5)Dot-sky|(Rh)Shine",
+			"Dark|Quiet|(2h)Area|(Rh)Sleep",
+			"(Lh)Sleep|Star|^(cl:5)Dot-sky|(Rh)Shine",
 			"(Lh)Shine|Angels|(cl:4)Come-down|(2h)v_Shine",
-			"Cradle-baby|(2h)Watch~|~|Eye-contact~",
-			"~|(cl:4)Line-sway|(cl:4)Line-sway|(alt)Sign+",
+			"Cradle-baby|(2h)Watch|(2h)Watch|>Eye-contact",
+			"<Eye-contact|(cl:4)Line-sway|(cl:4)Line-sway|(alt)Sign+",
 			"Wave-spread|Jesus|Christ|Born",
 			"<There|>There|King|Wave-spread",
 			"<Peace|>Peace|<Yay|>Yay",
 			"Stars|^(cl:5)Dot-sky|(Rh)Shine|(Lh)Shine",
 			"(2h)v_Shine|Jesus|Born|Rock-baby~",
-			"~|^God|>^(Rh)Area|(rs)(2h)Look-over",
+			"~|^God|>^(Rh)Area|(rs)(2h)Look-over~",
 			"~|<THEY|Clueless|<THEY",
 			"Humble|(Rh)Inform|(Lh)Inform|Bring>",
 			"Jesus|Christ|Born|Baby-rock",
@@ -3211,8 +3350,31 @@
     "line_time": 0,
     "line_timings": [],
   "lines": [
-      
-    ]
+	 "<Dark|>Light|<(cl:5)Push‑me|Push‑out",
+	 "Truth|(Rh)(cl:H)Draw‑sword(hold)|(Lh)(cl:5)Light‑up‑sword|(Lh)Bright~",
+	 "~|<(cl:5)Push‑out|(cl:5)Wipe‑flat|Eventually",
+	 "^Enter|Forever|Joy|Joy",
+	 "(cl:Claw)Many|(Rh)Insult‑me|(Lh)Insult‑me|(cl:1)Dart‑to‑Shield(Lh‑hold)",
+	 "(Rh)Dart‑fall|(cl:1)Dart‑to‑Shield(Lh‑hold)|(Rh)Dart‑fall|Lord",
+	 "^1‑Come‑down(hold)|(Lh)5-Behind‑1|<(2h)Come|(cl:1‑5)March~",
+	 "~|Strong|Ray‑out~|~",
+	 "(cl:5)Few‑people|(Lh)Resist|(Lh)Resist(hold)|^(Rh)Ray‑on‑resist",
+	 "(Rh)Shield|Truth|<(cl:Claw)Many|<Confuse~",
+	 "~|(Rh)Throw‑on‑shield(Lh‑hold)~|~|(Rh)Throw‑on‑shield(Lh‑hold)~",
+	 "~|^(Rh)Ray‑on‑shield|(Rh)(cl:5)Push‑shield(Lh‑hold)|(Rh)(cl:5)Push‑shield(Lh‑hold)",
+	 "(cl:Claw)Many|(Rh)Insult‑me|(Lh)Insult‑me|(cl:1)Dart‑to‑Shield(Lh‑hold)",
+	 "(Rh)Dart‑fall|(cl:1)Dart‑to‑Shield(Lh‑hold)|(Rh)Dart‑fall|Lord",
+	 "^1‑Come‑down(hold)|(Lh)5-Behind‑1|<(2h)Come|(cl:1‑5)March~",
+	 "~|Strong|Ray‑out~|~",
+	 "Lord|^His|Truth|(2h)Defend",
+	 "~|Courage~|~|No‑matter",
+	 "<(cl:5)Push‑me|<(cl:5)Push‑out|^Faith(Lh‑hold)|(Rh)Support‑me",
+	 "With‑me~|~|All‑way|!Pah!",
+	 "(cl:Claw)Many|(Rh)Insult‑me|(Lh)Insult‑me|(cl:1)Dart‑to‑Shield(Lh‑hold)",
+	 "(Rh)Dart‑fall|(cl:1)Dart‑to‑Shield(Lh‑hold)|(Rh)Dart‑fall|Lord",
+	 "^1‑Come‑down(hold)|(Lh)5-Behind‑1|<(2h)Come|(cl:1‑5)March~",
+	 "~|Strong|Ray‑out~|~"
+	]
   },
   "244": {
     "title": "Come Along, Come Along",
@@ -3458,9 +3620,40 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "Globe|(cl:4)Look‑up|(2h)Awe|^Bright",
+		 "^Jesus|<Chest‑ray|<Path|<(2h)YOU‑ALL",
+		 "<(2h)Come~|~|>Angel|<Bring",
+		 "^(cl:1)Down|<(cl:C)Hold‑book‑show|Scriptures|(cl:C)Book‑on‑book",
+		 "Globe|^(cl:4)Look‑up|Heaven|^Glory",
+		 "^Throne|^(2h)Ray‑down|^(cl:C)Hold‑book‑down|Open‑book(Lh‑hold), (Rh)Book‑light",
+		 "(Rh)Come|(Rh)Look‑at‑book|(2h)Book‑show(Lh‑hold)~|~",
+		 "(Rh)Book‑ray‑out(hold)|(Rh)All‑over‑world|Glory~|~",
+		 "Globe|(cl:4)Look‑up|Angel|(cl:4)Hold‑book‑show",
+		 "Scriptures|<(2h)!Inform‑all!|Angel|!Yay!",
+		 "!Yay!|New, Covenant|Include|Hope",
+		 "Satan|^(rs)Dark‑face|(2h)Hold‑emotion|(sad)Cross‑arms",
+		 "Globe|^(cl:4)Look‑up|Heaven|^Glory",
+		 "^Throne|^(2h)Ray‑down|^(cl:C)Hold‑book‑down|Open‑book(Lh‑hold), (Rh)Book‑light",
+		 "(Rh)Come|(Rh)Look‑at‑book|(2h)Book‑show(Lh‑hold)~|~",
+		 "(Rh)Book‑ray‑out(hold)|(Rh)All‑over‑world|Glory~|~",
+		 "Globe|(cl:4)Look‑up|(alt)Honor+|^Father",
+		 "^(2h)HIM|Exalt|Forever|(2h)Come",
+		 "Heart‑change+|(cl:1)Baptize|Do‑act|^Offer",
+		 "Jesus|<(rs)(2h)Come|>Exalt|Forever",
+		 "Globe|^(cl:4)Look‑up|Heaven|^Glory",
+		 "^Throne|^(2h)Ray‑down|^(cl:C)Hold‑book‑down|Open‑book(Lh‑hold), (Rh)Book‑light",
+		 "(Rh)Come|(Rh)Look‑at‑book|(2h)Book‑show(Lh‑hold)~|~",
+		 "(Rh)Book‑ray‑out(hold)|(Rh)All‑over‑world|Glory~|~",
+		 "Globe|(cl:4)Look‑down|Book‑open‑show(Lh‑hold)|(Rh)Scriptures",
+		 "(Rh)Book‑ray‑out|(Rh)!There‑book!|Book‑close, Set‑aside|Wave‑no",
+		 "Book‑open|Pray|Vision|^Door(Lh‑hold)",
+		 "(Rh)Knock+|Door‑opens|Jesus|(2h)!There!",
+		 "Globe|^(cl:4)Look‑up|Heaven|^Glory",
+		 "^Throne|^(2h)Ray‑down|^(cl:C)Hold‑book‑down|Open‑book(Lh‑hold), (Rh)Book‑light",
+		 "(Rh)Come|(Rh)Look‑at‑book|(2h)Book‑show(Lh‑hold)~|~",
+		 "(Rh)Book‑ray‑out(hold)|(Rh)All‑over‑world|Glory~|~"
+		]
   },
   "265": {
     "title": "Arise, O God, and Shine",
@@ -3790,21 +3983,67 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+	  "lines": [
+			 "Heaven|^Sphere|^Glory",
+			 "^(2h)HIM|My|(2h)Father",
+			 "Past|Me|Spirit",
+			 "Live|^(2h)There,Home|^?Hmm?",
+			 "^(2h)There|^Father|Me,Together",
+			 "^Teach-me|^?Hmm?|Someday",
+			 "Me, ^Enter|Heaven|^Eye-contact~",
+			 "~|^Father|^?Hmm?",
+			 "(2h)Wonder|^Father|(cl:)Form, Spirit",
+			 "Me|^Mingle|^Family, Cherish",
+			 "Learn+|^Father|Wise",
+			 "Set-up|Plan|(cl:)Form-globe(Lh-hold)",
+			 "(Rh)Place-me-there~|~, (Rh)Memory-taken~|~",
+			 "(2h)Wonder|Me, Stranger|(Rh)Gut, Inspire",
+			 "^Exalt|^Globe|Home",
+			 "Soul|Hands‑on‑heart|^Want+",
+			 "Hands‑on‑heart|Feel|Something",
+			 "1-Disappear|1-Ponder|^Holy Ghost",
+			 "Inspire~|~|^(2h)HIM",
+			 "My, ^Father~|~|Me, Understand",
+			 "^(2h)There|Heaven|Parent",
+			 "^(Rh)?Alone?|^(Lh)?Alone?| ^Father, ^?Alone?",
+			 "1-Ponder (no)|^1-with-1|Know",
+			 "My|(2h)Mother|^(2h)There",
+			 "Life, Span-forward|Responsible|^(Rh)Put-in-front",
+			 "^(Lh)Put-in-front|Do-act|!Finish!",
+			 "Someday|Bury, (Lh)Cover|Spirit‑leave‑body",
+			 "^(2h)Look‑up|Heaven|Higher",
+			 "Can|^1-meet-2|(2h)My",
+			 "^Father|(2h)Mother|Hand‑up",
+			 "^2-Them|(2h)Nod-yes|(2h)Come‑on",
+			 "Home|(rs)^With|^Together"
+		]
   },
   "293": {
     "title": "Each Life That Touches Ours for Good",
     "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
+ 	  "voiceURL": "",
+  	"accompanimentURL": "",
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+  	"lines": [
+		 "^Nudge+|^Father|^Thank+|Love|^Bright|^Ray‑down",
+		 "(cl:5)Surround‑me|Cherish|Friend|>Small‑bright|Small‑bright|<Small‑bright",
+		 "Love|Kind|(2h)Ray‑me|Heart-palm-light‑up(Lh-hold)|Show‑light‑forward(Lh‑hold)~|~",
+		 "^(Rh)Give‑you|(Rh)You‑give‑me|A‑Bless|Change|Life|Bright",
+		 "Christ|^Bright|(2h)YOU‑ALL|>Small‑bright|Small‑bright|<Small‑bright",
+		 "Cherish|Friend|>Follow|>Walk|>Path‑up|Daily",
+		 "Spread|Love|(2h)Ray‑me|Lift‑me|Influence‑me|Faith",
+		 "!Trust!~|~|^Gift‑me|Change|Life|Bright",
+		 "^HIM|(rs)(Rh)Come-on|Cherish|Friend|(cl:2)Spirit‑leave‑body(Lh‑hold)|(Rh)(cl:5)Light‑go‑up",
+		 "^Bright~|~|(Rh)Good, ^Bye|(2h)Wipe‑tears|No‑matter|Sad",
+		 "(2h)Look‑back|(Rh)Mind‑memory‑(2h)Heart‑memory~|Hold‑memory‑in‑heart|Inspire|^Near|^Near",
+		 "God|^Relationship‑up|^Relationship‑down|Change|Life|Bright",
+		 "Savior|Love|Peace|^Bright|(2h)YOU‑ALL|(2h)Look‑up",
+		 "^Include-you|>Small‑bright|Small‑bright|<Small‑bright|(Rh)Look‑at‑all|Inspire",
+		 "^Praise+|^Father|(2h)Wow|^Thank+|^(2h)Give‑me|(2h)YOU‑ALL",
+		 "Inspire|Change|Life|Bright|Amen|--"
+		]
   },
   "294": {
     "title": "Love at Home",
@@ -4444,7 +4683,32 @@
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
-  "lines": []
+  "lines":[ 
+  ">Life, River|>Inspire|Peace|<(2h)Big‑wave",
+  "(alt)Splash‑face+|5-Depress|^Teach‑me",
+  "No‑matter, Inspire|5-Depress|(cl:Bowl)Give‑^Him~|~", 
+  "^Include‑me|Let‑go‑chest, Breath‑in|Open‑chest|^Trust", 
+  ">(Rh)Palm, Inspire|<(Lh)Palm, 5-Depress|Twiddle‑think~|~", 
+  "(2h)Tight‑chest, Breath‑out|Breath‑in, Open‑chest|^Trust", 
+  "Satan|(alt)Throw‑face+|Life|(alt)(cl:B)In‑face+", 
+  "^!Trust!|^(2h)Ray‑me|(2h)Calm‑me", 
+  "Jesus|^Look‑my‑heart|Ball‑twist|(cl:Bowl)Give‑^Him", 
+  "^(Rh)Put‑in‑heart|Hand‑on‑heart|Breath‑out|Breath‑in", 
+  ">(Rh)Palm, Inspire|<(Lh)Palm, 5-Depress|Twiddle‑think~|~", 
+  "(2h)Tight‑chest, Breath‑out|Breath‑in, Open‑chest|^Trust", 
+  "Life|Twiddle‑think|Vision‑open|!Joy! !Joy!", 
+  "(2h)Sin|(Rh)Burden‑shoulder(hold) (Lh)Sad|(Lh)Burden‑shoulder(hold)", 
+  "(Rh)C-Cross‑vertical|(Lh)C-Cross‑horizontal|(alt)Nail‑palm+|Vision-close", 
+  "Open‑chest|Free|^Glory|^(2h)HIM", 
+  ">(Rh)Palm, Inspire|<(Lh)Palm, 5-Depress|Twiddle‑think~|~", 
+  "(2h)Tight‑chest, Breath‑out|Breath‑in, Open‑chest|^Trust", 
+  "!Joy! !Joy!|^Look‑forward|^Jesus|(cl:1)Come‑down", 
+  "Angel ^(Rh)(cl:5)Line|Sing Sing|^Ray‑down", 
+  "Inspire|^Look‑forward+|!Joy!|!Joy!", 
+  "Worry|Mind‑fade|Inside‑heart|Peace", 
+  ">(Rh)Palm, Inspire|<(Lh)Palm, 5-Depress|Twiddle‑think~|~",
+  "(2h)Tight‑chest, Breath‑out|Breath‑in, Open‑chest|^Trust" 
+  ]
 },
 "1004": {
   "title": "I Will Walk with Jesus",
@@ -4659,38 +4923,38 @@
   "line_time": 0,
   "line_timings": [],
   "lines": [
-		"1: (2h)Tap-all|^(2h)Look-up|^Cross|Jesus",
+		"(2h)Tap-all|^(2h)Look-up|^Cross|Jesus",
 		"There|(Rh)Nail-in-hands|(Lh)Nail-in-hands|(cl:U)Poke-in-side",
 		"^Look-up|Twiddle-think|(2h)^HIM|Die",
 		"?!Want!|Safe|People|Out-there",
-		"OIC|>^God|Plan|(rs)We, ^Disconnect",
+		"OIC|^>God|Plan|(rs)We, ^Disconnect",
 		"^Fallen|(rs)Jesus|Love|<Go-ahead",
-		"<Atone-right|>^(cl:1)hammer-nail|>^(cl:1)hammer-nail|^Die",
+		"<Atone-right|^>(cl:1)hammer-nail|^>(cl:1)hammer-nail|^Die",
 		"^Gates-open|We, (rs)Safe|^Connect|^Exalt",
-		"2: (2h)Tap-all|^(2h)Look-up|Christ|<(rs)(2h)Come-on",
-		"(Rh)^Look-up|(cl:1)Walk-away|(Rh)Punch-face|(Lh)Punch-face",
+		"(2h)Tap-all|^(2h)Look-up|Christ|<(rs)(2h)Come-on",
+		"^(Rh)Look-up|(cl:1)Walk-away|(Rh)Hit-face|(Lh)Hit-face",
 		"(Rh)Suffer|(Lh)Suffer|(Rh)Look-up|Sin",
-		"^(2h)(cl:claw)Heart-give|(rs)Jesus|<Remove|<Clean",
+		"^(cl:claw)Heart-give|(rs)Jesus|<Remove|<Clean",
 		"<Anoint|Love|<Provide|<Support",
-		"Someday|Die|^His, Power|(2h)^Ray-down",
+		"Someday|Die|^His, Power|^(2h)Ray-down",
 		"Grave|Open|(Rh)Resurrect|(Lh)Resurrect",
-		"(cl:1)^Meet-him|Jesus|(rs)Hug|^Bring-up",
-		"3: (2h)Tap-all|^(2h)Look-up|Jesus|(Rh)Nail-in-palms",
+		"^(cl:1)Meet-him|Jesus|(rs)Hug|^Bring-up",
+		"(2h)Tap-all|^(2h)Look-up|Jesus|(Rh)Nail-in-palms",
 		"(Lh)Nail-in-palms|IX-(Rh)palm|Love|Give-all",
-		"(2h)^Ray-you|Encourage|^Trust~|~",
+		"^(2h)Ray-you|Encourage|^Trust~|~",
 		"(Rh)<You-all|<(Rh)Attract-grab(sad)|<(Lh)Attract-grab(sad)|Close-heart",
 		"Open-heart|Empty-heart|Sad|Grief",
-		"(Rh)^Look-up|^Jesus|^Help-you|Sacrifice",
-		"(rs)(2h)^HIM|(Rh)^!Attract-grab!|(Rh)^!Attract-grab!|Open-heart",
+		"^(Rh)Look-up|^Jesus|^Help-you|Sacrifice",
+		"^(rs)(2h)HIM|^(Rh)!Attract-grab!|^(Lh)!Attract-grab!|Open-heart",
 		"^HIM|Into-heart|^Change~|~",
-		"4: (2h)Tap-all|^(2h)Look-up|Jesus|>(2h)Him",
+		"(2h)Tap-all|^(2h)Look-up|Jesus|>(2h)Him",
 		"(Rh)Come-on|(Lh)Come-on|>(Rh)(cl:1)Approach|>(Lh)(cl:1)Approach",
-		"His, Hand|(2h)cl:Hand-bring-me|Feel|(Rh)Feel-palm",
-		"(2h)Wow|Cherish|~|>Kneel",
+		"His, Hand|(cl:)Hand-bring-me|Feel|(Rh)Feel-palm",
+		"(2h)Wow|Cherish~|~|>Kneel",
 		">(alt)Foot+|(Rh)Tear-drop|(Lh)Tear-drop|>(Rh)Wash-foot",
 		"(Lh)Wash-foot|Hands-on-heart|>!Thank-you!|!Thank-you!",
 		"<(rs)Jesus|<(2h)Grab-pull-up|Hug|Smile-big",
-		"(rs)>Fear|Fade|Hug~|~"
+		">(rs)Fear|Fade|Hug~|~"
 	]
 },
 "1017": {
@@ -4816,7 +5080,34 @@
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
-  "lines": []
+  "lines":[ 
+  	"1: Heaven|^(2h)Ray-down|<Temple, (cl:1)Enter", 
+  	"Area|^Connect|^All-together", 
+  	"Inspire|Quiet|Ancestor, Past-hand-clasp", 
+  	"Partner|Do-act|^Connect", 
+  	"Ch: Me, ^Straight~|^Connect|^All-together", 
+  	"Inspire|Wow|Look-forward", 
+  	"Christ|^(cl:1)Come-to-earth|Spread-globe", 
+  	"(cl:)Ball-up~|~|(2h)Shine~|~|Beautiful~|~", 
+  	"", 
+  	"2: Home|Enter, Area|^Connect", 
+  	"^All-together|Inspire|^Express", 
+  	"(2h)Tiddle-think-mind-heart|^Interact|!Love!", 
+  	"Vibe|^Trust~|~", 
+  	"Ch: Me, ^Straight~|^Connect|^All-together", 
+  	"Inspire|Wow|Look-forward", 
+  	"Christ|^(cl:1)Come-to-earth|Spread-globe", 
+  	"(cl:)Ball-up~|~|(2h)Shine~|~|Beautiful~|~", 
+  	"", 
+  	"3: (Rh)Area|(Lh)Area|5-Depress", 
+  	">Push-aside|(Lh)Heart-out|^Connect", 
+  	"^All-together|Inspire|(alt)Patience+", 
+  	"Continue+|Peace|(2h)Shine-me", 
+  	"Ch: Me, ^Straight~|^Connect|^All-together", 
+  	"Inspire|Wow|Look-forward", 
+  	"Christ|^(cl:1)Come-to-earth|Spread-globe", 
+  	"(cl:)Ball-up~|~|(2h)Shine~|~|Beautiful~|~" 
+  ]
 },
 "1027": {
   "title": "Welcome Home",
@@ -4919,7 +5210,32 @@
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
-  "lines": []
+	"lines":[ 
+		"Sunday|Weekly|Sit, Quiet", 							
+		"Twiddle-think|^Agree|Heart‑change", 
+			"Bread, Eat|Water, Drink|^1-with-1", 
+			"^(2h)Ray‑me|Root‑in|Calm", 
+			"Heart‑give|Worship|Precious", 
+			"^HIM|Twiddle-think|^(2h)Ray‑down", 
+			"(2h)Calm|Root‑in|Love", 
+			"Path|^Ray-on-1(Lh-hold)|(Rh)Light, (Lh)1-follow", 
+			"Bow‑head|Twiddle-think|Bread, Eat", 
+			"Water, Drink|^Thank|^Thank", 
+			"^His, Teaching|Precious, (2h)Put‑into‑heart~|~", 
+			"Pray|Sing|Lift‑up", 
+			"Heart‑give|Worship|Precious", 
+			"^HIM|Twiddle-think|^(2h)Ray‑down", 
+			"(2h)Calm|Root‑in|Love", 
+			"Path|^Ray-on-1(Lh-hold)|(Rh)Light, (Lh)1-follow", 
+			"Wake‑up|Sunday|^Focus", 
+			"All‑day|Spirit|^Influence‑heart, Relation", 
+			"(2h)Thus|Roll‑up‑sleeves+|Serve+", 
+			"Lift‑up+|Joy|Joy", 
+			"Heart‑give|Worship|Precious", 
+			"^HIM|Twiddle-think|^(2h)Ray‑down", 
+			"(2h)Calm|Root‑in|Love", 
+			"Path|^Ray-on-1(Lh-hold)|(Rh)Light, (Lh)1-follow" 
+		]
 },
 "1036": {
   "title": "Read the Book of Mormon and Pray",
@@ -5000,117 +5316,189 @@
   "line_timings": [],
   "lines": []
 },
-"1042": {
-  "title": "Thou Gracious God, Whose Mercy Lends",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1043": {
-  "title": "Help Us Remember",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1044": {
-  "title": "How Did the Savior Minister",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1045": {
-  "title": "Jesus Is the Way",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1046": {
-  "title": "Can You Count the Stars in Heaven?",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1047": {
-  "title": "He Cares for Me",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1048": {
-  "title": "Our Prayer to Thee",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1049": {
-  "title": "Joseph Prayed in Faith",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1050": {
-  "title": "Stand by Me",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1051": {
-  "title": "This Day Is a Good Day, Lord",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1052": {
-  "title": "The Miracle",
-  "safe_title": "",
-  "voiceURL": "",
-  "accompanimentURL": "",
-  "intro_length": 0,
-  "line_time": 0,
-  "line_timings": [],
-  "lines": []
-},
-"1201": {
+  "1042": {
+    "title": "Thou Gracious God, Whose Mercy Lends",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1043": {
+    "title": "Help Us Remember",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1044": {
+    "title": "How Did the Savior Minister?",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1045": {
+    "title": "Jesus Is the Way",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1046": {
+    "title": "Can You Count the Stars in Heaven?",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1047": {
+    "title": "He Cares for Me",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1048": {
+    "title": "Our Prayer to Thee",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1049": {
+    "title": "Joseph Prayed in Faith",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1050": {
+    "title": "Stand by Me",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+  "1051": {
+    "title": "This Day Is a Good Day, Lord",
+    "safe_title": "",
+    "voiceURL": "",
+    "accompanimentURL": "",
+    "intro_length": 0,
+    "line_time": 0,
+    "line_timings": [],
+    "lines": [
+
+    ]
+  },
+		"1052": {
+		"title": "The Miracle",
+		"safe_title": "",
+		"voiceURL": "",
+		"accompanimentURL": "",
+		"intro_length": 0,
+		"line_time": 0,
+		"line_timings": [],
+		"lines":[ 
+			"1: Jesus|Do-act|Miracle|Water", 
+			"Small-waves(Lh-hold)|(Rh)(cl:1)Walk-on|Wind|!Big-wave!", 
+			"!Be-calm!|Sick, Skin-peel|Bless|Dissolve", 
+			"(cl:2)Lay‑on‑ground|Lift‑up, Stand‑up|Blind|Mud‑on, Look‑me", 
+			"Bread|Give‑all|Claw‑many, 1,000|Pick, Eat", "Ruler|Daughter", 
+			"Dead|Lift-up|Alive", "Ch: Jesus|Supreme|Wonderful|<Happen", 
+			">Happen|<Block|>Block|Un-block", 
+			"(2h)!1‑Hold!|Jesus", 
+			"Finish|Give‑all|Miracle|Top‑notch", 
+			"^HE|Save|(2h)ME~|~", 
+			"", 
+			"2: Jesus|^Only‑1|^Alone|Burden-shoulder", 
+			"Hand-bleed|Died|Atone~|~", 
+			"Finish, Resurrect~|~|Can|Heart-change", 
+			"^Offer-me(hold)~|~|(Lh)Forgive-me|(alt)Mistake+", 
+			"Sin|Throw‑behind|Free|Eye‑amazing", 
+			"Someday|Me|Resurrect|^1-with-1~|~", 
+			"Ch: Jesus|Supreme|Wonderful|<Happen", 
+			">Happen|<Block|>Block|Un-block", 
+			"(2h)!1‑Hold!|Jesus", 
+			"Finish|Give‑all|Miracle|Top‑notch", 
+			"^HE|Save|(2h)ME|^HE", 
+			"", 
+			"Save|2‑us|Eye‑amazing~|~" 
+		]
+	},
+	"1053": {
+		"title": "Jesus Wants Me for a Sunbeam",
+		"safe_title": "",
+		"voiceURL": "https://assets.churchofjesuschrist.org/47/7e/477e2fd969688ab8b2a31da7114bcb09edf656bb/jesus_wants_me_for_a_sunbeam_vocal_accompaniment_eng.mp3",
+		"accompanimentURL": "https://assets.churchofjesuschrist.org/91/72/91721beb7471ca75f766cccbb2ee141d68728e9a/cristo_me_manda_que_brillemusica_solo.mp3",
+		"intro_length": 0,
+		"line_time": 0,
+		"line_timings": [],
+		"lines":[ 
+		"1: Jesus wants me for a sunbeam,", 
+		"To shine for him each day;", 
+		"In ev’ry way try to please him,", 
+		"At home, at school, at play.", 
+		"Ch: A sunbeam, a sunbeam,", 
+		"Jesus wants me for a sunbeam.", 
+		"A sunbeam, a sunbeam,", 
+		"I’ll be a sunbeam for him.", 
+		"2: Jesus wants me to be loving", 
+		"And kind to all I see,", 
+		"Showing how pleasant and happy", 
+		"His little one can be.", 
+		"Ch: A sunbeam, a sunbeam,", 
+		"Jesus wants me for a sunbeam.", 
+		"A sunbeam, a sunbeam,", 
+		"I’ll be a sunbeam for him." 
+		]
+	},
+	"1201": {
   "title": "Hail the Day That Sees Him Rise",
   "safe_title": "",
   "voiceURL": "",
