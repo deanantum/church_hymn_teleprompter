@@ -5135,7 +5135,22 @@
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
-  "lines": []
+  "lines": [
+	"1: Inside-me|Bright|<Chest-vibe|>Chest-vibe", 
+	"Inside-me|Bright|<Chest-vibe|>Chest-vibe", 
+	"Inside-me|Bright|<Chest-vibe|>Chest-vibe", 
+	"(cl:5)Cover-1(hold)|(no)|(cl:5)Cover-off-1|Chest-vibe", 
+	"", 
+	"2: (cl:1)Wander|Chest-vibe|Chest-vibe|Chest-vibe", 
+	"(cl:1)Wander|Chest-vibe|Chest-vibe|Chest-vibe", 
+	"(cl:1)Wander|Chest-vibe|Chest-vibe|Chest-vibe", 		
+	"(cl:5)Cover-1(hold)|(no)|(cl:5)Cover-off-1|Chest-vibe", 
+	"", 
+	"3: ^Jesus|^Ray‑me|Chest-vibe|Vibe", 
+	"^Jesus|^Ray‑me|Chest-vibe|Vibe", 
+	"^Jesus|^Ray‑me|Chest-vibe|Vibe", 
+	"(cl:5)Cover-1(hold)|(no)|(cl:5)Cover-off-1|Chest-vibe" 
+  ]
 },
 "1030": {
   "title": "Close as a Quiet Prayer",
