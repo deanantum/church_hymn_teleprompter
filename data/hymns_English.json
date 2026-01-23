@@ -16337,7 +16337,7 @@
 		"accompanimentURL": "",
 		"intro_length": 4.4,
 		"line_time": 0,
-		"line_timings": [],
+		"line_timings": [5.2, 4.2, 5.3, 4.4, 4.8, 6.9, 2.7, 5.2, 4.4, 5.1, 4.4, 4.8, 7.3, 2.2, 5.3, 4.3, 5.1, 4.5, 4.7, 7],
 		"lines": [ 
 			"1: I wear the armor of my God.", 
 			"It keeps me safe from sin.", 
