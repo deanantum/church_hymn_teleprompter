@@ -4236,9 +4236,16 @@
     "intro_length": 0,
     "line_time": 0,
     "line_timings": [],
-  "lines": [
-      
-    ]
+		"lines": [ 
+			"Me|Cherish|(2h)YOU", 
+			"Go-ahead|Cherish|OUT-THERE~|~", 
+			"Command|<Go-ahead|>Go-ahead", 
+			"Love, Cherish|<Relation|>Relation", 
+			">They, Look|Touch-heart|Know", 
+			"YOU|Relate-me|Mine-Mine", 
+			"?Want|<Relate-me|>Relate-me?", 
+			"Go-ahead|Cherish|OUT-THERE~|~" 
+		]
   },
   "309": {
     "title": "As Sisters in Zion",
