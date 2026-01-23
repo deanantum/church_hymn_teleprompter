@@ -5483,6 +5483,18 @@
 			"Finish|Give‑all|Miracle|Top‑notch", 
 			"^HE|Save|(2h)ME|^HE", 
 			"", 
+			"3: Know‑know|Jesus|^(Rh)1-(Lh)Shine|^1-with-1(me)~", 
+			"~|^Ray‑heart, Hands‑on‑heart|Pain|Worry, Dissolve~", 
+			"~|Always|Love|Support‑me", 
+			"1-follow-1~|~|Eye‑amazing|Jesus", 
+			"^Show‑me‑hands|Atone|Me‑sin|You‑sin", 
+			"(Lh)Pierce‑hand|(Rh)Pierce‑hand(hold)|(Rh)Grab-Lh(hold)|(Look‑at‑hand)~|~", 
+			"Ch: Jesus|Supreme|Wonderful|<Happen", 
+			">Happen|<Block|>Block|Un-block", 
+			"(2h)!1‑Hold!|Jesus", 
+			"Finish|Give‑all|Miracle|Top‑notch", 
+			"^HE|Save|(2h)ME|^HE", 
+			"",
 			"Save|2‑us|Eye‑amazing~|~" 
 		]
 	},
@@ -5524,7 +5536,7 @@
 		"lines": [ 
 			"1: God, ^nudge|(2h)^Ray‑me|^Put‑on‑helmet|(cl:)Shield", 
 			"Temptation|(cl:1)Bounce‑shield|(cl:1)Bounce‑shield|!Resist!", 
-			"God, ^nudge|Truth|^Ray‑me|~", 
+			"God, ^nudge|Truth|^Ray‑me~|~", 
 			"Sin|Sin|Trump|Brush-hands", 
 			"God-Nudge|Ray-me|v_Helmet|Breastplate", 
 			"Shield|Sword|^Faith|Support-me++|Strong", 
