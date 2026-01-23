@@ -16330,6 +16330,35 @@
 		"I’ll be a sunbeam for him." 
 		]
 	},
+	"1054": {
+		"title": "God's Armor",
+		"safe_title": "",
+		"voiceURL": "",
+		"accompanimentURL": "",
+		"intro_length": 0,
+		"line_time": 0,
+		"line_timings": [],
+		"lines": [ 
+			"1: I wear the armor of my God.", 
+			"It keeps me safe from sin.", 
+			"I clothe myself in truth each day,", 
+			"And God will help me win.", 
+			"Ch: I’m wearing God’s armor today.", 
+			"I feel His strength each time I choose His way.", 
+			"2: I take my shield of faith along.", 
+			"The Spirit is my sword.", 
+			"My breastplate is His righteousness,", 
+			"And I will trust the Lord.", 
+			"Ch: I’m wearing God’s armor today.", 
+			"I feel His strength each time I choose His way.", 
+			"3: I wear the gospel of His peace", 
+			"Upon my ready feet.", 
+			"And with salvation’s helmet bright,", 
+			"My armor is complete.", 
+			"Ch: I’m wearing God’s armor today.", 
+			"I feel His strength each time I choose His way." 
+		]
+	},
   "1201": {
     "title": "Hail the Day That Sees Him Rise",
     "safe_title": "",
