@@ -5124,7 +5124,32 @@
   "intro_length": 0,
   "line_time": 0,
   "line_timings": [],
-  "lines": []
+  "lines": [
+		">Church|Open-door~|~|(cl:1)Enter|Friendly|Social",
+		"Love|^Inspire~|~|Spread~|~|(2h)YOU‑ALL",
+		">(2h)Crowd‑to~|~|(cl:4)Sit‑row~|~|Eat~|~",
+		"Drink~|~|Jesus|(2h)^HIM|Inspire~|~",
+		"<Life|Progress~|~|(Rh)Hit‑chin|(Lh)Hit‑chin|Struggle",
+		"~|(cl:1)Wander~|~|~|(cl:1)Wander+(Lh)Hand‑out~|~",
+		"~|(drop‑shoulder)|(Rh)Alone(hold)~|~|>(Lh)There(hold)~|~",
+		"~(Lh)Welcome(hold)~|~|(Rh)(cl:1)Enter~|~|^Connect~|~",
+		">Temple|(2h)YOU‑ALL~|~|>(2h)Crowd‑to~|~|Enter",
+		"^HE|God|Inspire~|~|Peace~|~",
+		"(cl:B)Altar~|~|(2h)Kneel~|~|^Heart‑give~|~",
+		"Covenant~|~|^Connect~|~|^(2h)Give‑me|Heal",
+		"<Life|Progress~|~|(Rh)Hit‑chin|(Lh)Hit‑chin|Struggle",
+		"~|(cl:1)Wander~|~|~|(cl:1)Wander+(Lh)Hand‑out~|~",
+		"~|(drop‑shoulder)|(Rh)Alone(hold)~|~|>(Lh)There(hold)~|~",
+		"~(Lh)Welcome(hold)~|~|(Rh)(cl:1)Enter~|~|^Connect~|~",
+		"^>Heaven|^Open‑gate~|~|^Jesus~|~|^(2h)HIM",
+		"^Glory~|~|(2h)^Ray‑me~|~|(2h)ME~|~",
+		"^HE|^Bring‑to‑you~|~|(2h)Give~|~|Comfort",
+		"(2h)YOU‑ALL|(2h)Come|(2h)Give|^(rs)Give‑me|Inspire~|~",
+		"<Life|Progress~|~|(Rh)Hit‑chin|(Lh)Hit‑chin|Struggle",
+		"~|(cl:1)Wander~|~|~|(cl:1)Wander+(Lh)Hand‑out~|~",
+		"~|(drop‑shoulder)|(Rh)Alone(hold)~|~|>(Lh)There(hold)~|~",
+		"~(Lh)Welcome(hold)~|~|(Rh)(cl:1)Enter~|~|^Connect~|~"
+	]
 },
 "1028": {
   "title": "This Little Light of Mine",
