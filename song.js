@@ -1139,13 +1139,12 @@ function populateLyricsContainer() {
 
                     // *** SKIP CHECK INSERTED HERE ***
                     // Check if this label is in our global skip list
-                    if (typeof skippedVerseLabels !== 'undefined' && skippedVerseLabels.includes(label)) {
+                    if (typeof skippedVerseLabels !== 'undefined' && skippedVerseLabels.includes(index)) {
                         const skipSpan = document.createElement('span');
                         skipSpan.className = 'skipped-indicator';
                         skipSpan.textContent = "(Skip)";
                         labelSpan.appendChild(skipSpan);
                         
-                        // Optional: Gray out the text if skipped
                         p.style.opacity = "0.6"; 
                     }
                     // ********************************
@@ -2372,26 +2371,18 @@ function startAutoScroll(lineTimings) {
   const totalLines = getMaxLineCount();
   if (!isPlaying || currentIndex >= totalLines) return;
   
-  const verseToSkip = currentVerseMap.find(v => v.startIndex === currentIndex && skippedVerseLabels.includes(v.label));
+  const verseToSkip = currentVerseMap.find(v => v.startIndex === currentIndex && skippedVerseLabels.includes(v.startIndex));
   
   if (verseToSkip) {
-      console.log(`Skipping Verse ${verseToSkip.label}. Duration: ${verseToSkip.totalDuration}s`);
-      
-      // 1. Jump Audio
+      console.log(`Skipping Verse at index ${verseToSkip.startIndex}. Duration: ${verseToSkip.totalDuration}s`);
       if (audio) {
           audio.currentTime += (verseToSkip.totalDuration); 
       }
-      
-      // 2. Jump Lyric Index
-      // We set index to the line AFTER this verse
       setCurrentIndex(verseToSkip.endIndex + 1, true);
-      
-      // 3. Recursive Call to handle the next line immediately
-      // We use a tiny timeout to allow the audio.currentTime to settle
       setTimeout(() => {
           startAutoScroll(lineTimings);
       }, 50);
-      return; // STOP execution of the current loop
+      return; 
   }
   
   // --- NEW: VERSE DELAY LOGIC ---
@@ -3253,8 +3244,12 @@ function renderVerseSelection() {
     const savedSkips = JSON.parse(localStorage.getItem('skippedVersesStore') || '{}');
     skippedVerseLabels = savedSkips[currentHymnNumber] || [];
 
+    // --- SAFETY CHECK: Filter out old string labels (like "Ch:") from previous version ---
+    // We only want numbers (indices) now.
+    skippedVerseLabels = skippedVerseLabels.filter(item => typeof item === 'number');
+
     currentVerseMap.forEach((verse, idx) => {
-        // Don't show "Intro/Start" unlabeled blocks usually, unless you want to
+        // Don't show "Intro/Start" unlabeled blocks
         if(verse.label === "Intro/Start") return;
 
         const div = document.createElement('div');
@@ -3263,20 +3258,21 @@ function renderVerseSelection() {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `verse-check-${idx}`;
-        checkbox.dataset.label = verse.label;
         
-        // CHECKED means PLAY. UNCHECKED means SKIP.
-        // If label is in skippedVerseLabels, it should be UNCHECKED.
-        checkbox.checked = !skippedVerseLabels.includes(verse.label);
+        // --- CHANGE 1: ID based on Start Index, not Label ---
+        checkbox.dataset.index = verse.startIndex; 
+        
+        // Check if this SPECIFIC index is in the skip list
+        checkbox.checked = !skippedVerseLabels.includes(verse.startIndex);
         
         checkbox.addEventListener('change', (e) => {
             if (e.target.checked) {
                 // Removed from skip list (Play it)
-                skippedVerseLabels = skippedVerseLabels.filter(l => l !== verse.label);
+                skippedVerseLabels = skippedVerseLabels.filter(id => id !== verse.startIndex);
             } else {
-                // Add to skip list
-                if (!skippedVerseLabels.includes(verse.label)) {
-                    skippedVerseLabels.push(verse.label);
+                // Add to skip list (Skip it)
+                if (!skippedVerseLabels.includes(verse.startIndex)) {
+                    skippedVerseLabels.push(verse.startIndex);
                 }
             }
             
@@ -3285,12 +3281,15 @@ function renderVerseSelection() {
             store[currentHymnNumber] = skippedVerseLabels;
             localStorage.setItem('skippedVersesStore', JSON.stringify(store));
 
-            // Re-render lyrics to show/hide "(Skip)" text
+            // Re-render lyrics to update the red (Skip) text
             populateLyricsContainer();
         });
 
         const label = document.createElement('label');
         label.htmlFor = `verse-check-${idx}`;
+        
+        // Add a number to the label so "Chorus" looks like "Chorus (1)", "Chorus (2)" if needed
+        // Or just keep it simple. Let's stick to the text.
         label.textContent = `Verse ${verse.label.replace(':', '')}`;
 
         div.appendChild(checkbox);
@@ -3298,16 +3297,13 @@ function renderVerseSelection() {
         container.appendChild(div);
     });
     
-    // Wire up the toggle click
+    // Wire up the toggle click (Cloning removes old event listeners to prevent duplicates)
     const toggleBtn = $('verse-selection-toggle');
-    // Remove old listener to avoid duplicates
     const newBtn = toggleBtn.cloneNode(true);
     toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
     
     newBtn.addEventListener('click', () => {
         toggleCollapsibleById('verse-selection-content'); 
-        // Note: You might need to adjust toggleCollapsibleById to handle div IDs directly 
-        // or just use the logic inline:
         const c = $('verse-selection-content');
         const isCollapsed = c.classList.toggle('is-collapsed');
         const icon = $('verse-selection-icon');
