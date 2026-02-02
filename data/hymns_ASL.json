@@ -5497,7 +5497,8 @@
 			"<!Calm!|>Sick, >Hand‑peel|>Bless|>Fade", 
 			"<(cl:2)Lay‑on‑ground|<Lift‑up, <Stand‑up|>Blind, >(2h)Get‑mud|>Mud‑on-eyes, >(Rh)Look‑me", 
 			"<Bread|<(2h)Give‑all|<Audience, 1,000|Pick-up, Eat", 
-			">Ruler|>Daughter|>Dead|>Lift‑up, Live~|~", 
+			">Ruler|>Daughter|>Dead", 
+			">Lift‑up, Live~|~", 
 			"Jesus|Supreme|Wonderful|<Happen", 
 			">Happen|<Block|>Block|>Block-throw-down", 
 			"Jesus|Finish", 
@@ -5525,7 +5526,8 @@
 			"Jesus|Finish", 
 			"Give-all|Wonderful|Happen|Top‑notch~", 
 			"~|^HE, Save~|~|(2h)ME", 
-			"^HE, Save|2-us|!Eyes-wide!~|~" ]
+			"^HE, Save|2-us|!Eyes-wide!~|~" 
+		]
 	},
 	"1053": {
 		"title": "Jesus Wants Me for a Sunbeam",
